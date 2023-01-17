@@ -1,3 +1,17 @@
+terraform {
+  required_providers {
+    azurerm = {
+      source = "hashicorp/azurerm"
+      version = "3.29.1"
+    }
+  }
+}
+
+provider "azurerm" {
+  # Configuration options
+  features {} 
+}
+
 resource "azurerm_resource_group" "example" {
   name     = "PERSO_SIEF"
   location = "West Europe"
