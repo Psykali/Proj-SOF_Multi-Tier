@@ -36,3 +36,17 @@ resource "azurerm_storage_account" "example" {
   account_tier             = "Standard"
   account_replication_type = "LRS"
 }
+
+resource "azurerm_storage_container" "example" {
+  name                  = "tfstate"
+  storage_account_name  = azurerm_storage_account.example.name
+  container_access_type = "private"
+}
+
+terraform {
+  backend "azurerm" {
+    storage_account_name = azurerm_storage_account.example.name
+    container_name       = azurerm_storage_container.example.name
+    key                  = "state.tfstate"
+  }
+}
