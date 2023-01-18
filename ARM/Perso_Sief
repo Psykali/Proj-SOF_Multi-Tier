@@ -1,53 +1,8 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "webAppName": {
-            "type": "string",
-            "defaultValue": "persosiefweb"
-        },
-        "funcAppName": {
-            "type": "string",
-            "defaultValue": "persosieffunc"
-        },
-        "region": {
-            "type": "string",
-            "defaultValue": "France Central"
-        }
-    },
-    "resources": [
-        {
-            "type": "Microsoft.Resources/resourceGroups",
-            "name": "PERSO_SIEF",
-            "location": "[parameters('region')]",
-            "resources": [
-                {
-                    "type": "Microsoft.Web/sites",
-                    "name": "[parameters('webAppName')]",
-                    "location": "[parameters('region')]",
-                    "sku": {
-                        "name": "F1"
-                    },
-                    "kind": "web",
-                    "properties": {},
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Resources/resourceGroups/', 'PERSO_SIEF')]"
-                    ]
-                },
-                {
-                    "type": "Microsoft.Web/sites",
-                    "name": "[parameters('funcAppName')]",
-                    "location": "[parameters('region')]",
-                    "sku": {
-                        "name": "F1"
-                    },
-                    "kind": "functionapp",
-                    "properties": {},
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Resources/resourceGroups/', 'PERSO_SIEF')]"
-                    ]
-                }
-            ]
-        }
-    ]
+  "$schema": "https://schema.management.azure.com/schemas/2019-08-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {},
+  "variables": {},
+  "resources": [],
+  "outputs": {}
 }
