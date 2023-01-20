@@ -6,7 +6,53 @@
             "defaultValue": "persosiefsa",
             "type": "String"
         },
-           {
+        "actionGroups_RecommendedAlertRules_AG_1_name": {
+            "defaultValue": "RecommendedAlertRules-AG-1",
+            "type": "String"
+        },
+        "metricAlerts_CPU_Usage_Percentage___persosief_aks_name": {
+            "defaultValue": "CPU Usage Percentage - persosief-aks",
+            "type": "String"
+        },
+        "metricAlerts_Memory_Working_Set_Percentage___persosief_aks_name": {
+            "defaultValue": "Memory Working Set Percentage - persosief-aks",
+            "type": "String"
+        },
+        "managedClusters_persosief_aks_externalid": {
+            "defaultValue": "/subscriptions/682603a3-d9f3-417f-98e8-a7b2398bc448/resourceGroups/PERSO_SIEF/providers/Microsoft.ContainerService/managedClusters/persosief-aks",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "microsoft.insights/actionGroups",
+            "apiVersion": "2022-06-01",
+            "name": "[parameters('actionGroups_RecommendedAlertRules_AG_1_name')]",
+            "location": "Global",
+            "properties": {
+                "groupShortName": "recalert1",
+                "enabled": true,
+                "emailReceivers": [
+                    {
+                        "name": "Email_-EmailAction-",
+                        "emailAddress": "skhalifa@simplonformations.onmicrosoft.com",
+                        "useCommonAlertSchema": true
+                    }
+                ],
+                "smsReceivers": [],
+                "webhookReceivers": [],
+                "eventHubReceivers": [],
+                "itsmReceivers": [],
+                "azureAppPushReceivers": [],
+                "automationRunbookReceivers": [],
+                "voiceReceivers": [],
+                "logicAppReceivers": [],
+                "azureFunctionReceivers": [],
+                "armRoleReceivers": []
+            }
+        },
+        {
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2022-05-01",
             "name": "[parameters('storageAccounts_persosiefsa_name')]",
@@ -49,6 +95,84 @@
                     "keySource": "Microsoft.Storage"
                 },
                 "accessTier": "Hot"
+            }
+        },
+        {
+            "type": "microsoft.insights/metricAlerts",
+            "apiVersion": "2018-03-01",
+            "name": "[parameters('metricAlerts_CPU_Usage_Percentage___persosief_aks_name')]",
+            "location": "Global",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/actionGroups', parameters('actionGroups_RecommendedAlertRules_AG_1_name'))]"
+            ],
+            "properties": {
+                "severity": 3,
+                "enabled": true,
+                "scopes": [
+                    "[parameters('managedClusters_persosief_aks_externalid')]"
+                ],
+                "evaluationFrequency": "PT5M",
+                "windowSize": "PT5M",
+                "criteria": {
+                    "allOf": [
+                        {
+                            "threshold": 80,
+                            "name": "Metric1",
+                            "metricNamespace": "Microsoft.ContainerService/managedClusters",
+                            "metricName": "node_cpu_usage_percentage",
+                            "operator": "GreaterThan",
+                            "timeAggregation": "Average",
+                            "criterionType": "StaticThresholdCriterion"
+                        }
+                    ],
+                    "odata.type": "Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria"
+                },
+                "targetResourceType": "Microsoft.ContainerService/managedClusters",
+                "actions": [
+                    {
+                        "actionGroupId": "[resourceId('microsoft.insights/actionGroups', parameters('actionGroups_RecommendedAlertRules_AG_1_name'))]",
+                        "webHookProperties": {}
+                    }
+                ]
+            }
+        },
+        {
+            "type": "microsoft.insights/metricAlerts",
+            "apiVersion": "2018-03-01",
+            "name": "[parameters('metricAlerts_Memory_Working_Set_Percentage___persosief_aks_name')]",
+            "location": "Global",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/actionGroups', parameters('actionGroups_RecommendedAlertRules_AG_1_name'))]"
+            ],
+            "properties": {
+                "severity": 3,
+                "enabled": true,
+                "scopes": [
+                    "[parameters('managedClusters_persosief_aks_externalid')]"
+                ],
+                "evaluationFrequency": "PT5M",
+                "windowSize": "PT5M",
+                "criteria": {
+                    "allOf": [
+                        {
+                            "threshold": 80,
+                            "name": "Metric1",
+                            "metricNamespace": "Microsoft.ContainerService/managedClusters",
+                            "metricName": "node_memory_working_set_percentage",
+                            "operator": "GreaterThan",
+                            "timeAggregation": "Average",
+                            "criterionType": "StaticThresholdCriterion"
+                        }
+                    ],
+                    "odata.type": "Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria"
+                },
+                "targetResourceType": "Microsoft.ContainerService/managedClusters",
+                "actions": [
+                    {
+                        "actionGroupId": "[resourceId('microsoft.insights/actionGroups', parameters('actionGroups_RecommendedAlertRules_AG_1_name'))]",
+                        "webHookProperties": {}
+                    }
+                ]
             }
         },
         {
