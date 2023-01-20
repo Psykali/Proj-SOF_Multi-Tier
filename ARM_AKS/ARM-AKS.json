@@ -1,43 +1,17 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
-        "managedClusters_PERSOSAIF_AKS_name": {
-            "defaultValue": "PERSOSAIF_AKS",
-            "type": "String"
-        },
-        "actionGroups_RecommendedAlertRules_AG_1_name": {
-            "defaultValue": "RecommendedAlertRules-AG-1",
-            "type": "String"
-        },
-        "metricAlerts_CPU_Usage_Percentage___PERSOSAIF_AKS_name": {
-            "defaultValue": "CPU Usage Percentage - PERSOSAIF_AKS",
-            "type": "String"
-        },
-        "metricAlerts_Memory_Working_Set_Percentage___PERSOSAIF_AKS_name": {
-            "defaultValue": "Memory Working Set Percentage - PERSOSAIF_AKS",
-            "type": "String"
-        },
-        "workspaces_DefaultWorkspace_682603a3_d9f3_417f_98e8_a7b2398bc448_PAR_externalid": {
-            "defaultValue": "/subscriptions/682603a3-d9f3-417f-98e8-a7b2398bc448/resourceGroups/DefaultResourceGroup-PAR/providers/Microsoft.OperationalInsights/workspaces/DefaultWorkspace-682603a3-d9f3-417f-98e8-a7b2398bc448-PAR",
-            "type": "String"
-        },
-        "publicIPAddresses_03c1c08a_4aa5_4ab1_a101_0f04661bab1a_externalid": {
-            "defaultValue": "/subscriptions/682603a3-d9f3-417f-98e8-a7b2398bc448/resourceGroups/MC_PERSO_SIEF_PERSOSAIF_AKS_francecentral/providers/Microsoft.Network/publicIPAddresses/03c1c08a-4aa5-4ab1-a101-0f04661bab1a",
-            "type": "String"
-        },
-        "userAssignedIdentities_PERSOSAIF_AKS_agentpool_externalid": {
-            "defaultValue": "/subscriptions/682603a3-d9f3-417f-98e8-a7b2398bc448/resourceGroups/MC_PERSO_SIEF_PERSOSAIF_AKS_francecentral/providers/Microsoft.ManagedIdentity/userAssignedIdentities/PERSOSAIF_AKS-agentpool",
-            "type": "String"
-        }
-    },
+    "parameters": {},
     "variables": {},
     "resources": [
         {
             "type": "Microsoft.ContainerService/managedClusters",
             "apiVersion": "2022-08-03-preview",
-            "name": "[parameters('managedClusters_PERSOSAIF_AKS_name')]",
+            "name": "PersoSIEF_AKS",
             "location": "francecentral",
+            "tags": {
+                "Owner": "persosief"
+            },
             "sku": {
                 "name": "Basic",
                 "tier": "Paid"
@@ -47,7 +21,7 @@
             },
             "properties": {
                 "kubernetesVersion": "1.24.6",
-                "dnsPrefix": "PERSOSAIFAKS-dns",
+                "dnsPrefix": "PersoSIEFAKS-dns",
                 "agentPoolProfiles": [
                     {
                         "name": "agentpool",
@@ -71,6 +45,9 @@
                         },
                         "orchestratorVersion": "1.24.6",
                         "enableNodePublicIP": false,
+                        "tags": {
+                            "Owner": "persosief"
+                        },
                         "mode": "System",
                         "osType": "Linux",
                         "osSKU": "Ubuntu",
@@ -88,23 +65,19 @@
                         "enabled": false
                     },
                     "httpApplicationRouting": {
-                        "enabled": true,
-                        "config": {
-                            "HTTPApplicationRoutingZoneName": "777099a0228540e1bc7c.francecentral.aksapp.io"
-                        }
+                        "enabled": false
                     },
                     "omsAgent": {
                         "enabled": true,
                         "config": {
-                            "logAnalyticsWorkspaceResourceID": "[parameters('workspaces_DefaultWorkspace_682603a3_d9f3_417f_98e8_a7b2398bc448_PAR_externalid')]"
+                            "logAnalyticsWorkspaceResourceID": "/subscriptions/682603a3-d9f3-417f-98e8-a7b2398bc448/resourceGroups/DefaultResourceGroup-PAR/providers/Microsoft.OperationalInsights/workspaces/DefaultWorkspace-682603a3-d9f3-417f-98e8-a7b2398bc448-PAR"
                         }
                     }
                 },
-                "nodeResourceGroup": "[concat('MC_PERSO_SIEF_', parameters('managedClusters_PERSOSAIF_AKS_name'), '_francecentral')]",
+                "nodeResourceGroup": "MC_PERSO_SIEF_PersoSIEF_AKS_francecentral",
                 "enableRBAC": true,
                 "networkProfile": {
                     "networkPlugin": "kubenet",
-                    "networkPolicy": "calico",
                     "loadBalancerSku": "Standard",
                     "loadBalancerProfile": {
                         "managedOutboundIPs": {
@@ -112,7 +85,7 @@
                         },
                         "effectiveOutboundIPs": [
                             {
-                                "id": "[parameters('publicIPAddresses_03c1c08a_4aa5_4ab1_a101_0f04661bab1a_externalid')]"
+                                "id": "/subscriptions/682603a3-d9f3-417f-98e8-a7b2398bc448/resourceGroups/MC_PERSO_SIEF_PersoSIEF_AKS_francecentral/providers/Microsoft.Network/publicIPAddresses/bb55a670-812c-410d-9e2b-c41678f8822c"
                             }
                         ],
                         "backendPoolType": "nodeIPConfiguration"
@@ -134,9 +107,9 @@
                 },
                 "identityProfile": {
                     "kubeletidentity": {
-                        "resourceId": "[parameters('userAssignedIdentities_PERSOSAIF_AKS_agentpool_externalid')]",
-                        "clientId": "63ed2f14-7f9b-43a6-b506-fea1317dbf7c",
-                        "objectId": "3790fc51-9f4d-46b7-981a-2db09014e4c8"
+                        "resourceId": "/subscriptions/682603a3-d9f3-417f-98e8-a7b2398bc448/resourcegroups/MC_PERSO_SIEF_PersoSIEF_AKS_francecentral/providers/Microsoft.ManagedIdentity/userAssignedIdentities/PersoSIEF_AKS-agentpool",
+                        "clientId": "2795ace7-0e8f-45f0-ad9f-5d06c0d1d172",
+                        "objectId": "0760bf9a-8d58-4657-b509-7b860fbb8fb8"
                     }
                 },
                 "autoScalerProfile": {
@@ -184,7 +157,7 @@
         {
             "type": "microsoft.insights/actionGroups",
             "apiVersion": "2022-06-01",
-            "name": "[parameters('actionGroups_RecommendedAlertRules_AG_1_name')]",
+            "name": "RecommendedAlertRules-AG-1",
             "location": "Global",
             "properties": {
                 "groupShortName": "recalert1",
@@ -211,9 +184,9 @@
         {
             "type": "Microsoft.ContainerService/managedClusters/agentPools",
             "apiVersion": "2022-08-03-preview",
-            "name": "[concat(parameters('managedClusters_PERSOSAIF_AKS_name'), '/agentpool')]",
+            "name": "PersoSIEF_AKS/agentpool",
             "dependsOn": [
-                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('managedClusters_PERSOSAIF_AKS_name'))]"
+                "[resourceId('Microsoft.ContainerService/managedClusters', 'PersoSIEF_AKS')]"
             ],
             "properties": {
                 "count": 3,
@@ -236,6 +209,9 @@
                 },
                 "orchestratorVersion": "1.24.6",
                 "enableNodePublicIP": false,
+                "tags": {
+                    "Owner": "persosief"
+                },
                 "mode": "System",
                 "osType": "Linux",
                 "osSKU": "Ubuntu",
@@ -245,17 +221,17 @@
         {
             "type": "microsoft.insights/metricAlerts",
             "apiVersion": "2018-03-01",
-            "name": "[parameters('metricAlerts_CPU_Usage_Percentage___PERSOSAIF_AKS_name')]",
+            "name": "CPU Usage Percentage - PersoSIEF_AKS",
             "location": "Global",
             "dependsOn": [
-                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('managedClusters_PERSOSAIF_AKS_name'))]",
-                "[resourceId('microsoft.insights/actionGroups', parameters('actionGroups_RecommendedAlertRules_AG_1_name'))]"
+                "[resourceId('Microsoft.ContainerService/managedClusters', 'PersoSIEF_AKS')]",
+                "[resourceId('microsoft.insights/actionGroups', 'RecommendedAlertRules-AG-1')]"
             ],
             "properties": {
                 "severity": 3,
                 "enabled": true,
                 "scopes": [
-                    "[resourceId('Microsoft.ContainerService/managedClusters', parameters('managedClusters_PERSOSAIF_AKS_name'))]"
+                    "[resourceId('Microsoft.ContainerService/managedClusters', 'PersoSIEF_AKS')]"
                 ],
                 "evaluationFrequency": "PT5M",
                 "windowSize": "PT5M",
@@ -276,7 +252,7 @@
                 "targetResourceType": "Microsoft.ContainerService/managedClusters",
                 "actions": [
                     {
-                        "actionGroupId": "[resourceId('microsoft.insights/actionGroups', parameters('actionGroups_RecommendedAlertRules_AG_1_name'))]",
+                        "actionGroupId": "[resourceId('microsoft.insights/actionGroups', 'RecommendedAlertRules-AG-1')]",
                         "webHookProperties": {}
                     }
                 ]
@@ -285,17 +261,17 @@
         {
             "type": "microsoft.insights/metricAlerts",
             "apiVersion": "2018-03-01",
-            "name": "[parameters('metricAlerts_Memory_Working_Set_Percentage___PERSOSAIF_AKS_name')]",
+            "name": "Memory Working Set Percentage - PersoSIEF_AKS",
             "location": "Global",
             "dependsOn": [
-                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('managedClusters_PERSOSAIF_AKS_name'))]",
-                "[resourceId('microsoft.insights/actionGroups', parameters('actionGroups_RecommendedAlertRules_AG_1_name'))]"
+                "[resourceId('Microsoft.ContainerService/managedClusters', 'PersoSIEF_AKS')]",
+                "[resourceId('microsoft.insights/actionGroups', 'RecommendedAlertRules-AG-1')]"
             ],
             "properties": {
                 "severity": 3,
                 "enabled": true,
                 "scopes": [
-                    "[resourceId('Microsoft.ContainerService/managedClusters', parameters('managedClusters_PERSOSAIF_AKS_name'))]"
+                    "[resourceId('Microsoft.ContainerService/managedClusters', 'PersoSIEF_AKS')]"
                 ],
                 "evaluationFrequency": "PT5M",
                 "windowSize": "PT5M",
@@ -316,7 +292,7 @@
                 "targetResourceType": "Microsoft.ContainerService/managedClusters",
                 "actions": [
                     {
-                        "actionGroupId": "[resourceId('microsoft.insights/actionGroups', parameters('actionGroups_RecommendedAlertRules_AG_1_name'))]",
+                        "actionGroupId": "[resourceId('microsoft.insights/actionGroups', 'RecommendedAlertRules-AG-1')]",
                         "webHookProperties": {}
                     }
                 ]
