@@ -15,7 +15,7 @@
             "name": "[parameters('storageAccounts_persosiefsa_name')]",
             "location": "francecentral",
             "tags": {
-                "owner": "persosief"
+                "Owner": "persosief"
             },
             "sku": {
                 "name": "Standard_RAGRS",
@@ -24,7 +24,7 @@
             "kind": "StorageV2",
             "properties": {
                 "dnsEndpointType": "Standard",
-                "defaultToOAuthAuthentication": false,
+                "defaultToOAuthAuthentication": true,
                 "publicNetworkAccess": "Enabled",
                 "allowCrossTenantReplication": true,
                 "minimumTlsVersion": "TLS1_2",
@@ -53,7 +53,7 @@
                 },
                 "accessTier": "Hot"
             }
-        },     
+        },
         {
             "type": "Microsoft.Storage/storageAccounts/blobServices",
             "apiVersion": "2022-05-01",
@@ -67,14 +67,14 @@
             },
             "properties": {
                 "changeFeed": {
-                    "enabled": false
+                    "enabled": true
                 },
                 "restorePolicy": {
                     "enabled": false
                 },
                 "containerDeleteRetentionPolicy": {
                     "enabled": true,
-                    "days": 7
+                    "days": 30
                 },
                 "cors": {
                     "corsRules": []
@@ -82,9 +82,9 @@
                 "deleteRetentionPolicy": {
                     "allowPermanentDelete": false,
                     "enabled": true,
-                    "days": 7
+                    "days": 30
                 },
-                "isVersioningEnabled": false
+                "isVersioningEnabled": true
             }
         },
         {
@@ -107,7 +107,7 @@
                 },
                 "shareDeleteRetentionPolicy": {
                     "enabled": true,
-                    "days": 7
+                    "days": 30
                 }
             }
         },
@@ -140,7 +140,7 @@
         {
             "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
             "apiVersion": "2022-05-01",
-            "name": "[concat(parameters('storageAccounts_persosiefsa_name'), '/default/persosieftfstat')]",
+            "name": "[concat(parameters('storageAccounts_persosiefsa_name'), '/default/state')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_persosiefsa_name'), 'default')]",
                 "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_persosiefsa_name'))]"
