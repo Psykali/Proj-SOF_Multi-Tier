@@ -1,12 +1,12 @@
 resource "azurerm_kubernetes_cluster" "example" {
-  name                = "example-aks1"
+  name                = "PersoSief-AKS"
   location            = "France Central"
   resource_group_name = "PERSO_SIEF"
-  dns_prefix          = "exampleaks1"
+  dns_prefix          = "persosiefdns"
 
   default_node_pool {
-    name       = "default"
-    node_count = 1
+    name       = "persosiefpool"
+    node_count = 3
     vm_size    = "Standard_D2_v2"
   }
 
