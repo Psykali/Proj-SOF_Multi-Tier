@@ -33,6 +33,6 @@ output "kube_config" {
 resource "null_resource" "deploy-yaml" {
 
   provisioner "local-exec" {
-      command = "kubectl apply -f ${file(${path.module}/config.yml)}"
+      command = "kubectl apply -f config.yml"
   }
 }
