@@ -30,9 +30,10 @@ resource "azurerm_kubernetes_cluster" "example" {
 #  sensitive = true
 #}
 
-resource "null_resource" "deploy-yaml" {
+#resource "null_resource" "deploy-yaml" {
 
-  provisioner "local-exec" {
-      command = "kubectl apply -f config.yml"
-  }
-}
+#  provisioner "local-exec" {
+#      command = "kubectl apply -f config.yml"
+#  }
+#}
+#
