@@ -5,7 +5,7 @@ resource "azurerm_kubernetes_cluster" "example" {
   dns_prefix          = "persosiefdns"
 
   default_node_pool {
-    name       = "persosiefpool"
+    name       = "persosiefpl"
     node_count = 3
     vm_size    = "Standard_D2_v2"
   }
