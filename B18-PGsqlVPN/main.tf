@@ -76,6 +76,9 @@ resource "azurerm_postgresql_server" "example" {
   sku_name   = "GP_Gen5_4"
   administrator_login = "adminuser"
   administrator_login_password = "password1234!"
+  public_network_access_enabled    = false
+  ssl_enforcement_enabled          = true
+  ssl_minimal_tls_version_enforced = "TLS1_2"
 }
 
 # Create a firewall rule to block all external access to the database
