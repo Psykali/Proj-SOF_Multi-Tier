@@ -46,8 +46,8 @@ resource "azurerm_subnet" "gateway" {
 }
 
 # Create a public IP address for the VPN gateway
-resource "azurerm_public_ip" "sk_vpn_gateway" {
-  name                = "vpn-gateway-ip"
+resource "azurerm_public_ip" "vpn_gateway" {
+  name                = "sk-vpn-gateway-ip"
   location = "West Europe"
 ##  location            = azurerm_resource_group.example.location
   resource_group_name = "PERSO_SIEF"
