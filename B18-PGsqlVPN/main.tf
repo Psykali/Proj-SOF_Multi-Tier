@@ -114,7 +114,8 @@ resource "azurerm_postgresql_firewall_rule" "block_all" {
 resource "azurerm_postgresql_firewall_rule" "allow_vpn_subnet" {
   name                = "allow-vpn-subnet"
   server_name         = azurerm_postgresql_server.example.name
-  resource_group_name = azurerm_resource_group.example.name
+  resource_group_name = "PERSO_SIEF"
+##  resource_group_name = azurerm_resource_group.example.name
   start_ip_address    = "10.1.1.1"
   end_ip_address      = "10.1.1.100"
 }
