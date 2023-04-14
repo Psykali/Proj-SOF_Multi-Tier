@@ -38,7 +38,7 @@ resource "azurerm_subnet" "database" {
 
 # Create a subnet for the VPN gateway
 resource "azurerm_subnet" "gateway" {
-  name                 = "sk-gateway-subnet"
+  name                 = "GatewaySubnet"
   resource_group_name = "PERSO_SIEF"
 ##  resource_group_name = azurerm_resource_group.example.name
   address_prefixes     = ["10.1.2.0/24"]
