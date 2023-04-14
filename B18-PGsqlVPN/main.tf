@@ -71,8 +71,9 @@ resource "azurerm_postgresql_server" "example" {
   location            = azurerm_resource_group.example.location
   resource_group_name = azurerm_resource_group.example.name
   version             = "11"
+  sku_name   = "GP_Gen5_4"
   administrator_login = "adminuser"
-  administrator_password = "password1234!"
+  administrator_login_password = "password1234!"
 }
 
 # Create a firewall rule to block all external access to the database
