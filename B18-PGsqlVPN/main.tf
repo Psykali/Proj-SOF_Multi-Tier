@@ -28,6 +28,7 @@ resource "azurerm_virtual_network" "example" {
 # Create a subnet for the database
 resource "azurerm_subnet" "database" {
   name                 = "database-subnet"
+  resource_group_name = azurerm_resource_group.example.name
   address_prefixes     = ["10.1.1.0/24"]
   virtual_network_name = azurerm_virtual_network.example.name
 }
@@ -35,6 +36,7 @@ resource "azurerm_subnet" "database" {
 # Create a subnet for the VPN gateway
 resource "azurerm_subnet" "gateway" {
   name                 = "gateway-subnet"
+  resource_group_name = azurerm_resource_group.example.name
   address_prefixes     = ["10.1.2.0/24"]
   virtual_network_name = azurerm_virtual_network.example.name
 }
