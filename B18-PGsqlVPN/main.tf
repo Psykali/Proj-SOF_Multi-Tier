@@ -19,7 +19,7 @@ provider "azurerm" {
 
 # Create a virtual network
 resource "azurerm_virtual_network" "example" {
-  name                = "example-virtual-network"
+  name                = "sk-virtual-network"
   address_space       = ["10.1.0.0/16"]
   location = "West Europe"
 ##  location            = azurerm_resource_group.example.location
@@ -29,7 +29,7 @@ resource "azurerm_virtual_network" "example" {
 
 # Create a subnet for the database
 resource "azurerm_subnet" "database" {
-  name                 = "database-subnet"
+  name                 = "sk-database-subnet"
   resource_group_name = "PERSO_SIEF"
 ##  resource_group_name = azurerm_resource_group.example.name
   address_prefixes     = ["10.1.1.0/24"]
@@ -38,7 +38,7 @@ resource "azurerm_subnet" "database" {
 
 # Create a subnet for the VPN gateway
 resource "azurerm_subnet" "gateway" {
-  name                 = "gateway-subnet"
+  name                 = "sk-gateway-subnet"
   resource_group_name = "PERSO_SIEF"
 ##  resource_group_name = azurerm_resource_group.example.name
   address_prefixes     = ["10.1.2.0/24"]
@@ -46,7 +46,7 @@ resource "azurerm_subnet" "gateway" {
 }
 
 # Create a public IP address for the VPN gateway
-resource "azurerm_public_ip" "vpn_gateway" {
+resource "azurerm_public_ip" "sk_vpn_gateway" {
   name                = "vpn-gateway-ip"
   location = "West Europe"
 ##  location            = azurerm_resource_group.example.location
@@ -57,7 +57,7 @@ resource "azurerm_public_ip" "vpn_gateway" {
 
 # Create the VPN gateway
 resource "azurerm_virtual_network_gateway" "vpn_gateway" {
-  name                = "vpn-gateway"
+  name                = "sk-vpn-gateway"
   location = "West Europe"
 ##  location            = azurerm_resource_group.example.location
   resource_group_name = "PERSO_SIEF"
@@ -77,7 +77,7 @@ resource "azurerm_virtual_network_gateway" "vpn_gateway" {
 
 # Create a Postgres SQL server
 resource "azurerm_postgresql_server" "example" {
-  name                = "example-psqlserver"
+  name                = "sk-psqlserver"
   location = "West Europe"
 ##  location            = azurerm_resource_group.example.location
   resource_group_name = "PERSO_SIEF"
