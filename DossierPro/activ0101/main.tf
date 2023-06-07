@@ -5,7 +5,7 @@ provider "azurerm" {
 
 # Define the resource group
 resource "azurerm_resource_group" "skrg" {
-  name     = "skrg-PERSO_SIEF"
+  name     = "PERSO_SIEF"
   location = "France Central"
 }
 
