@@ -1,17 +1,15 @@
 # Définir la version de Terraform et le fournisseur Azure
 terraform {
-  required_version = ">= 0.12"
   required_providers {
     azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 2.0"
+      source = "hashicorp/azurerm"
+      version = "3.40.0"
     }
   }
 }
 
-# Configurer le fournisseur Azure
 provider "azurerm" {
-  features {}
+  # Configuration options
 }
 
 # Créer un groupe de ressources
