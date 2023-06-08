@@ -150,3 +150,8 @@ resource "azurerm_mariadb_database" "db" {
   server_name         = azurerm_mariadb_server.db.name
   charset             = "utf8"
   collation           = "utf8_general
+  }
+
+output "wordpress_site_url" {
+  value = "${azurerm_public_ip.lb_ip.ip_address}"
+}
