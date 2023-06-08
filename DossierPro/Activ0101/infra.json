@@ -1,0 +1,320 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {},
+  "variables": {},
+  "resources": [
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "apiVersion": "2021-04-01",
+      "name": "PERSO_SIEF",
+      "location": "France Central",
+      "properties": {}
+    },
+    {
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2021-02-01",
+      "name": "skvnet",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/resourceGroups', 'PERSO_SIEF')]"
+      ],
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "10.0.0.0/16"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "sksnet",
+            "properties": {
+              "addressPrefix": "10.0.2.0/24"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/publicIPAddresses",
+      "apiVersion": "2021-02-01",
+      "name": "skpublicIPForLB",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/resourceGroups', 'PERSO_SIEF')]"
+      ],
+      "properties": {
+        "publicIPAllocationMethod": "Static"
+      }
+    },
+    {
+      "type": "Microsoft.Network/loadBalancers",
+      "apiVersion": "2021-02-01",
+      "name": "skloadBalancer",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/resourceGroups', 'PERSO_SIEF')]",
+        "[resourceId('Microsoft.Network/publicIPAddresses', 'skpublicIPForLB')]"
+      ],
+      "properties": {
+        "frontendIPConfigurations": [
+          {
+            "name": "skpublicIPAddress",
+            "properties": {
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'skpublicIPForLB')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/loadBalancers/backendAddressPools",
+      "apiVersion": "2021-02-01",
+      "name": "skBackEndAddressPool",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/loadBalancers', 'skloadBalancer')]"
+      ],
+      "properties": {
+        "loadBalancerBackendAddresses": []
+      }
+    },
+    {
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2021-02-01",
+      "name": "sknic0",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/resourceGroups', 'PERSO_SIEF')]",
+        "[resourceId('Microsoft.Network/virtualNetworks', 'skvnet')]",
+        "[resourceId('Microsoft.Network/loadBalancers', 'skloadBalancer')]",
+        "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', 'skBackEndAddressPool')]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "sktestConfiguration",
+            "properties": {
+              "subnet": {
+                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks', 'skvnet'), '/subnets/sksnet')]"
+              }
+            }
+          }
+        ],
+        "networkSecurityGroup": null,
+        "enableAcceleratedNetworking": false,
+        "enableIPForwarding": false
+      }
+    },
+    {
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2021-02-01",
+      "name": "sknic1",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/resourceGroups', 'PERSO_SIEF')]",
+        "[resourceId('Microsoft.Network/virtualNetworks', 'skvnet')]",
+        "[resourceId('Microsoft.Network/loadBalancers', 'skloadBalancer')]",
+        "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', 'skBackEndAddressPool')]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "sktestConfiguration",
+            "properties": {
+              "subnet": {
+                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks', 'skvnet'), '/subnets/sksnet')]"
+              }
+            }
+          }
+        ],
+        "networkSecurityGroup": null,
+        "enableAcceleratedNetworking": false,
+        "enableIPForwarding": false
+      }
+    },
+    {
+      "type": "Microsoft.Network/loadBalancers/inboundNatPools",
+      "apiVersion": "2021-02-01",
+      "name": "natPool",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/resourceGroups', 'PERSO_SIEF')]",
+        "[resourceId('Microsoft.Network/loadBalancers', 'skloadBalancer')]"
+      ],
+      "properties": {
+        "frontendIPConfiguration": {
+          "id": "[concat(resourceId('Microsoft.Network/loadBalancers', 'skloadBalancer'), '/frontendIPConfigurations/skpublicIPAddress')]"
+        },
+        "protocol": "Tcp",
+        "frontendPortRangeStart": 50000,
+        "frontendPortRangeEnd": 50119,
+        "backendPort": 22
+      }
+    },
+    {
+      "type": "Microsoft.Compute/availabilitySets",
+      "apiVersion": "2021-03-01",
+      "name": "skavset",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/resourceGroups', 'PERSO_SIEF')]"
+      ],
+      "properties": {
+        "platformFaultDomainCount": 2,
+        "platformUpdateDomainCount": 2
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2021-04-01",
+      "name": "skvm0",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/resourceGroups', 'PERSO_SIEF')]",
+        "[resourceId('Microsoft.Network/networkInterfaces', 'sknic0')]",
+        "[resourceId('Microsoft.Compute/availabilitySets', 'skavset')]"
+      ],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "Standard_DS1_v2"
+        },
+        "storageProfile": {
+          "osDisk": {
+            "createOption": "FromImage",
+            "managedDisk": {
+              "storageAccountType": "Standard_LRS"
+            },
+            "osType": "Linux"
+          },
+          "imageReference": {
+            "publisher": "Debian",
+            "offer": "debian-11",
+            "sku": "11",
+            "version": "latest"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', 'sknic0')]"
+            }
+          ]
+        },
+        "osProfile": {
+          "computerName": "skvm0",
+          "adminUsername": "testadmin",
+          "adminPassword": "Password1234!",
+          "linuxConfiguration": {
+            "disablePasswordAuthentication": false
+          }
+        },
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', 'skavset')]"
+        },
+        "provisioningState": "Succeeded"
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2021-04-01",
+      "name": "skvm1",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/resourceGroups', 'PERSO_SIEF')]",
+        "[resourceId('Microsoft.Network/networkInterfaces', 'sknic1')]",
+        "[resourceId('Microsoft.Compute/availabilitySets', 'skavset')]"
+      ],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "Standard_DS1_v2"
+        },
+        "storageProfile": {
+          "osDisk": {
+            "createOption": "FromImage",
+            "managedDisk": {
+              "storageAccountType": "Standard_LRS"
+            },
+            "osType": "Linux"
+          },
+          "imageReference": {
+            "publisher": "Debian",
+            "offer": "debian-11",
+            "sku": "11",
+            "version": "latest"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', 'sknic1')]"
+            }
+          ]
+        },
+        "osProfile": {
+          "computerName": "skvm1",
+          "adminUsername": "testadmin",
+          "adminPassword": "Password1234!",
+          "linuxConfiguration": {
+            "disablePasswordAuthentication": false
+          }
+        },
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', 'skavset')]"
+        },
+        "provisioningState": "Succeeded"
+      }
+    },
+    {
+      "type": "Microsoft.DBforMariaDB/servers",
+      "apiVersion": "2021-02-01",
+      "name": "skmariadbserver",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/resourceGroups', 'PERSO_SIEF')]"
+      ],
+      "properties": {
+        "administratorLogin": "testadmin",
+        "administratorLoginPassword": "Password1234!",
+        "sku": {
+          "name": "B_Gen5_2",
+          "tier": "Basic",
+          "family": "Gen5",
+          "capacity": 2
+        },
+        "sslEnforcement": "Enabled",
+        "storageProfile": {
+          "storageMB": 5120
+        },
+        "version": "10.3"
+      }
+    },
+    {
+      "type": "Microsoft.DBforMariaDB/servers/databases",
+      "apiVersion": "2021-02-01",
+      "name": "skwordpressdb",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.DBforMariaDB/servers', 'skmariadbserver')]"
+      ],
+      "properties": {
+        "charset": "utf8",
+        "collation": "utf8_general_ci"
+      }
+    },
+    {
+      "type": "Microsoft.DBforMariaDB/servers/firewallRules",
+      "apiVersion": "2021-02-01",
+      "name": "AllowAllAzureIPs",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.DBforMariaDB/servers', 'skmariadbserver')]"
+      ],
+      "properties": {
+        "startIpAddress": "0.0.0.0",
+        "endIpAddress": "0.0.0.0"
+      }
+    }
+  ]
+}
