@@ -1,25 +1,19 @@
-# azure-pipeline.yml
-
-trigger:
-  branches:
-    include:
-      - main
-
-pool:
-  vmImage: 'ubuntu-latest'
-
-steps:
-- task: Docker@2
-  displayName: 'Build and Push Docker image'
-  inputs:
-    command: 'build'
-    repository: 'psykali/stackoverp20kcab'
-    Dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-    tags: 'latest'
-
-- task: Docker@2
-  displayName: 'Push Docker image to Docker Hub'
-  inputs:
-    command: 'push'
-    repository: 'psykali/stackoverp20kcab'
-    tags: 'latest'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stackoverp20kcab-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: stackoverp20kcab
+  template:
+    metadata:
+      labels:
+        app: stackoverp20kcab
+    spec:
+      containers:
+      - name: stackoverp20kcab
+        image: psykali/stackoverp20kcab:latest
+        ports:
+        - containerPort: 80
