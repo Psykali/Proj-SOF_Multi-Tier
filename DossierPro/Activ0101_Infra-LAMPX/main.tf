@@ -3,7 +3,6 @@ resource "azurerm_resource_group" "PERSO_SIEF" {
   name     = "PERSO_SIEF"
   location = "France Central"
 }
-=
 
 resource "azurerm_virtual_network" "skvnet" {
   name                = "skvnet"
