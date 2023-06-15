@@ -108,7 +108,7 @@ resource "azurerm_storage_account" "sk_sa" {
 }
 
 resource "azurerm_storage_container" "sk_container" {
-  name                  = "sk_container"
+  name                  = "sk-container"
 ##  resource_group_name   = azurerm_resource_group.sk_rg.name
   storage_account_name  = azurerm_storage_account.sk_sa.name
   container_access_type = "private"
@@ -121,14 +121,14 @@ resource "azurerm_mariadb_server" "sk_db" {
   administrator_login          = "sk_admin"
   administrator_login_password = "Password1234!"
   sku_name            = "B_Gen5_1"
+  version             = "10.4"
+  ssl_enforcement_enabled = true
 
   storage_profile {
     storage_mb            = 5120
     backup_retention_days = 7
     geo_redundant_backup  = "Disabled"
   }
-
-  ssl_enforcement_enabled = true
 }
 
 resource "azurerm_mariadb_database" "sk_db_wp" {
@@ -146,13 +146,15 @@ resource "azurerm_lb_backend_address_pool" "sk_lb_pool" {
 }
 
 resource "azurerm_lb_rule" "sk_lb_rule" {
-  name = "sk_lb_rule"
+  name                = "sk-lb-rule"
 ##  resource_group_name = azurerm_resource_group.sk_rg.name
-  loadbalancer_id = azurerm_lb.sk_lb.id
-  protocol = "tcp"
-  frontend_port = 80
-  backend_port = 80
-##  backend_address_pool_id = azurerm_lb_backend_address_pool.sk_lb_pool.id
+  loadbalancer_id     = azurerm_lb.sk_lb.id
+  protocol            = "Tcp"
+  frontend_port       = 80
+  backend_port        = 80
+  enable_floating_ip  = false
+  idle_timeout_in_minutes = 5
+  frontend_ip_configuration_name = azurerm_lb_frontend_ip_configuration.sk_lb_fe.name
 }
 
 resource "azurerm_lb_probe" "sk_lb_probe" {
@@ -161,24 +163,31 @@ resource "azurerm_lb_probe" "sk_lb_probe" {
   loadbalancer_id = azurerm_lb.sk_lb.id
   protocol = "tcp"
   port = 80
-  interval = 15
+##  interval = 15
   number_of_probes = 2
 }
 
 resource "azurerm_monitor_diagnostic_setting" "sk_monitor" {
-  name = "sk_monitor"
-  target_resource_id = azurerm_lb.sk_lb.id
+  name               = "sk-monitor"
+  target_resource_id = azurerm_virtual_machine.sk_vm.*.id[count.index]
 
-  log_analytics_workspace_id = ""
-  storage_account_id = azurerm_storage_account.sk_sa.id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.sk_law.id
 
-log {
-  category = "LoadBalancerProbeHealthStatus"
-  enabled = true
-retention_policy {
-  enabled = false
-}
-}
+  metric {
+    category = "AllMetrics"
+
+    enabled = true
+    time_grain = "PT1M"
+  }
+
+  log {
+    category = "LinuxSyslog"
+    enabled_log = true
+    retention_policy {
+      enabled = false
+      days    = 0
+    }
+  }
 }
 
 resource "random_integer" "random_integer" {
@@ -205,5 +214,5 @@ output "public_ip_address" {
 }
 
 output "load_balancer_dns_name" {
-  value = azurerm_lb.sk_lb.dns_name_label
+  value = azurerm_lb.sk_lb.frontend_ip_configuration.0.fqdn
 }
