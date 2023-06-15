@@ -23,6 +23,12 @@ resource "azurerm_public_ip" "sk_pip" {
 
   allocation_method = "Dynamic"
 }
+resource "azurerm_lb_frontend_ip_configuration" "sk_lb_fe" {
+  name                 = "sk-lb-fe"
+  resource_group_name  = azurerm_resource_group.sk_rg.name
+  loadbalancer_id      = azurerm_lb.sk_lb.id
+  public_ip_address_id = azurerm_public_ip_address.sk_pip.id
+}
 
 resource "azurerm_lb" "sk_lb" {
   name                = "sk_lb"
@@ -121,7 +127,7 @@ resource "azurerm_mariadb_server" "sk_db" {
   administrator_login          = "sk_admin"
   administrator_login_password = "Password1234!"
   sku_name            = "B_Gen5_1"
-  version             = "10.4"
+  version             = "10.3"
   ssl_enforcement_enabled = true
 
 ##  storage_profile {
