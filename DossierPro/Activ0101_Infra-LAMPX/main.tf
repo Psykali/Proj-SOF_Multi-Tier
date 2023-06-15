@@ -61,6 +61,7 @@ resource "azurerm_virtual_machine" "sk_vm" {
   location            = azurerm_resource_group.sk_rg.location
   resource_group_name = azurerm_resource_group.sk_rg.name
   availability_set_id = azurerm_availability_set.sk_as.id
+  vm_size             = "Standard_DS1_v2"   # or any other valid Azure VM size
 
   network_interface_ids = [
     azurerm_network_interface.sk_nic.*.id[count.index],
@@ -91,7 +92,8 @@ resource "azurerm_virtual_machine" "sk_vm" {
   }
 
   boot_diagnostics {
-    storage_account_uri = "${azurerm_storage_account.sk_sa.primary_blob_endpoint}"
+    enabled     = true
+    storage_uri = "${azurerm_storage_account.sk_sa.primary_blob_endpoint}"
   }
 }
 
@@ -107,23 +109,26 @@ resource "azurerm_storage_account" "sk_sa" {
 
 resource "azurerm_storage_container" "sk_container" {
   name                  = "sk_container"
-  resource_group_name   = azurerm_resource_group.sk_rg.name
+##  resource_group_name   = azurerm_resource_group.sk_rg.name
   storage_account_name  = azurerm_storage_account.sk_sa.name
   container_access_type = "private"
 }
 
 resource "azurerm_mariadb_server" "sk_db" {
-  name                = "sk_db"
+  name                = "sk-db"
   location            = azurerm_resource_group.sk_rg.location
   resource_group_name = azurerm_resource_group.sk_rg.name
-
-  sku_name   = "B_Gen5_1"
-  storage_mb = 5120
-
-  administrator_login          = "dbadmin"
+  administrator_login          = "sk_admin"
   administrator_login_password = "Password1234!"
+  sku_name            = "B_Gen5_1"
 
-  version = "10.2"
+  storage_profile {
+    storage_mb            = 5120
+    backup_retention_days = 7
+    geo_redundant_backup  = "Disabled"
+  }
+
+  ssl_enforcement_enabled = true
 }
 
 resource "azurerm_mariadb_database" "sk_db_wp" {
@@ -135,70 +140,70 @@ resource "azurerm_mariadb_database" "sk_db_wp" {
 }
 
 resource "azurerm_lb_backend_address_pool" "sk_lb_pool" {
-name = "sk_lb_pool"
-resource_group_name = azurerm_resource_group.sk_rg.name
-loadbalancer_id = azurerm_lb.sk_lb.id
+  name = "sk_lb_pool"
+##  resource_group_name = azurerm_resource_group.sk_rg.name
+  loadbalancer_id = azurerm_lb.sk_lb.id
 }
 
 resource "azurerm_lb_rule" "sk_lb_rule" {
-name = "sk_lb_rule"
-resource_group_name = azurerm_resource_group.sk_rg.name
-loadbalancer_id = azurerm_lb.sk_lb.id
-protocol = "tcp"
-frontend_port = 80
-backend_port = 80
-backend_address_pool_id = azurerm_lb_backend_address_pool.sk_lb_pool.id
+  name = "sk_lb_rule"
+##  resource_group_name = azurerm_resource_group.sk_rg.name
+  loadbalancer_id = azurerm_lb.sk_lb.id
+  protocol = "tcp"
+  frontend_port = 80
+  backend_port = 80
+##  backend_address_pool_id = azurerm_lb_backend_address_pool.sk_lb_pool.id
 }
 
 resource "azurerm_lb_probe" "sk_lb_probe" {
-name = "sk_lb_probe"
-resource_group_name = azurerm_resource_group.sk_rg.name
-loadbalancer_id = azurerm_lb.sk_lb.id
-protocol = "tcp"
-port = 80
-interval = 15
-number_of_probes = 2
+  name = "sk_lb_probe"
+##  resource_group_name = azurerm_resource_group.sk_rg.name
+  loadbalancer_id = azurerm_lb.sk_lb.id
+  protocol = "tcp"
+  port = 80
+  interval = 15
+  number_of_probes = 2
 }
 
 resource "azurerm_monitor_diagnostic_setting" "sk_monitor" {
-name = "sk_monitor"
-target_resource_id = azurerm_lb.sk_lb.id
+  name = "sk_monitor"
+  target_resource_id = azurerm_lb.sk_lb.id
 
-log_analytics_workspace_id = ""
-storage_account_id = azurerm_storage_account.sk_sa.id
+  log_analytics_workspace_id = ""
+  storage_account_id = azurerm_storage_account.sk_sa.id
 
 log {
-category = "LoadBalancerProbeHealthStatus"
-enabled = true
+  category = "LoadBalancerProbeHealthStatus"
+  enabled = true
 retention_policy {
-enabled = false
+  enabled = false
 }
 }
 }
 
 resource "random_integer" "random_integer" {
-min = 1000
-max = 9999
+  min = 1000
+  max = 9999
 }
 
 resource "azurerm_virtual_network" "sk_vnet" {
-name = "sk_vnet"
-address_space = ["10.0.0.0/16"]
-location = azurerm_resource_group.sk_rg.location
-resource_group_name = azurerm_resource_group.sk_rg.name
+  name = "sk_vnet"
+  address_space = ["10.0.0.0/16"]
+  location = azurerm_resource_group.sk_rg.location
+  resource_group_name = azurerm_resource_group.sk_rg.name
 }
 
 resource "azurerm_subnet" "sk_subnet" {
-name = "sk_subnet"
-resource_group_name = azurerm_resource_group.sk_rg.name
-virtual_network_name = azurerm_virtual_network.sk_vnet.name
-address_prefixes = ["10.0.1.0/24"]
+  name = "sk_subnet"
+  resource_group_name = azurerm_resource_group.sk_rg.name
+  virtual_network_name = azurerm_virtual_network.sk_vnet.name
+  address_prefixes = ["10.0.1.0/24"]
 }
 
 output "public_ip_address" {
-value = azurerm_public_ip.sk_pip.ip_address
+  value = azurerm_public_ip.sk_pip.ip_address
 }
 
 output "load_balancer_dns_name" {
-value = azurerm_lb.sk_lb.dns_name_label
+  value = azurerm_lb.sk_lb.dns_name_label
 }
