@@ -124,11 +124,11 @@ resource "azurerm_mariadb_server" "sk_db" {
   version             = "10.4"
   ssl_enforcement_enabled = true
 
-  storage_profile {
-    storage_mb            = 5120
-    backup_retention_days = 7
-    geo_redundant_backup  = "Disabled"
-  }
+##  storage_profile {
+##    storage_mb            = 5120
+##    backup_retention_days = 7
+##    geo_redundant_backup  = "Disabled"
+##  }
 }
 
 resource "azurerm_mariadb_database" "sk_db_wp" {
@@ -161,7 +161,7 @@ resource "azurerm_lb_probe" "sk_lb_probe" {
   name = "sk_lb_probe"
 ##  resource_group_name = azurerm_resource_group.sk_rg.name
   loadbalancer_id = azurerm_lb.sk_lb.id
-  protocol = "tcp"
+  protocol = "Tcp"
   port = 80
 ##  interval = 15
   number_of_probes = 2
@@ -209,10 +209,10 @@ resource "azurerm_subnet" "sk_subnet" {
   address_prefixes = ["10.0.1.0/24"]
 }
 
-output "public_ip_address" {
-  value = azurerm_public_ip.sk_pip.ip_address
-}
+##output "public_ip_address" {
+##  value = azurerm_public_ip.sk_pip.ip_address
+##}
 
-output "load_balancer_dns_name" {
-  value = azurerm_lb.sk_lb.frontend_ip_configuration.0.fqdn
-}
+##output "load_balancer_dns_name" {
+##  value = azurerm_lb.sk_lb.frontend_ip_configuration.0.fqdn
+##}
