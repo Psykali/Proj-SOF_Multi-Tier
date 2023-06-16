@@ -1,8 +1,3 @@
-# Define the Azure provider
-provider "azurerm" {
-  features {}
-}
-
 # Define the resource group
 resource "azurerm_resource_group" "skrg" {
   name     = "PERSO_SIEF"
