@@ -1,16 +1,16 @@
 # Define the provider
-provider "azurerm" {
-  features {}
-}
-
+#provider "azurerm" {
+#  features {}
+#}
+#
 # Define the resource group
 resource "azurerm_resource_group" "sk_rg" {
   name     = "PERSO_SIEF"
   location = "francecentral"
 
-  tags = {
-    Name = "sk_rg"
-  }
+#  tags = {
+#    Name = "sk_rg"
+#  }
 }
 
 # Define the instances
