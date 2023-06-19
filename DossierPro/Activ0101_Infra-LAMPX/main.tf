@@ -1,16 +1,16 @@
 # Define the provider
-#provider "azurerm" {
-#  features {}
-#}
-#
+provider "azurerm" {
+  features {}
+}
+
 # Define the resource group
 resource "azurerm_resource_group" "sk_rg" {
   name     = "PERSO_SIEF"
   location = "francecentral"
 
-#  tags = {
-#    Name = "sk_rg"
-#  }
+  tags = {
+    Name = "sk_rg"
+  }
 }
 
 # Define the instances
@@ -72,10 +72,6 @@ resource "azurerm_subnet" "sk_subnet" {
   resource_group_name  = azurerm_resource_group.sk_rg.name
   virtual_network_name = azurerm_virtual_network.sk_vnet.name
   address_prefixes     = ["10.0.2.0/24"]
-
-#  tags = {
-#    Name = "sk_subnet"
-#  }
 }
 
 # Define the virtual network
@@ -84,10 +80,6 @@ resource "azurerm_virtual_network" "sk_vnet" {
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.sk_rg.location
   resource_group_name = azurerm_resource_group.sk_rg.name
-
-  tags = {
-    Name = "sk_vnet"
-  }
 }
 
 # Define the load balancer
@@ -101,22 +93,9 @@ resource "azurerm_lb" "sk_lb" {
     public_ip_address_id          = azurerm_public_ip.sk_public_ip.id
   }
 
-#  backend_address_pool {
-#    name = "sk_lb_backend_pool"
-#  }
-
-#  probe {
-#    name                = "sk_lb_probe"
-#    protocol            = "Http"
-#    request_path        = "/"
-#    port                = 80
-#    interval_in_seconds = 5
-#    number_of_probes    = 2
-#  }
-
-#  tags = {
-#    Name = "sk_lb"
-#  }
+  tags = {
+    Name = "sk_lb"
+  }
 }
 
 # Define the public IP address
@@ -169,17 +148,17 @@ resource "azurerm_monitor_metric_alert" "sk_cpu_alert" {
     }
   }
   action {
-    action_group_id = azurerm_action_group.sk_action_group.id
+    action_group_id = azurerm_monitor_action_group.sk_action_group.id
   }
 }
-#
+
 # Define the action group
-#resource "azurerm_action_group" "sk_action_group" {
-#  name                = "sk_action_group"
-#  resource_group_name = azurerm_resource_group.sk_rg.name
-#  short_name          = "sk_action_group"
-#  email_receiver {
-#    name          = "sk_email_receiver"
-#    email_address = "admin@example.com"
-#  }
-#}
+resource "azurerm_monitor_action_group" "sk_action_group" {
+  name                = "sk_action_group"
+  resource_group_name = azurerm_resource_group.sk_rg.name
+  short_name          = "sk_action_group"
+  email_receiver {
+    name          = "sk_email_receiver"
+    email_address = "admin@example.com"
+  }
+}
