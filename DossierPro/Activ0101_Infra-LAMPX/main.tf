@@ -1,7 +1,7 @@
 # Define the provider
-#provider "azurerm" {
-#  features {}
-#}
+provider "azurerm" {
+  features {}
+}
 
 # Define the required providers
 #terraform {
