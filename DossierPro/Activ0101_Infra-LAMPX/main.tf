@@ -59,7 +59,7 @@ resource "azurerm_lb_rule" "sk_lb_rule" {
 
 # Define the virtual machines
 resource "azurerm_linux_virtual_machine" "sk_vm" {
-  name                  = "sk_vm"
+  name                  = "skvm"
   location              = "francecentral"
   resource_group_name   = "PERSO_SIEF"
   size                  = "Standard_B1s"
