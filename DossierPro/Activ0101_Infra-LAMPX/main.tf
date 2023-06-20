@@ -1,27 +1,27 @@
 # Define the provider
-provider "azurerm" {
-  features {}
-}
+#provider "azurerm" {
+#  features {}
+#}
 
 # Define the required providers
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = ">= 2.0"
-    }
-  }
-}
+#terraform {
+#  required_providers {
+#    azurerm = {
+#      source  = "hashicorp/azurerm"
+#      version = ">= 2.0"
+#    }
+#  }
+#}
 
 # Define the backend configuration
-terraform {
-  backend "azurerm" {
-    resource_group_name  = "PERSO_SIEF"
-    storage_account_name = "terraformstate123"
-    container_name       = "tfstate"
-    key                  = "terraform.tfstate"
-  }
-}
+#terraform {
+#  backend "azurerm" {
+#    resource_group_name  = "PERSO_SIEF"
+#    storage_account_name = "terraformstate123"
+#    container_name       = "tfstate"
+#    key                  = "terraform.tfstate"
+#  }
+#}
 
 # Define the virtual network
 resource "azurerm_virtual_network" "sk_vnet" {
