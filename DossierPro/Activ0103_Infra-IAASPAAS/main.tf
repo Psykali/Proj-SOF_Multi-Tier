@@ -21,10 +21,11 @@ resource "azurerm_linux_virtual_machine" "sk_mariadb_vm" {
     azurerm_network_interface.sk_mariadb_vm.id,
   ]
 
-  os_disk {
-    name              = "sk_mariadb_vm_os_disk"
-    caching           = "ReadWrite"
-    storage_account_type = "Standard_LRS"
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "18.04-LTS"
+    version   = "latest"
   }
 }
 
@@ -63,39 +64,11 @@ resource "azurerm_virtual_network" "sk_vnet" {
 }
 
 # Create a load balancer for the web applications
-resource "azurerm_lb" "sk_web_lb" {
-  name                = "sk_web_lb"
-  resource_group_name = azurerm_resource_group.sk_rg.name
-  location            = azurerm_resource_group.sk_rg.location
-
-  frontend_ip_configuration {
-    name                          = "sk_web_lb_frontend_ipconfig"
-    subnet_id                     = azurerm_subnet.sk_web_lb.id
-    private_ip_address_allocation = "Dynamic"
-  }
-
-  backend_address_pool {
-    name = "sk_web_lb_backend_pool"
-  }
-
-  probe {
-    name                = "sk_web_lb_probe"
-    protocol            = "Http"
-    request_path        = "/"
-    port                = 80
-    interval_in_seconds = 15
-    number_of_probes    = 2
-  }
-
-  load_balancing_rule {
-    name                       = "sk_web_lb_rule"
-    frontend_ip_configuration = azurerm_lb.sk_web_lb.frontend_ip_configuration[0].id
-    backend_address_pool       = azurerm_lb.sk_web_lb.backend_address_pool[0].id
-    probe_id                   = azurerm_lb.sk_web_lb.probe[0].id
-    protocol                   = "Tcp"
-    frontend_port              = 80
-    backend_port               = 80
-  }
+resource "azurerm_subnet" "sk_web_lb" {
+  name                 = "sk_web_lb_subnet"
+  resource_group_name  = azurerm_resource_group.sk_rg.name
+  virtual_network_name = azurerm_virtual_network.sk_vnet.name
+  address_prefixes     = ["10.0.2.0/24"]
 }
 
 # Create the web applications
@@ -146,7 +119,7 @@ resource "azurerm_application_insights" "sk_app_insights" {
 
 # Create a storage account for the application blobs
 resource "azurerm_storage_account" "sk_storage_account" {
-  name                     = "sk_storage_account"
+  name                     = "skstorageaccount"
   resource_group_name      = azurerm_resource_group.sk_rg.name
   location                 = azurerm_resource_group.sk_rg.location
   account_tier             = "Standard"
