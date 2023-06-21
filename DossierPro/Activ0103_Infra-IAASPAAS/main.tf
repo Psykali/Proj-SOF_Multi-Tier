@@ -67,7 +67,7 @@ resource "azurerm_monitor_metric_alert" "sk_metric_alert" {
     metric_name      = "CpuPercentage"
     operator         = "GreaterThan"
     threshold        = 90
-    time_aggregation = "Average"
+    aggregation      = "Average"
   }
 
   action {
@@ -113,7 +113,8 @@ resource "azurerm_template_deployment" "sk_template_deployment" {
       "contentVersion": "1.0.0.0",
       "parameters": {
         "location": {
-          "type": "string"
+          "type": "string",
+          "defaultValue": "francecentral"
         }
       },
       "resources": [
