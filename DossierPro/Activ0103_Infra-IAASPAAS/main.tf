@@ -122,7 +122,7 @@ resource "azurerm_template_deployment" "sk_template_deployment" {
           "type": "Microsoft.Web/sites",
           "name": "sk-template-site",
           "apiVersion": "2021-04-01",
-          "location": "[parameters('location')]",
+          "location": "[parameters('location').value]",  # Use .value to get the value of the parameter
           "properties": {
             "siteConfig": {
               "appSettings": [
@@ -140,7 +140,7 @@ resource "azurerm_template_deployment" "sk_template_deployment" {
 
   parameters = {
     location = {
-      value = "francecentral"
+      value = "francecentral"  # Use the correct format for the "location" parameter
     }
   }
 }
