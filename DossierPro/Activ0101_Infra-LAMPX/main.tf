@@ -79,6 +79,11 @@ resource "azurerm_linux_virtual_machine" "sk_vm" {
     version   = "latest"
   }
 
+  admin_ssh_key {
+    username   = "adminuser"
+    public_key = file("~/.ssh/id_rsa.pub")
+  }
+
   custom_data = base64encode(<<-EOF
               #!/bin/bash
               sudo apt-get update
