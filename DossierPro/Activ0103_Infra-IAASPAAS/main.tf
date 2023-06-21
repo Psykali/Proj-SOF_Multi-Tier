@@ -138,9 +138,9 @@ resource "azurerm_template_deployment" "sk_template_deployment" {
     }
   EOF
 
-  parameters_content = jsonencode({
+  parameters = {
     location = {
       value = "francecentral"
     }
-  })
+  }
 }
