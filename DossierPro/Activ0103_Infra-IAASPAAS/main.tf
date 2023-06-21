@@ -1,8 +1,8 @@
 # Provider configuration
-provider "azurerm" {
-  features {}
-}
-
+#provider "azurerm" {
+#  features {}
+#}
+#
 # Resource Group
 resource "azurerm_resource_group" "rg" {
   name     = "PERSO_SIEF"
