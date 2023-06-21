@@ -47,6 +47,7 @@ resource "azurerm_application_insights" "sk_app_insights" {
 resource "azurerm_monitor_action_group" "sk_action_group" {
   name                = "sk-action-group"
   resource_group_name = azurerm_resource_group.sk_rg.name
+  short_name          = "action-group"
 
   email_receiver {
     name          = "email-receiver"
@@ -136,11 +137,9 @@ resource "azurerm_template_deployment" "sk_template_deployment" {
     }
   EOF
 
-  parameters_content = <<EOF
-    {
-      "location": {
-        "value": "francecentral"
-      }
+  parameters = {
+    "location" = {
+      "value" = "francecentral"
     }
-  EOF
+  }
 }
