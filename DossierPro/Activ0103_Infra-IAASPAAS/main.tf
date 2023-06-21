@@ -1,7 +1,7 @@
-provider "azurerm" {
-  features {}
-}
-
+#provider "azurerm" {
+#  features {}
+#}
+#
 resource "azurerm_resource_group" "skrg" {
   name     = "PERSO_SIEF"
   location = "francecentral"
