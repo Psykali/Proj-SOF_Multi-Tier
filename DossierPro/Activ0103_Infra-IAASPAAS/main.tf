@@ -5,7 +5,7 @@
 #
 # Create a resource group
 resource "azurerm_resource_group" "sk_rg" {
-  name     = "sk_rg"
+  name     = "PERSO_SIEF"
   location = "francecentral"
 }
 
@@ -20,6 +20,12 @@ resource "azurerm_linux_virtual_machine" "sk_mariadb_vm" {
   network_interface_ids = [
     azurerm_network_interface.sk_mariadb_vm.id,
   ]
+
+  os_disk {
+    name              = "sk_mariadb_vm_os_disk"
+    caching           = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
 }
 
 # Create a network interface for the virtual machine
@@ -97,8 +103,11 @@ resource "azurerm_app_service_plan" "sk_web_app_service_plan" {
   name                = "sk_web_app_service_plan"
   resource_group_name = azurerm_resource_group.sk_rg.name
   location            = azurerm_resource_group.sk_rg.location
-  sku_tier            = "Standard"
-  sku_size            = "S1"
+
+  sku {
+    tier = "Standard"
+    size = "S1"
+  }
 }
 
 resource "azurerm_app_service" "sk_web_app" {
@@ -132,6 +141,7 @@ resource "azurerm_application_insights" "sk_app_insights" {
   name                = "sk_app_insights"
   resource_group_name = azurerm_resource_group.sk_rg.name
   location            = azurerm_resource_group.sk_rg.location
+  application_type    = "web"
 }
 
 # Create a storage account for the application blobs
