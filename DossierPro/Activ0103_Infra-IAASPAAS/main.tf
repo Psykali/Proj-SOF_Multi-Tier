@@ -34,18 +34,18 @@ resource "azurerm_lb_backend_address_pool" "backend_pool" {
 }
 
 resource "azurerm_lb" "lb" {
-name = "sk-lb"
-location = azurerm_resource_group.rg.location
-resource_group_name = azurerm_resource_group.rg.name
+  name                = "sk-lb"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
 
-frontend_ip_configuration {
-name = "PublicIPAddress"
-public_ip_address_id = azurerm_public_ip.public_ip.id
-}
+  frontend_ip_configuration {
+    name                 = "PublicIPAddress"
+    public_ip_address_id = azurerm_public_ip.public_ip.id
+  }
 
-backend_address_pool {
-name = "sk-backend-pool"
-}
+  backend_address_pool_ids = [
+    azurerm_lb_backend_address_pool.backend_pool.id
+  ]
 }
 
 ##Load Balancer
@@ -91,12 +91,6 @@ resource "azurerm_linux_virtual_machine" "mariadb_vm" {
   admin_username                = "adminuser"
   disable_password_authentication = false
 
-  os_profile {
-    computer_name  = "sk-mariadb-vm"
-    admin_username = "adminuser"
-    admin_password = "your_admin_password"
-  }
-
   os_disk {
     name              = "sk-mariadb-vm-osdisk"
     caching           = "ReadWrite"
@@ -118,6 +112,12 @@ resource "azurerm_linux_virtual_machine" "mariadb_vm" {
     sudo mysql_secure_installation
     EOF
   )
+
+  os_profile {
+    computer_name  = "sk-mariadb-vm"
+    admin_username = "adminuser"
+    admin_password = "your_admin_password"
+  }
 
   network_interface_ids = [
     azurerm_network_interface.nic.id
