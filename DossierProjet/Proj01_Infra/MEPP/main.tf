@@ -7,10 +7,12 @@ resource "azurerm_resource_group" "rg" {
   location = "francecentral"
 }
 
+
 resource "azurerm_virtual_network" "vnet" {
   name                = "sk-vnet"
   resource_group_name = azurerm_resource_group.rg.name
   address_space       = ["10.0.0.0/16"]
+  location            = azurerm_resource_group.rg.location
 }
 
 resource "azurerm_subnet" "subnet" {
@@ -22,23 +24,12 @@ resource "azurerm_subnet" "subnet" {
 
 resource "azurerm_network_security_group" "nsg" {
   name                = "sk-nsg"
+  location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
   security_rule {
-    name                       = "AllowHTTP"
-    priority                   = 100
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "80"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
     name                       = "AllowSSH"
-    priority                   = 200
+    priority                   = 100
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
@@ -49,12 +40,60 @@ resource "azurerm_network_security_group" "nsg" {
   }
 }
 
+resource "azurerm_availability_set" "availability_set" {
+  name                = "sk-availability-set"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  platform_fault_domain_count = 3
+  platform_update_domain_count = 5
+}
+
 resource "azurerm_storage_account" "storage_account" {
   name                     = "skstorageaccount"
   resource_group_name      = azurerm_resource_group.rg.name
   location                 = azurerm_resource_group.rg.location
   account_tier             = "Standard"
   account_replication_type = "GRS"
+}
+
+resource "azurerm_virtual_machine" "vm" {
+  name                  = "sk-vm"
+  resource_group_name   = azurerm_resource_group.rg.name
+  location              = azurerm_resource_group.rg.location
+  availability_set_id   = azurerm_availability_set.availability_set.id
+  network_interface_ids = [azurerm_network_interface.nic.id]
+  vm_size               = "Standard_D2_v3"
+  delete_os_disk_on_termination = true
+  delete_data_disks_on_termination = true
+
+  storage_os_disk {
+    name              = "osdisk"
+    caching           = "ReadWrite"
+    create_option     = "FromImage"
+    managed_disk_type = "Standard_LRS"
+  }
+
+  os_profile {
+    computer_name  = "sk-vm"
+    admin_username = "adminuser"
+    admin_password = "password"
+  }
+
+  os_profile_linux_config {
+    disable_password_authentication = false
+  }
+}
+
+resource "azurerm_network_interface" "nic" {
+  name                = "sk-nic"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+
+  ip_configuration {
+    name                          = "config1"
+    subnet_id                     = azurerm_subnet.subnet.id
+    private_ip_address_allocation = "Dynamic"
+  }
 }
 
 resource "azurerm_app_service_plan" "app_service_plan" {
@@ -73,37 +112,25 @@ resource "azurerm_app_service" "wordpress" {
   resource_group_name = azurerm_resource_group.rg.name
   app_service_plan_id = azurerm_app_service_plan.app_service_plan.id
   site_config {
-    always_on           = true
-    linux_fx_version    = "DOCKER|wordpress"
-    connection_strings = [
-      {
-        name  = "DB_CONNECTION_STRING"
-        value = azurerm_sql_database.sql_db.connection_strings[0].value
-        type  = "SQLAzure"
-      }
-    ]
+    always_on            = true
+    linux_fx_version     = "DOCKER|wordpress"
+    app_command_line     = ""
+    scm_type             = "LocalGit"
+    use_32_bit_worker_process = true
   }
+  connection_string {
+    name  = "db_connection"
+    type  = "SQLAzure"
+    value = azurerm_sql_database.sql_db.connection_strings[0].value
+  }
+  depends_on = [azurerm_sql_database.sql_db]
 }
 
-resource "azurerm_sql_server" "sql_server" {
-  name                = "sk-sql-server"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
-  version             = "12.0"
-  administrator_login = "admin"
-  administrator_login_password = "P@ssw0rd"
-}
-
-resource "azurerm_sql_database" "sql_db" {
-  name                = "sk-sql-db"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
-  server_name         = azurerm_sql_server.sql_server.name
-  edition             = "GeneralPurpose"
-  compute_model       = "Serverless"
-  min_capacity        = 0.5
-  max_capacity        = 2
-  auto_pause_delay     = 60
+resource "azurerm_storage_container" "container" {
+  name                  = "sk-container"
+  resource_group_name   = azurerm_resource_group.rg.name
+  storage_account_name  = azurerm_storage_account.storage_account.name
+  container_access_type = "private"
 }
 
 resource "azurerm_monitor_action_group" "action_group" {
@@ -111,33 +138,47 @@ resource "azurerm_monitor_action_group" "action_group" {
   resource_group_name = azurerm_resource_group.rg.name
 
   email_receiver {
-    name          = "email1"
-    email_address = "your-email@example.com"
+    name          = "email"
+    email_address = "admin@example.com"
   }
 }
 
-resource "azurerm_monitor_metric_alert" "metric_alert" {
-  name                = "sk-metric-alert"
+resource "azurerm_application_insights" "app_insights" {
+  name                = "sk-app-insights"
   resource_group_name = azurerm_resource_group.rg.name
-  scopes              = [azurerm_app_service.wordpress.id]
-  description         = "High CPU utilization alert"
-  severity            = 3
+  location            = azurerm_resource_group.rg.location
+}
 
-  criteria {
-    metric_namespace = "microsoft.web/sites"
-    metric_name      = "cpuPercentage"
-    aggregation      = "Average"
-    operator         = "GreaterThan"
-    threshold        = 80
-    dimensions {
-      name     = "name"
-      operator = "Include"
-      values   = [azurerm_app_service.wordpress.name]
+resource "azurerm_log_analytics_workspace" "log_analytics" {
+  name                = "sk-log-analytics"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  sku                 = "PerGB2018"
+}
+
+resource "azurerm_sql_server" "sql_server" {
+  name                         = "sk-sql-server"
+  resource_group_name          = azurerm_resource_group.rg.name
+  location                     = azurerm_resource_group.rg.location
+  version                      = "12.0"
+  administrator_login          = "adminuser"
+  administrator_login_password = "password"
+}
+
+resource "azurerm_sql_database" "sql_db" {
+  name                = "sk-sql-db"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  server_name         = azurerm_sql_server.sql_server.name
+  sku_name            = "BC_Gen5_2"
+  collation_name      = "SQL_Latin1_General_CP1_CI_AS"
+  edition             = "Standard"
+
+  connection_policy {
+    connection_mode = "Default"
+    ip_address {
+      subnet_id = azurerm_subnet.subnet.id
     }
-  }
-
-  action {
-    action_group_id = azurerm_monitor_action_group.action_group.id
   }
 }
 
