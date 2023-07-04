@@ -63,7 +63,8 @@ resource "azurerm_linux_virtual_machine" "sk_vm" {
   location              = "francecentral"
   resource_group_name   = "PERSO_SIEF"
   size                  = "Standard_B1s"
-  admin_username        = "adminuser"
+  admin_username        = "skadminadminuser"
+  admin_password        = "skadminadminlogpass"
   network_interface_ids = [azurerm_network_interface.sk_nic.id]
 
   os_disk {
@@ -77,11 +78,6 @@ resource "azurerm_linux_virtual_machine" "sk_vm" {
     offer     = "UbuntuServer"
     sku       = "18.04-LTS"
     version   = "latest"
-  }
-
-  admin_ssh_key {
-    username   = "adminuser"
-    public_key = file("~/.ssh/id_rsa.pub")
   }
 
   custom_data = base64encode(<<-EOF
