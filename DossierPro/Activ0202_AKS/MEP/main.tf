@@ -1,5 +1,5 @@
 resource "azurerm_kubernetes_cluster" "example" {
-  name                = "SK-MEP-AKS"
+  name                = "SK-AKS"
   location            = "France Central"
   resource_group_name = "PERSO_SIEF"
   dns_prefix          = "skmepdns"
@@ -14,7 +14,7 @@ resource "azurerm_kubernetes_cluster" "example" {
     type = "SystemAssigned"
   }
 
-  tags = {
-    Environment = "Production"
-  }
+#  tags = {
+#    Environment = "Production"
+#  }
 }
