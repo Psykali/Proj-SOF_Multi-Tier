@@ -65,7 +65,7 @@ resource "azurerm_linux_virtual_machine" "sk_vm" {
   size                  = "Standard_B1s"
   disable_password_authentication = false
   admin_username        = "skadminadminuser"
-  admin_password        = "skadminadminlogpass"
+  admin_password        = "MyP@ssw0rd123"
   network_interface_ids = [azurerm_network_interface.sk_nic.id]
 
   os_disk {
