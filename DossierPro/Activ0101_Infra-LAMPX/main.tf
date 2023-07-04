@@ -87,9 +87,9 @@ resource "azurerm_lb" "sk_lb" {
   resource_group_name = "PERSO_SIEF"
 
   frontend_ip_configuration {
-    name                          = "sk_lb_private_ip"
-    private_ip_address            = azurerm_network_interface.sk_nic.private_ip_address
-  }
+  name                          = "sk_lb_public_ip"
+  public_ip_address_id          = azurerm_public_ip.sk_public_ip.id
+ }
 }
 
 # Define the load balancer rule
