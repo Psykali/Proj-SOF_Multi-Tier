@@ -1,5 +1,5 @@
 resource "azurerm_kubernetes_cluster" "example" {
-  name                = "SK-MEP-SOF"
+  name                = "SK-AKS"
   location            = "France Central"
   resource_group_name = "PERSO_SIEF"
   dns_prefix          = "skmepdns"
