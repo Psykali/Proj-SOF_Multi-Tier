@@ -63,6 +63,7 @@ resource "azurerm_linux_virtual_machine" "sk_vm" {
   location              = "francecentral"
   resource_group_name   = "PERSO_SIEF"
   size                  = "Standard_B1s"
+  disable_password_authentication = false
   admin_username        = "skadminadminuser"
   admin_password        = "skadminadminlogpass"
   network_interface_ids = [azurerm_network_interface.sk_nic.id]
