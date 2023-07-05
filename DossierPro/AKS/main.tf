@@ -11,7 +11,7 @@ resource "azurerm_resource_group" "rg" {
 
 # Define the AKS cluster
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                = "aks-cluster"
+  name                = "sk-aks-cluster"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   dns_prefix          = "aks-cluster"
@@ -35,7 +35,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
 # Define the subnet
 resource "azurerm_subnet" "aks" {
-  name                 = "aks-subnet"
+  name                 = "sk-aks-subnet"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = ["10.0.2.0/24"]
@@ -43,7 +43,7 @@ resource "azurerm_subnet" "aks" {
 
 # Define the virtual network
 resource "azurerm_virtual_network" "vnet" {
-  name                = "aks-vnet"
+  name                = "sk-aks-vnet"
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
@@ -51,7 +51,7 @@ resource "azurerm_virtual_network" "vnet" {
 
 # Define the public IP address
 resource "azurerm_public_ip" "aks" {
-  name                = "aks-public-ip"
+  name                = "sk-aks-public-ip"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   allocation_method   = "Static"
@@ -59,7 +59,7 @@ resource "azurerm_public_ip" "aks" {
 
 # Define the load balancer
 resource "azurerm_lb" "aks" {
-  name                = "aks-lb"
+  name                = "sk-aks-lb"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
@@ -71,13 +71,13 @@ resource "azurerm_lb" "aks" {
 
 # Define the load balancer backend address pool
 resource "azurerm_lb_backend_address_pool" "aks" {
-  name                = "aks-lb-backend-pool"
+  name                = "sk-aks-lb-backend-pool"
   loadbalancer_id     = azurerm_lb.aks.id
 }
 
 # Define the load balancer rule
 resource "azurerm_lb_rule" "aks" {
-  name                   = "aks-lb-rule"
+  name                   = "sk-aks-lb-rule"
   frontend_ip_configuration_name = azurerm_lb.aks.frontend_ip_configuration[0].name
   loadbalancer_id        = azurerm_lb.aks.id
   protocol               = "Tcp"
@@ -88,12 +88,12 @@ resource "azurerm_lb_rule" "aks" {
 
 # Define the network interface
 resource "azurerm_network_interface" "aks" {
-  name                = "aks-nic"
+  name                = "sk-aks-nic"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
   ip_configuration {
-    name                          = "aks-nic-ipconfig"
+    name                          = "sk-aks-nic-ipconfig"
     subnet_id                     = azurerm_subnet.aks.id
     private_ip_address_allocation = "Dynamic"
   }
