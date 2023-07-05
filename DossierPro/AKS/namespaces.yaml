@@ -12,7 +12,7 @@ kind: Namespace
 metadata:
   name: wp
 
-  ---
+---
 
 # Define the Kubernetes namespace for voting
 apiVersion: v1
