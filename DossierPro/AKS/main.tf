@@ -16,12 +16,11 @@ resource "azurerm_kubernetes_cluster" "aks" {
   resource_group_name = azurerm_resource_group.rg.name
   dns_prefix          = "aks-cluster"
 
-  agent_pool_profile {
+  default_node_pool {
     name            = "default"
-    count           = 3
+    node_count      = 3
     vm_size         = "Standard_DS2_v2"
-    os_type         = "Linux"
-    vnet_subnet_id  = azurerm_subnet.aks.id
+    os_disk_size_gb = 30
   }
 
    identity {
