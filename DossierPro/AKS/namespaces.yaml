@@ -14,6 +14,14 @@ metadata:
 
 ---
 
+# Define the Kubernetes namespace for wp
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sql
+
+---
+
 # Define the Kubernetes namespace for voting
 apiVersion: v1
 kind: Namespace
