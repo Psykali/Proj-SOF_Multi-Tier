@@ -24,9 +24,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
     vnet_subnet_id  = azurerm_subnet.aks.id
   }
 
-  service_principal {
-    client_id     = var.client_id
-    client_secret = var.client_secret
+   identity {
+    type = "SystemAssigned"
   }
 
   depends_on = [
