@@ -68,9 +68,10 @@ resource "azurerm_network_interface" "sk_nic" {
   resource_group_name = "PERSO_SIEF"
 
   ip_configuration {
-    name                          = "sk_nic_ipconfig_active0101"
-    subnet_id                     = azurerm_subnet.sk_subnet.id
-    private_ip_address_allocation = "Dynamic"
+  name                          = "sk_nic_ipconfig_active0101"
+  subnet_id                     = azurerm_subnet.sk_subnet.id
+  private_ip_address_allocation = "Dynamic"
+  network_security_group_id     = azurerm_network_security_group.sk_nsg.id
   }
 
   network_security_group_id = azurerm_network_security_group.sk_nsg.id
