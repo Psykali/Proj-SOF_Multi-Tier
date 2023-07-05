@@ -10,96 +10,108 @@ resource "azurerm_resource_group" "rg" {
 }
 
 # Define the AKS cluster
-resource "azurerm_kubernetes_cluster" "aks_cluster" {
-  name                = "SK-aks-cluster"
-  location            = azurerm_resource_group.aks_rg.location
-  resource_group_name = azurerm_resource_group.aks_rg.name
-  dns_prefix          = "myakscluster"
+resource "azurerm_kubernetes_cluster" "aks" {
+  name                = "aks-cluster"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  dns_prefix          = "aks-cluster"
 
-  default_node_pool {
+  agent_pool_profile {
     name            = "default"
-    node_count      = 1
+    count           = 3
     vm_size         = "Standard_DS2_v2"
-    os_disk_size_gb = 30
+    os_type         = "Linux"
+    vnet_subnet_id  = azurerm_subnet.aks.id
   }
 
   service_principal {
-    client_id     = "YOUR_AZURE_CLIENT_ID"
-    client_secret = "YOUR_AZURE_CLIENT_SECRET"
+    client_id     = var.client_id
+    client_secret = var.client_secret
   }
 
-  tags = {
-    Environment = "Production"
+  depends_on = [
+    azurerm_subnet.aks,
+  ]
+}
+
+# Define the subnet
+resource "azurerm_subnet" "aks" {
+  name                 = "aks-subnet"
+  resource_group_name  = azurerm_resource_group.rg.name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes     = ["10.0.2.0/24"]
+}
+
+# Define the virtual network
+resource "azurerm_virtual_network" "vnet" {
+  name                = "aks-vnet"
+  address_space       = ["10.0.0.0/16"]
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+}
+
+# Define the public IP address
+resource "azurerm_public_ip" "aks" {
+  name                = "aks-public-ip"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  allocation_method   = "Static"
+}
+
+# Define the load balancer
+resource "azurerm_lb" "aks" {
+  name                = "aks-lb"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+
+  frontend_ip_configuration {
+    name                          = "aks-lb-public-ip"
+    public_ip_address_id          = azurerm_public_ip.aks.id
   }
 }
 
-# Define the Kubernetes namespace
-resource "kubernetes_namespace" "app_namespace" {
-  metadata {
-    name = "my-app-namespace"
+# Define the load balancer backend address pool
+resource "azurerm_lb_backend_address_pool" "aks" {
+  name                = "aks-lb-backend-pool"
+  loadbalancer_id     = azurerm_lb.aks.id
+}
+
+# Define the load balancer rule
+resource "azurerm_lb_rule" "aks" {
+  name                   = "aks-lb-rule"
+  frontend_ip_configuration_name = azurerm_lb.aks.frontend_ip_configuration[0].name
+  loadbalancer_id        = azurerm_lb.aks.id
+  protocol               = "Tcp"
+  frontend_port          = 80
+  backend_port           = 80
+  backend_address_pool_ids = [azurerm_lb_backend_address_pool.aks.id]
+}
+
+# Define the network interface
+resource "azurerm_network_interface" "aks" {
+  name                = "aks-nic"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+
+  ip_configuration {
+    name                          = "aks-nic-ipconfig"
+    subnet_id                     = azurerm_subnet.aks.id
+    private_ip_address_allocation = "Dynamic"
   }
 }
 
-# Define the Kubernetes deployment for App 1
-resource "kubernetes_deployment" "app1_deployment" {
+# Define the Kubernetes namespace for sof-p20
+resource "kubernetes_namespace" "sof_p20" {
   metadata {
-    name      = "app1-deployment"
-    namespace = kubernetes_namespace.app_namespace.metadata[0].name
-  }
-
-  spec {
-    replicas = 3
-
-    selector {
-      match_labels = {
-        app = "app1"
-      }
-    }
-
-    template {
-      metadata {
-        labels = {
-          app = "app1"
-        }
-      }
-
-      spec {
-        container {
-          name  = "app1-container"
-          image = "your-registry/app1:latest"
-        }
-      }
-    }
+    name = "sof-p20"
   }
 }
 
-# Define the Kubernetes service for App 1
-resource "kubernetes_service" "app1_service" {
+# Define the Kubernetes deployment for sof-p20
+resource "kubernetes_deployment" "sof_p20" {
   metadata {
-    name      = "app1-service"
-    namespace = kubernetes_namespace.app_namespace.metadata[0].name
-  }
-
-  spec {
-    selector = {
-      app = "app1"
-    }
-
-    port {
-      protocol = "TCP"
-      port     = 80
-      target_port = 8080
-    }
-
-    type = "LoadBalancer"
-  }
-}
-
-# Define the Kubernetes deployment for App 2
-resource "kubernetes_deployment" "app2_deployment" {
-  metadata {
-    name      = "app2-deployment"
-    namespace = kubernetes_namespace.app_namespace.metadata[0].name
+    name      = "sof-p20"
+    namespace = kubernetes_namespace.sof_p20.metadata[0].name
   }
 
   spec {
@@ -107,43 +119,109 @@ resource "kubernetes_deployment" "app2_deployment" {
 
     selector {
       match_labels = {
-        app = "app2"
+        app = "sof-p20"
       }
     }
 
     template {
       metadata {
         labels = {
-          app = "app2"
+          app = "sof-p20"
         }
       }
 
       spec {
         container {
-          name  = "app2-container"
-          image = "your-registry/app2:latest"
+          image = "psykali/stackoverp20kcab:latest"
+          name  = "sof-p20"
+          port {
+            container_port = 80
+          }
         }
       }
     }
   }
 }
 
-# Define the Kubernetes service for App 2
-resource "kubernetes_service" "app2_service" {
+# Define the Kubernetes service for sof-p20
+resource "kubernetes_service" "sof_p20" {
   metadata {
-    name      = "app2-service"
-    namespace = kubernetes_namespace.app_namespace.metadata[0].name
+    name      = "sof-p20"
+    namespace = kubernetes_namespace.sof_p20.metadata[0].name
   }
 
   spec {
     selector = {
-      app = "app2"
+      app = "sof-p20"
     }
 
     port {
-      protocol = "TCP"
-      port     = 80
-      target_port = 8080
+      port        = 80
+      target_port = 80
+    }
+
+    type = "LoadBalancer"
+  }
+}
+
+# Define the Kubernetes namespace for wp
+resource "kubernetes_namespace" "wp" {
+  metadata {
+    name = "wp"
+  }
+}
+
+# Define the Kubernetes deployment for wp
+resource "kubernetes_deployment" "wp" {
+  metadata {
+    name      = "wp"
+    namespace = kubernetes_namespace.wp.metadata[0].name
+  }
+
+  spec {
+    replicas = 2
+
+    selector {
+      match_labels = {
+        app = "wp"
+      }
+    }
+
+    template {
+      metadata {
+        labels = {
+          app = "wp"
+        }
+      }
+
+      spec {
+        container {
+          image = "wordpress/wordpress:latest"
+          name  = "wp"
+          port {
+            container_port = 80
+          }
+        }
+      }
+    }
+  }
+}
+
+# Define the Kubernetes service for wp
+resource "kubernetes_service" "wp" {
+  metadata {
+    name      = "wp"
+    namespace = kubernetes_namespace.wp.metadata[0].name
+  }
+
+  spec {
+    selector = {
+      app = "wp"
+    }
+
+    port {
+      port        = 80
+      target_port = 80
     }
 
     type = "LoadBalancer"
