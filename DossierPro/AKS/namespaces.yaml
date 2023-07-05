@@ -5,8 +5,17 @@ metadata:
   name: sof-p20
 
 ---
+
 # Define the Kubernetes namespace for wp
 apiVersion: v1
 kind: Namespace
 metadata:
   name: wp
+
+  ---
+
+# Define the Kubernetes namespace for voting
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: voting
