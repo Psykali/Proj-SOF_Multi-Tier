@@ -3,28 +3,23 @@ provider "azurerm" {
   features {}
 }
 
-# Define the resource group
-resource "azurerm_resource_group" "rg" {
-  name     = "PERSO_SIEF"
-  location = "francecentral"
-}
-
 # Define the AKS cluster
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                = "sk-aks-cluster"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  name                = "aks-cluster"
+  location            = "francecentral"
+  resource_group_name = "PERSO_SIEF"
   dns_prefix          = "aks-cluster"
 
   default_node_pool {
     name            = "default"
-    node_count      = 3
+    node_count      = 1
     vm_size         = "Standard_DS2_v2"
     os_disk_size_gb = 30
   }
 
-   identity {
-    type = "SystemAssigned"
+  service_principal {
+    client_id     = var.client_id
+    client_secret = var.client_secret
   }
 
   depends_on = [
@@ -34,33 +29,33 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
 # Define the subnet
 resource "azurerm_subnet" "aks" {
-  name                 = "sk-aks-subnet"
-  resource_group_name  = azurerm_resource_group.rg.name
+  name                 = "aks-subnet"
+  resource_group_name  = "PERSO_SIEF"
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = ["10.0.2.0/24"]
 }
 
 # Define the virtual network
 resource "azurerm_virtual_network" "vnet" {
-  name                = "sk-aks-vnet"
+  name                = "aks-vnet"
   address_space       = ["10.0.0.0/16"]
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = "francecentral"
+  resource_group_name = "PERSO_SIEF"
 }
 
 # Define the public IP address
 resource "azurerm_public_ip" "aks" {
-  name                = "sk-aks-public-ip"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  name                = "aks-public-ip"
+  location            = "francecentral"
+  resource_group_name = "PERSO_SIEF"
   allocation_method   = "Static"
 }
 
 # Define the load balancer
 resource "azurerm_lb" "aks" {
-  name                = "sk-aks-lb"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  name                = "aks-lb"
+  location            = "francecentral"
+  resource_group_name = "PERSO_SIEF"
 
   frontend_ip_configuration {
     name                          = "aks-lb-public-ip"
@@ -70,13 +65,13 @@ resource "azurerm_lb" "aks" {
 
 # Define the load balancer backend address pool
 resource "azurerm_lb_backend_address_pool" "aks" {
-  name                = "sk-aks-lb-backend-pool"
+  name                = "aks-lb-backend-pool"
   loadbalancer_id     = azurerm_lb.aks.id
 }
 
 # Define the load balancer rule
 resource "azurerm_lb_rule" "aks" {
-  name                   = "sk-aks-lb-rule"
+  name                   = "aks-lb-rule"
   frontend_ip_configuration_name = azurerm_lb.aks.frontend_ip_configuration[0].name
   loadbalancer_id        = azurerm_lb.aks.id
   protocol               = "Tcp"
@@ -87,12 +82,12 @@ resource "azurerm_lb_rule" "aks" {
 
 # Define the network interface
 resource "azurerm_network_interface" "aks" {
-  name                = "sk-aks-nic"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  name                = "aks-nic"
+  location            = "francecentral"
+  resource_group_name = "PERSO_SIEF"
 
   ip_configuration {
-    name                          = "sk-aks-nic-ipconfig"
+    name                          = "aks-nic-ipconfig"
     subnet_id                     = azurerm_subnet.aks.id
     private_ip_address_allocation = "Dynamic"
   }
