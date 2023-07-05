@@ -12,15 +12,15 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   default_node_pool {
     name            = "default"
-    node_count      = 1
+    node_count      = 3
     vm_size         = "Standard_DS2_v2"
     os_disk_size_gb = 30
   }
 
-  service_principal {
-    client_id     = var.client_id
-    client_secret = var.client_secret
+  identity {
+    type = "SystemAssigned"
   }
+
 
   depends_on = [
     azurerm_subnet.aks,
