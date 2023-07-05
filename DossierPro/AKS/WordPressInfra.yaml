@@ -1,23 +1,87 @@
 apiVersion: v1
-kind: PersistentVolumeClaim
+kind: Service
 metadata:
-  name: wordpress-pvc
+  name: wordpress
   namespace: wp
 spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: wordpress
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: mysql-pvc
+  name: wordpress
   namespace: wp
 spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wordpress
+  template:
+    metadata:
+      labels:
+        app: wordpress
+    spec:
+      containers:
+      - name: wordpress
+        image: wordpress:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: WORDPRESS_DB_HOST
+          value: mysql
+        - name: WORDPRESS_DB_USER
+          value: wordpress
+        - name: WORDPRESS_DB_PASSWORD
+          value: <your_mysql_password>
+        - name: WORDPRESS_DB_NAME
+          value: wordpress
+        volumeMounts:
+        - name: wordpress-persistent-storage
+          mountPath: /var/www/html
+        - name: init-data
+          mountPath: /init-data
+      volumes:
+      - name: wordpress-persistent-storage
+        persistentVolumeClaim:
+          claimName: wordpress-pvc
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pvc
+      - name: init-data
+        emptyDir: {}
+      initContainers:
+      - name: init-mysql
+        image: mysql:5.7
+        command: ['/bin/bash', '-c', 'mysqld --initialize-insecure --datadir=/var/lib/mysql']
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      - name: init-scripts
+        image: wordpress:latest
+        command: ['/bin/bash', '-c', 'cp /var/www/html/docker-entrypoint-initdb.d/* /init-data']
+        volumeMounts:
+        - name: init-data
+          mountPath: /init-data
+          readOnly: true
+        - name: wordpress-persistent-storage
+          mountPath: /var/www/html
+      - name: init-wordpress
+        image: wordpress:latest
+        command: ['/bin/bash', '-c', 'wp core install --url=localhost --title=MySite --admin_user=admin --admin_password=admin --admin_email=admin@example.com --skip-email']
+        env:
+        - name: WORDPRESS_DB_HOST
+          value: mysql
+        - name: WORDPRESS_DB_USER
+          value: root
+        - name: WORDPRESS_DB_PASSWORD
+          value: <your_mysql_password>
+        - name: WORDPRESS_DB_NAME
+          value: wordpress
+        volumeMounts:
+        - name: wordpress-persistent-storage
+          mountPath: /var/www/html
+      restartPolicy: Always
