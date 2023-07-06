@@ -71,9 +71,9 @@ resource "azurerm_container_group" "rocket_chat_aci" {
       Accounts_UseDNSDomainCheck = "false"
     }
 
-    ip_address {
-      type = "public"
-    }
+  #  ip_address {
+  #    type = "public"
+  #  }
   }
 }
 
