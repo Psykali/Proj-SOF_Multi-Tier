@@ -1,5 +1,5 @@
 # Define variables
-variable "name" {
+variable "resource_group_name" {
   default = "PERSO_SIEF"
 }
 
