@@ -26,3 +26,7 @@ variable "admin_password" {
 variable "app_insights_name" {
   default = "skappinsights"
 }
+
+variable "app_insights_instrumentation_key" {
+  type = string
+}
