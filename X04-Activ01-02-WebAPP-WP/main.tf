@@ -145,4 +145,5 @@ resource "azurerm_linux_virtual_machine" "vm" {
   ]
 
   os_disk {
-   name = "${var.vm_name}-osdisk"
+  name = "${var.vm_name}-osdisk"
+}
