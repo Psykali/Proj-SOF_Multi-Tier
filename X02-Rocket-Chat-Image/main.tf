@@ -34,9 +34,9 @@ resource "azurerm_cosmosdb_account" "mongodb" {
     name = "EnableAggregationPipeline"
   }
 
-  failover_policy {
-    mode = "Manual"
-  }
+  #failover_policy {
+  #  mode = "Manual"
+  #}
 
   tags = {
     environment = "dev"
