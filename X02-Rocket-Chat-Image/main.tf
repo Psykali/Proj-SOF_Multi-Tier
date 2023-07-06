@@ -53,7 +53,6 @@ resource "azurerm_container_group" "rocket_chat_aci" {
 
   depends_on = [azurerm_cosmosdb_account.mongodb]
 
-
   container {
     name   = "rocket-chat"
     image  = "rocketchat/rocket.chat"
@@ -71,10 +70,10 @@ resource "azurerm_container_group" "rocket_chat_aci" {
       PORT                       = "3000"
       Accounts_UseDNSDomainCheck = "false"
     }
-  }
 
-  ip_address {
-    type = "public"
+    ip_address {
+      type = "public"
+    }
   }
 }
 
