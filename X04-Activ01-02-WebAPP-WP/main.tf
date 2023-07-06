@@ -106,4 +106,4 @@ resource "azurerm_linux_virtual_machine" "vm" {
   ]
 
   os_disk {
-    name                 = "${var.vm_name}-osdiskSure, here's the Terraform code to create a WordPress website on Azure, with an Azure SQL database as the backend and a Storage Account and Blob Storage to store photos. The resources will be connected using connection strings, and the database will be administered by a Linux VM.
+   name = "${var.vm_name}-osdisk"
