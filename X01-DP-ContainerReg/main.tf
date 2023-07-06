@@ -10,10 +10,9 @@ resource "azurerm_container_registry" "acr" {
   sku {
     name = "Premium"
 
-    replication {
-      location                = "westeurope"
-      zone_redundancy_enabled = true
-    }
+    tier = "Premium"
+
+    capacity = 1
 
     replication {
       location                = "northeurope"
