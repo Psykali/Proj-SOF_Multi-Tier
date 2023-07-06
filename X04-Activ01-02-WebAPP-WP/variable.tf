@@ -1,18 +1,34 @@
-# Define variables
-variable "resource_group_name" {
-  default = "PERSO_SIEF"
-}
-
+# Set variables
 variable "location" {
   default = "francecentral"
 }
 
-variable "vm_name" {
-  default = "sk-lamp-vm"
+variable "resource_group_name" {
+  type = PERSO_SIEF
 }
 
-variable "vm_size" {
-  default = "Standard_B1s"
+variable "webapp_name" {
+  type = string
+}
+
+variable "sql_server_name" {
+  default = "sksql"
+}
+
+variable "sql_database_name" {
+  default = "wordpress"
+}
+
+variable "storage_account_name" {
+  default = "sksawp"
+}
+
+variable "container_name" {
+  default = "skwpimg"
+}
+
+variable "vm_name" {
+  default = "sk-lamp-vm"
 }
 
 variable "admin_username" {
@@ -23,10 +39,9 @@ variable "admin_password" {
   default = "P@ssw0rd123"
 }
 
-variable "app_insights_name" {
-  default = "skappinsights"
-}
-
-variable "app_insights_instrumentation_key" {
-  type = string
-}
+##variable "app_insights_name" {
+##  default = "skappinsights"
+##}
+##variable "app_insights_instrumentation_key" {
+##  type = string
+##}
