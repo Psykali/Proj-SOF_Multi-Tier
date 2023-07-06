@@ -46,8 +46,8 @@ variable "vm_name" {
 # Create the app service plan
 resource "azurerm_app_service_plan" "asp" {
   name                = "${var.webapp_name}-asp"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = var.location
+  resource_group_name = var.resource_group_name
 
   sku {
     tier = "Standard"
@@ -58,8 +58,8 @@ resource "azurerm_app_service_plan" "asp" {
 # Create the webapp
 resource "azurerm_app_service" "webapp" {
   name                = var.webapp_name
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = var.location
+  resource_group_name = var.resource_group_name
   app_service_plan_id = azurerm_app_service_plan.asp.id
 
   site_config {
@@ -80,8 +80,8 @@ resource "azurerm_app_service" "webapp" {
 # Create the SQL Server
 resource "azurerm_sql_server" "sql_server" {
   name                         = var.sql_server_name
-  resource_group_name          = azurerm_resource_group.rg.name
-  location                     = azurerm_resource_group.rg.location
+  location            = var.location
+  resource_group_name = var.resource_group_name
   version                      = "12.0"
   administrator_login          = var.admin_username
   administrator_login_password = var.admin_password
@@ -90,7 +90,7 @@ resource "azurerm_sql_server" "sql_server" {
 # Create firewall rule for SQL Server
 resource "azurerm_sql_firewall_rule" "sql_firewall_rule" {
   name                = "AllowAll"
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = var.resource_group_name
   server_name         = azurerm_sql_server.sql_server.name
   start_ip_address    = "0.0.0.0"
   end_ip_address      = "255.255.255.255"
@@ -99,7 +99,7 @@ resource "azurerm_sql_firewall_rule" "sql_firewall_rule" {
 # Create SQL Database
 resource "azurerm_sql_database" "sql_database" {
   name                = var.sql_database_name
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = var.resource_group_name
   server_name         = azurerm_sql_server.sql_server.name
   edition             = "GeneralPurpose"
   family              = "Gen5"
@@ -110,8 +110,8 @@ resource "azurerm_sql_database" "sql_database" {
 # Create Storage Account
 resource "azurerm_storage_account" "storage_account" {
   name                     = var.storage_account_name
-  resource_group_name      = azurerm_resource_group.rg.name
-  location                 = azurerm_resource_group.rg.location
+  location            = var.location
+  resource_group_name = var.resource_group_name
   account_tier             = "Standard"
   account_replication_type = "LRS"
 
@@ -134,8 +134,8 @@ resource "azurerm_storage_container" "blob_container" {
 # Create Linux VM
 resource "azurerm_linux_virtual_machine" "vm" {
   name                = var.vm_name
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
+  location            = var.location
+  resource_group_name = var.resource_group_name
   size                = "Standard_B1s"
   admin_username      = var.admin_username
   admin_password      = var.admin_password
@@ -145,5 +145,6 @@ resource "azurerm_linux_virtual_machine" "vm" {
   ]
 
   os_disk {
-  name = "${var.vm_name}-osdisk"
+    name = "${var.vm_name}-osdisk"
+  }
 }
