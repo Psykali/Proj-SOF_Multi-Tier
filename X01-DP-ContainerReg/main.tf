@@ -26,4 +26,4 @@ resource "azurerm_container_registry" "acr" {
   tags = {
     environment = "production"
   }
-}
+} 
