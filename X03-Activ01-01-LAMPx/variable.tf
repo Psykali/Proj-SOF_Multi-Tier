@@ -24,5 +24,5 @@ variable "admin_password" {
 }
 
 variable "app_insights_name" {
-  default = "myappinsights"
+  default = "skappinsights"
 }
