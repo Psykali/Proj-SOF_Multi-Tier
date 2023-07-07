@@ -55,7 +55,7 @@ resource "azurerm_sql_firewall_rule" "fw" {
 resource "azurerm_container_group" "wordpress" {
   name                = "wordpress"
   location            = var.location
-  resource_group_name = resource_group_name = var.rg-name
+  resource_group_name = var.rg-name
   ip_address_type     = "public"
   dns_name_label      = "mywordpress"
   os_type             = "Linux"
