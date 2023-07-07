@@ -1,5 +1,5 @@
 resource "azurerm_container_registry" "acr" {
-  name                = "skContainerRegistry"
+  name                = "skP20ContReg"
   resource_group_name = "PERSO_SIEF"
   location            = "westeurope"
   sku                 = "Basic"
