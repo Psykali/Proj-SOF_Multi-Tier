@@ -15,7 +15,7 @@ variable "password" {
 }
 
 variable "serverName" {
-  default = "sksqlserver"
+  default = "skdwpsqlserver"
 }
 
 resource "random_integer" "r" {
