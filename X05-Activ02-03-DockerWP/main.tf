@@ -61,7 +61,7 @@ resource "azurerm_container_group" "wordpress" {
   os_type             = "Linux"
 
   container {
-    name   = "wordpress"
+    name   = "skdwp"
     image  = "wordpress:latest"
     cpu    = "0.5"
     memory = "1.5"
