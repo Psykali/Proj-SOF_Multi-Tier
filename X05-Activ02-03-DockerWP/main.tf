@@ -20,20 +20,20 @@ resource "azurerm_sql_firewall_rule" "sql_firewall_rule" {
 # Create SQL Database
 resource "azurerm_sql_database" "sql_database" {
   name                = var.sql_database_name
+  location            = var.location
   resource_group_name = var.resource_group_name
   server_name         = azurerm_sql_server.sql_server.name
   edition             = "GeneralPurpose"
-  family              = "Gen5"
-  capacity            = 2
-  zone_redundant      = false
+  requested_service_objective_name = "GP_Gen5_2"
 }
+
 
 # Create the Azure Container Instance
 resource "azurerm_container_group" "aci" {
   name                = var.container_name
   location            = var.location
   resource_group_name = var.resource_group_name
-  ip_address_type     = "public"
+  ip_address_type     = "Public"
   dns_name_label      = "${var.container_name}-dns"
   os_type             = "Linux"
 
@@ -49,4 +49,3 @@ resource "azurerm_container_group" "aci" {
     }
   }
 }
-
