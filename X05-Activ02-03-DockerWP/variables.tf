@@ -21,3 +21,11 @@ variable "sql_server_name" {
 variable "sql_database_name" {
   default = "skwp_sqldb"
 }
+
+variable "container_name" {
+  default = "skdwpp20cont"
+}
+
+variable "image_name" {
+  default = "skp20contreg.azurecr.io/wordpress:latest"
+}
