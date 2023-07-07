@@ -15,11 +15,11 @@ variable "admin_password" {
 }
 
 variable "sql_server_name" {
-  default = "skwpp20_sqlserver"
+  default = "skwpp20-sqlserver"
 }
 
 variable "sql_database_name" {
-  default = "skwp_sqldb"
+  default = "skwp-sqldb"
 }
 
 variable "container_name" {
