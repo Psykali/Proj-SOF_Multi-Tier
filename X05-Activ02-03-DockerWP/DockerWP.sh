@@ -4,7 +4,7 @@
 resourceGroupName=PERSO_SIEF
 location=francecentral
 adminUser=myadmin
-password=P@ssW0rd!!
+password=myP@ssW0rd!!
 serverName=mysqlserver-$RANDOM
 
 # Create a resource group
