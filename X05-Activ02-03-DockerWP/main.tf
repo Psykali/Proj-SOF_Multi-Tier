@@ -38,14 +38,14 @@ resource "azurerm_sql_server" "sql" {
 }
 
 resource "azurerm_sql_database" "db" {
-  name                = "wordpressdb"
+  name                = "skwordpressdb"
   resource_group_name = var.rg-name
   location            = var.location
   server_name         = azurerm_sql_server.sql.name
 }
 
 resource "azurerm_sql_firewall_rule" "fw" {
-  name                = "allAzureIPs"
+  name                = "SKallAzureIPs"
   resource_group_name = var.rg-name
   server_name         = azurerm_sql_server.sql.name
   start_ip_address    = "0.0.0.0"
@@ -53,11 +53,11 @@ resource "azurerm_sql_firewall_rule" "fw" {
 }
 
 resource "azurerm_container_group" "wordpress" {
-  name                = "wordpress"
+  name                = "skdwp"
   location            = var.location
   resource_group_name = var.rg-name
-  ip_address_type     = "public"
-  dns_name_label      = "mywordpress"
+  ip_address_type     = "Public"
+  dns_name_label      = "skdwp"
   os_type             = "Linux"
 
   container {
