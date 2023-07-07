@@ -78,11 +78,11 @@ resource "azurerm_container_group" "wordpress" {
       WORDPRESS_DB_NAME     = azurerm_sql_database.db.name
     }
     
-    secure_environment_variables = {
-      WORDPRESS_DB_SSL_CA   ="https://www.digicert.com/CACerts/BaltimoreCyberTrustRoot.crt.pem"
-    }
+    #secure_environment_variables = {
+    #  WORDPRESS_DB_SSL_CA   ="https://www.digicert.com/CACerts/BaltimoreCyberTrustRoot.crt.pem"
+    #}
     
-    commands=["docker-entrypoint.sh", "--wait-for-mysql"]
+    #commands=["docker-entrypoint.sh", "--wait-for-mysql"]
     
     liveness_probe{
         http_get{
