@@ -30,10 +30,23 @@ resource "azurerm_sql_database" "sql_database" {
 
 # Create the Azure Container Instance
 resource "azurerm_container_group" "aci" {
-  name                = "wordpress-aci"
+  name                = var.container_name
   location            = var.location
   resource_group_name = var.resource_group_name
   ip_address_type     = "public"
-  dns_name_label      = "wordpress-aci-dns"
+  dns_name_label      = "${var.container_name}-dns"
   os_type             = "Linux"
+
+  container {
+    name   = var.container_name
+    image  = var.image_name
+    cpu    = "0.5"
+    memory = "1.5"
+
+    ports {
+      port     = 80
+      protocol = "TCP"
+    }
+  }
+}
 
