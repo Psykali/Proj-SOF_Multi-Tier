@@ -30,8 +30,8 @@ resource "random_integer" "r" {
 
 resource "azurerm_sql_server" "sql" {
   name                         = var.serverName
-  resource_group_name          = azurerm_resource_group.rg.name
-  location                     = azurerm_resource_group.rg.location
+  resource_group_name          = var.rg-name
+  location                     = var.location
   version                      = "12.0"
   administrator_login          = var.adminUser
   administrator_login_password = var.password
@@ -39,14 +39,14 @@ resource "azurerm_sql_server" "sql" {
 
 resource "azurerm_sql_database" "db" {
   name                = "wordpressdb"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
+  resource_group_name = var.rg-name
+  location            = var.location
   server_name         = azurerm_sql_server.sql.name
 }
 
 resource "azurerm_sql_firewall_rule" "fw" {
   name                = "allAzureIPs"
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = var.rg-name
   server_name         = azurerm_sql_server.sql.name
   start_ip_address    = "0.0.0.0"
   end_ip_address      = "0.0.0.0"
@@ -54,8 +54,8 @@ resource "azurerm_sql_firewall_rule" "fw" {
 
 resource "azurerm_container_group" "wordpress" {
   name                = "wordpress"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = var.location
+  resource_group_name = resource_group_name = var.rg-name
   ip_address_type     = "public"
   dns_name_label      = "mywordpress"
   os_type             = "Linux"
