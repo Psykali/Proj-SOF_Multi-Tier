@@ -15,7 +15,7 @@ variable "password" {
 }
 
 variable "serverName" {
-  default = "mysqlserver-${random_integer.r.result}"
+  default = "sksqlserver"
 }
 
 resource "random_integer" "r" {
