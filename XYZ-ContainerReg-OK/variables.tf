@@ -10,5 +10,5 @@ variable "location_rg" {
 
 variable "location_contreg" {
   type        = string
-  description = "francecentral"
+  description = "westeurope"
 }
