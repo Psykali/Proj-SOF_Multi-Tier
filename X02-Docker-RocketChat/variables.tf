@@ -14,24 +14,12 @@ variable "admin_password" {
   default = "P@ssw0rd123"
 }
 
-variable "sql_server_name" {
-  default = "skwpp20-sqlserver"
-}
-
-variable "sql_server_fqdn" {
-  default = "skwpp20-sqlserver.database.windows.net:1433"
-}
-
-variable "sql_database_name" {
-  default = "skwp-sqldb"
-}
-
 variable "container_name" {
-  default = "skdwpp20cont"
+  default = "skdrcp20"
 }
 
 variable "image_name" {
-  default = "skp20contreg.azurecr.io/wordpress:latest"
+  default = "skp20contreg.azurecr.io/rocketchat:latest"
 }
 
 ##variable "scope_map_token_name" {
