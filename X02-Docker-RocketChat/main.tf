@@ -22,8 +22,8 @@ resource "azurerm_container_group" "cg" {
     os_type             = "Linux"
 
     container {
-        name   = "rocketcat"
-        image  = "skp20contreg.azurecr.io/rocketcat:latest"
+        name   = var.container_name
+        image  = var.image_name
         cpu    = "0.5"
         memory = "1.5"
 
