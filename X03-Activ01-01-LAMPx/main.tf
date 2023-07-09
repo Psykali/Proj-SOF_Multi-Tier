@@ -1,10 +1,3 @@
-###########################################################
-### Create the resource group
-##resource "azurerm_resource_group" "rg" {
-##  name     = var.resource_group_name
-##  location = var.location
-##}
-############################################################
 # Create a virtual network
 resource "azurerm_virtual_network" "vnet" {
   name                = var.virtual_network
@@ -88,4 +81,3 @@ wget http://software.virtualmin.com/gpl/scripts/install.sh -O /tmp/virtualmin-in
 EOF)
 
 }
-
