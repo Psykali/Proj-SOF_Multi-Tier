@@ -1,5 +1,5 @@
 variable "location" {
-  default = "francecentral"
+  default = "westeurope"
 }
 
 variable "resource_group_name" {
@@ -11,29 +11,29 @@ variable "admin_username" {
 }
 
 variable "admin_password" {
-  default = "P@ssw0rd123"
+  default = "P@ssw0rd123P@ssw0rd123"
 }
 
-variable "webapp_name" {
-  default = "skwp_webapp"
+variable "ubuntu-vm" {
+  default = "skwpp20mdb"
 }
 
-variable "sql_server_name" {
-  default = "skwp_sqlserver"
+variable "subnet" {
+  default = "skwpp20subnet"
 }
 
-variable "sql_database_name" {
-  default = "skwp_sqldb"
+variable "virtual_network" {
+  default = "skwpp20vnet"
 }
 
-variable "storage_account_name" {
-  default = "skwp_storage"
+variable "network_interface" {
+  default = "skwpp20nic"
 }
 
-variable "container_name" {
-  default = "skwp_blobcontainer"
+variable "ubuntu-ipconfig" {
+  default = "skwpp20ip"
 }
 
-variable "vm_name" {
-  default = "skwp_linuxvm"
+variable "ubuntu-pip" {
+  default = "skwpp20pip"
 }
