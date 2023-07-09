@@ -19,7 +19,7 @@ variable "sql_server_name" {
 }
 
 variable "sql_server_fqdn" {
-  default = "skwpp20-sqlserver.database.windows.net"
+  default = "skwpp20-sqlserver.database.windows.net:1433"
 }
 
 variable "sql_database_name" {
