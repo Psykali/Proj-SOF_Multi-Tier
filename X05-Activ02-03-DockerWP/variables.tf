@@ -30,8 +30,12 @@ variable "image_name" {
   default = "skp20contreg.azurecr.io/wordpress:latest"
 }
 
+##variable "scope_map_token_name" {
+##  default = "docker login -u Admin -p Zxq1EiAjiDl3BEDNbRXBzrjN7szlmJ+DLtdFe63Vn4+ACRCPwHZC skp20contreg.azurecr.io"
+##}
+
 variable "scope_map_token_name" {
-  default = "docker login -u Admin -p Zxq1EiAjiDl3BEDNbRXBzrjN7szlmJ+DLtdFe63Vn4+ACRCPwHZC skp20contreg.azurecr.io"
+  default = "Admin"
 }
 
 variable "scope_map_token_password" {
