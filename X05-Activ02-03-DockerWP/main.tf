@@ -50,8 +50,10 @@ resource "azurerm_container_group" "aci" {
   }
 
   container {
-    name   = var.container_name
-    image  = var.image_name
+    name   = "wordpress"
+    image  = "wordpress:latest"
+  ##  name   = var.container_name
+  ##  image  = var.image_name
     cpu    = "0.5"
     memory = "1.5"
 
