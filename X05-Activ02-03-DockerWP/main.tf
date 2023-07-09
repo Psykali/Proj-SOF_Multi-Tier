@@ -61,7 +61,7 @@ resource "azurerm_container_group" "aci" {
     }
 
     environment_variables = {
-      WORDPRESS_DB_HOST     = var.sql_server_name
+      WORDPRESS_DB_HOST     = var.sql_server_fqdn
       WORDPRESS_DB_USER     = var.admin_username
       WORDPRESS_DB_PASSWORD = var.admin_password
       WORDPRESS_DB_NAME     = var.sql_database_name
