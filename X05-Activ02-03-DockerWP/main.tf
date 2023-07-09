@@ -65,6 +65,7 @@ resource "azurerm_container_group" "aci" {
       WORDPRESS_DB_USER     = var.admin_username
       WORDPRESS_DB_PASSWORD = var.admin_password
       WORDPRESS_DB_NAME     = var.sql_database_name
+      WORDPRESS_DB_SSL = "true"
     }
   }
 }
