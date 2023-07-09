@@ -1,3 +1,9 @@
+# Create the resource group
+##resource "azurerm_resource_group" "rg" {
+##  name     = var.resource_group_name
+##  location = var.location
+##}
+##
 # Create the SQL Server
 resource "azurerm_sql_server" "sql_server" {
   name                         = var.sql_server_name
