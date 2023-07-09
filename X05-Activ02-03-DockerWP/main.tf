@@ -46,7 +46,7 @@ resource "azurerm_container_group" "aci" {
   image_registry_credential {
     server   = "skp20contreg.azurecr.io"
     username = var.scope_map_token_name
-    password = ""
+    password = var.scope_map_token_password
   }
 
   container {
