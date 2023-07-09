@@ -12,3 +12,8 @@ variable "location_contreg" {
   type        = string
   description = "westeurope"
 }
+
+variable "contreg_name" {
+  type        = string
+  description = "skP20ContReg"
+}
