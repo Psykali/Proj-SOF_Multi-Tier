@@ -69,7 +69,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   admin_username      = var.admin_username
   admin_password      = var.admin_password
   
-   custom_data=base64encode(<<EOF
+   custom_data = base64encode(<<EOF
 #!/bin/bash
 
 sudo apt-get update -y
@@ -80,6 +80,9 @@ sudo systemctl start mariadb
 
 sudo systemctl enable mariadb
 
-EOF)
+# Create the skwp-sqldb database
+mysql -u root -e "CREATE DATABASE skwp-sqldb;"
 
+EOF
+  )
 }
