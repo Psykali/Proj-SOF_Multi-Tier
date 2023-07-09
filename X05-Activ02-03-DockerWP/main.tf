@@ -50,10 +50,10 @@ resource "azurerm_container_group" "aci" {
   }
 
   container {
-    name   = "wordpress"
-    image  = "wordpress:latest"
-  ##  name   = var.container_name
-  ##  image  = var.image_name
+  ##  name   = "wordpress"
+  ##  image  = "wordpress:latest"
+    name   = var.container_name
+    image  = var.image_name
     cpu    = "0.5"
     memory = "1.5"
 
@@ -62,12 +62,12 @@ resource "azurerm_container_group" "aci" {
       protocol = "TCP"
     }
 
-    environment_variables = {
-      WORDPRESS_DB_HOST     = var.sql_server_fqdn
-      WORDPRESS_DB_USER     = var.admin_username
-      WORDPRESS_DB_PASSWORD = var.admin_password
-      WORDPRESS_DB_NAME     = var.sql_database_name
-      WORDPRESS_DB_SSL = "true"
-    }
+##    environment_variables = {
+##      WORDPRESS_DB_HOST     = var.sql_server_fqdn
+##      WORDPRESS_DB_USER     = var.admin_username
+##      WORDPRESS_DB_PASSWORD = var.admin_password
+##      WORDPRESS_DB_NAME     = var.sql_database_name
+##      WORDPRESS_DB_SSL = "true"
+##    }
   }
 }
