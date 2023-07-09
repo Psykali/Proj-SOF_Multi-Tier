@@ -43,6 +43,12 @@ resource "azurerm_container_group" "aci" {
   dns_name_label      = "${var.container_name}-dns"
   os_type             = "Linux"
 
+  image_registry_credential {
+    server   = "skp20contreg.azurecr.io"
+    username = var.scope_map_token_name
+    password = ""
+  }
+
   container {
     name   = var.container_name
     image  = var.image_name
