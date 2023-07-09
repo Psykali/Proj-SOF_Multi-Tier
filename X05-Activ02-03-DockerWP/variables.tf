@@ -18,6 +18,10 @@ variable "sql_server_name" {
   default = "skwpp20-sqlserver"
 }
 
+variable "sql_server_fqdn" {
+  default = "skwpp20-sqlserver.database.windows.net"
+}
+
 variable "sql_database_name" {
   default = "skwp-sqldb"
 }
