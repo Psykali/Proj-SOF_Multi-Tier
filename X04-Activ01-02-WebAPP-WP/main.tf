@@ -50,13 +50,13 @@ resource "azurerm_app_service" "app" {
     app_command_line= ""
     }
 
-    app_settings {
-      WEBSITES_ENABLE_APP_SERVICE_STORAGE= false
-      WORDPRESS_DB_HOST                  = "${azurerm_mysql_server.mysql.fqdn}:3306"
-      WORDPRESS_DB_USER                  = azurerm_mysql_server.mysql.administrator_login
-      WORDPRESS_DB_PASSWORD              = azurerm_mysql_server.mysql.administrator_login_password
-      WORDPRESS_DB_NAME                  = azurerm_mysql_database.wordpress.name
-    }
+     app_settings = { # Use the equals sign to assign a value to the app_settings argument
+    WEBSITES_ENABLE_APP_SERVICE_STORAGE= false
+    WORDPRESS_DB_HOST                  = "${azurerm_mysql_server.mysql.fqdn}:3306"
+    WORDPRESS_DB_USER                  = azurerm_mysql_server.mysql.administrator_login
+    WORDPRESS_DB_PASSWORD              = azurerm_mysql_server.mysql.administrator_login_password
+    WORDPRESS_DB_NAME                  = azurerm_mysql_database.wordpress.name
+  }
     
     connection_string {
       name  = "dbconnectionstring"
@@ -109,8 +109,6 @@ resource "azurerm_app_service" "app" {
 
     default_documents = []
 
-    http20_enabled = true
-
     local_mysql_enabled = false
 
     managed_pipeline_mode = ""
@@ -118,21 +116,5 @@ resource "azurerm_app_service" "app" {
     php_version = ""
 
     python_version = ""
-
-    reserved_instance_count = null
-
-    virtual_application {
-      physical_path   = ""
-      virtual_path    = ""
-      preload_enabled = false
-
-      virtual_directory {
-        physical_path   = ""
-        virtual_path    = ""
-        preload_enabled = false
-        virtual_application_name=""
-        virtual_directory_name=""
-      }
-    }
   }
 }
