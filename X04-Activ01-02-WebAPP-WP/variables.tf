@@ -14,7 +14,7 @@ variable "admin_password" {
   default = "P@ssw0rd123H@Sh1CoR3!"
 }
 
-variable "webapp_name" {
+variable "app_service" {
   default = "skwp_webapp"
 }
 
