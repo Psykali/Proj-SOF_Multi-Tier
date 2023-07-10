@@ -11,9 +11,9 @@ resource "azurerm_mysql_server" "mysql" {
   resource_group_name = var.resource_group_name
 
   sku_name = "B_Gen5_2"
-
   storage_mb = 5120
   version    = "5.7"
+  ssl_enforcement_enabled = false
 
   administrator_login          = var.admin_username
   administrator_login_password = var.admin_password
@@ -49,7 +49,7 @@ resource "azurerm_app_service" "app" {
     linux_fx_version= "DOCKER|wordpress:latest"
     app_command_line= ""
     }
-    
+
     app_settings {
       WEBSITES_ENABLE_APP_SERVICE_STORAGE= false
       WORDPRESS_DB_HOST                  = "${azurerm_mysql_server.mysql.fqdn}:3306"
