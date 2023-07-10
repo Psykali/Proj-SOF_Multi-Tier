@@ -34,6 +34,6 @@ variable "container_name" {
   default = "skwp_blobcontainer"
 }
 
-variable "vm_name" {
-  default = "skwp_linuxvm"
+variable "app_service_plan" {
+  default = "skwp_appplan"
 }
