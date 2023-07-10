@@ -1,38 +1,36 @@
-provider "azurerm" {
-  features {}
-}
-
-resource "azurerm_resource_group" "rg" {
-  name     = "wordpress-rg"
-  location = "West US"
-}
-
+###########################################################
+### Create the resource group
+##resource "azurerm_resource_group" "rg" {
+##  name     = var.resource_group_name
+##  location = var.location
+##}
+############################################################
 resource "azurerm_mysql_server" "mysql" {
   name                = "wordpress-mysql"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = var.location
+  resource_group_name = var.resource_group_name
 
   sku_name = "B_Gen5_2"
 
   storage_mb = 5120
   version    = "5.7"
 
-  administrator_login          = "mysqladmin"
-  administrator_login_password = "H@Sh1CoR3!"
+  administrator_login          = var.admin_username
+  administrator_login_password = var.admin_password
 }
 
 resource "azurerm_mysql_database" "wordpress" {
-  name                = "wordpress"
-  resource_group_name = azurerm_resource_group.rg.name
+  name                = var.sql_server_name
+  resource_group_name = var.resource_group_name
   server_name         = azurerm_mysql_server.mysql.name
   charset             = "utf8"
   collation           = "utf8_unicode_ci"
 }
 
 resource "azurerm_app_service_plan" "asp" {
-  name                = "wordpress-asp"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  name                = var.app_service_plan
+  location            = var.location
+  resource_group_name = var.resource_group_name
 
   sku {
     tier = "Basic"
@@ -41,9 +39,9 @@ resource "azurerm_app_service_plan" "asp" {
 }
 
 resource "azurerm_app_service" "app" {
-  name                = "wordpress-app"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  name                = var.app_service
+  location            = var.location
+  resource_group_name = var.resource_group_name
   app_service_plan_id = azurerm_app_service_plan.asp.id
 
   site_config {
