@@ -48,6 +48,7 @@ resource "azurerm_app_service" "app" {
     always_on       = true
     linux_fx_version= "DOCKER|wordpress:latest"
     app_command_line= ""
+    }
     
     app_settings {
       WEBSITES_ENABLE_APP_SERVICE_STORAGE= false
