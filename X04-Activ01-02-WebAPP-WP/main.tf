@@ -62,161 +62,75 @@ resource "azurerm_app_service" "app" {
       type  = "MySQL"
       value = "${azurerm_mysql_server.mysql.administrator_login}@${azurerm_mysql_server.mysql.fqdn}:3306/${azurerm_mysql_database.wordpress.name}"
     }
-    
+      site_config {
     cors {
       allowed_origins     = []
-      support_credentials= false
+      support_credentials = false
     }
-    
-    ftps_state= "AllAllowed"
-    
-    http2_enabled= true
-    
+
+    ftps_state = "AllAllowed"
+
+    http2_enabled = true
+
     ip_restriction {
-      action     = "Allow"
-      ip_address= "<IPAddress>/32"
-      name       = "<IPAddress>"
-      priority   = 100
-      service_tag= ""
-      virtual_network_subnet_id= ""
+      action                 = "Allow"
+      ip_address             = "<IPAddress>/32"
+      name                   = "<IPAddress>"
+      priority               = 100
+      service_tag            = ""
+      virtual_network_subnet_id = ""
     }
-    
-    min_tls_version= "1.2"
-    
-    number_of_workers= 1
-    
-    remote_debugging_enabled= false
-    
-    remote_debugging_version= ""
-    
+
+    min_tls_version = "1.2"
+
+    number_of_workers = 1
+
+    remote_debugging_enabled = false
+
+    remote_debugging_version = ""
+
     scm_ip_restriction {
-      action     = ""
-      ip_address= ""
-      name       = ""
-      priority   = null
-      service_tag= ""
-      virtual_network_subnet_id= ""
+      action                 = ""
+      ip_address             = ""
+      name                   = ""
+      priority               = null
+      service_tag            = ""
+      virtual_network_subnet_id = ""
     }
-    
-    scm_type= ""
-    
-    use_32_bit_worker_process= false
-    
-    websockets_enabled= false
-    
-    windows_fx_version= ""
-    
-    default_documents= []
-    
-    http20_enabled= true
-    
-    local_mysql_enabled= false
-    
-    managed_pipeline_mode= ""
-    
-    php_version= ""
-    
-    python_version= ""
-    
-    remote_debugging_version= ""
-    
-    reserved_instance_count= null
-    
-    scm_type= ""
-    
-    use_32_bit_worker_process= false
-    
+
+    scm_type = ""
+
+    use_32_bit_worker_process = false
+
+    websockets_enabled = false
+
+    windows_fx_version = ""
+
+    default_documents = []
+
+    http20_enabled = true
+
+    local_mysql_enabled = false
+
+    managed_pipeline_mode = ""
+
+    php_version = ""
+
+    python_version = ""
+
+    reserved_instance_count = null
+
     virtual_application {
-      physical_path= ""
-      virtual_path= ""
-      
-      preload_enabled= false
-      
+      physical_path   = ""
+      virtual_path    = ""
+      preload_enabled = false
+
       virtual_directory {
-        physical_path= ""
-        virtual_path= ""
-        
-        preload_enabled= false
-        
+        physical_path   = ""
+        virtual_path    = ""
+        preload_enabled = false
         virtual_application_name=""
-        
         virtual_directory_name=""
-        
-        virtual_path=""
-        
-        preload_enabled=false
-        
-        physical_path=""
-        
-        virtual_application_name=""
-        
-        virtual_directory_name=""
-        
-        virtual_path=""
-        
-        preload_enabled=false
-        
-        physical_path=""
-        
-        virtual_application_name=""
-        
-        virtual_directory_name=""
-        
-        virtual_path=""
-        
-        preload_enabled=false
-        
-        physical_path=""
-        
-        virtual_application_name=""
-        
-        virtual_directory_name=""
-        
-        virtual_path=""
-        
-        preload_enabled=false
-        
-        physical_path=""
-        
-        virtual_application_name=""
-        
-        virtual_directory_name=""
-        
-        virtual_path=""
-        
-        preload_enabled=false
-        
-        physical_path=""
-        
-        virtual_application_name=""
-        
-        virtual_directory_name=""
-        
-        virtual_path=""
-        
-        preload_enabled=false
-        
-        physical_path=""
-        
-        virtual_application_name=""
-        
-        virtual_directory_name=""
-        
-        virtual_path=""
-        
-        preload_enabled=false
-        
-        physical_path=""
-        
-        virtual_application_name=""
-        
-        virtual_directory_name=""
-        
-        virtual_path=""
-        
-        preload_enabled=false
-        
-        physical_path=""
       }
     }
   }
