@@ -42,7 +42,7 @@ resource "azurerm_virtual_machine" "vm" {
     name              = "${var.vm_name}-osdisk"
     caching           = "ReadWrite"
     create_option     = "FromImage"
-    managed_disk_type = "Standard_LRS"
+    managed_disk_type = "Standard_GRS"
   }
 
   storage_image_reference {
@@ -55,16 +55,54 @@ resource "azurerm_virtual_machine" "vm" {
   os_profile {
     computer_name  = var.vm_name
     admin_username = var.admin_username
+    admin_password = var.admin_password
     custom_data    = file("cloud-init.yml")
   }
 
   os_profile_linux_config {
-    disable_password_authentication = true
+    disable_password_authentication = false
+  }
 
-    ssh_keys {
-      path     = "/home/${var.admin_username}/.ssh/authorized_keys"
-      key_data = file("~/.ssh/id_rsa.pub")
-    }
+  boot_diagnostics {
+    enabled     = true
+    storage_uri = azurerm_storage_account.storage_account.primary_blob_endpoint
+  }
+}
+
+resource "azurerm_storage_account" "storage_account" {
+  name                     = "${var.vm_name}diag"
+  resource_group_name      = var.resource_group_name
+  location                 = var.location
+  account_tier             = "Standard"
+  account_replication_type = "GRS"
+}
+
+resource "azurerm_backup_protected_vm" "backup_protected_vm" {
+  resource_group_name = var.resource_group_name
+  recovery_vault_name = azurerm_recovery_services_vault.recovery_services_vault.name
+  source_vm_id        = azurerm_virtual_machine.vm.id
+  backup_policy_id    = azurerm_backup_policy_vm.backup_policy_vm.id
+}
+
+resource "azurerm_recovery_services_vault" "recovery_services_vault" {
+  name                = "${var.vm_name}-recovery-vault"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  sku                 = "Standard"
+}
+
+resource "azurerm_backup_policy_vm" "backup_policy_vm" {
+  name                = "${var.vm_name}-backup-policy"
+  resource_group_name = var.resource_group_name
+  recovery_vault_name = azurerm_recovery_services_vault.recovery_services_vault.name
+
+  backup {
+    frequency = "Daily"
+    time      = "23:00"
+  }
+
+  retention_daily {
+    count = 30
   }
 }
 
