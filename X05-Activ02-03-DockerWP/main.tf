@@ -81,3 +81,23 @@ resource "azurerm_container_group" "aci" {
 ##    }
   }
 }
+
+resource "azurerm_monitor_metric_alert" "example" {
+  name                = "example-metricalert"
+  resource_group_name = var.resource_group_name
+  scopes              = [azurerm_container_group.aci.id]
+  description         = "Action will be triggered when CPU usage is greater than 80%."
+
+  criteria {
+    metric_namespace = "Microsoft.ContainerInstance/containerGroups"
+    metric_name      = "CpuUsage"
+    aggregation      = "Average"
+    operator         = "GreaterThan"
+    threshold        = 80
+  }
+
+  action {
+    # specify the ID of the action group you want to use
+    action_group_id = azurerm_monitor_action_group.main.id
+  }
+}
