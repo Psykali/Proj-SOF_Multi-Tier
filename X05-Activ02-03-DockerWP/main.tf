@@ -89,33 +89,40 @@ resource "azurerm_container_group" "aci" {
   container {
     name   = "${var.container_name}-1"
     image  = var.image_name
-    cpu    = "0.5"
-    memory = "1.5"
+    cpu    = "2"
+    memory = "4"
 
     ports {
       port     = 80
       protocol = "TCP"
+    }
+    
+    environment_variables = {
+      WORDPRESS_DB_HOST     = azurerm_mariadb_server.mariadb_server.fqdn
+      WORDPRESS_DB_USER     = azurerm_mariadb_server.mariadb_server.administrator_login
+      WORDPRESS_DB_PASSWORD = azurerm_mariadb_server.mariadb_server.administrator_login_password
+      WORDPRESS_DB_NAME     = azurerm_mariadb_database.mariadb_database.name
     }
   }
 
   container {
     name   = "${var.container_name}-2"
     image  = var.image_name
-    cpu    = "0.5"
-    memory = "1.5"
+    cpu    = "2"
+    memory = "4"
 
     ports {
       port     = 8080
       protocol = "TCP"
     }
     
-  environment_variables = {
+    environment_variables = {
       WORDPRESS_DB_HOST     = azurerm_mariadb_server.mariadb_server.fqdn
       WORDPRESS_DB_USER     = azurerm_mariadb_server.mariadb_server.administrator_login
       WORDPRESS_DB_PASSWORD = azurerm_mariadb_server.mariadb_server.administrator_login_password
       WORDPRESS_DB_NAME     = azurerm_mariadb_database.mariadb_database.name
     }
-    
+}
 ##    environment_variables = {
 ##      WORDPRESS_DB_HOST     = var.sql_server_fqdn
 ##      WORDPRESS_DB_USER     = var.admin_username
@@ -123,7 +130,7 @@ resource "azurerm_container_group" "aci" {
 ##      WORDPRESS_DB_NAME     = var.sql_database_name
 ##      WORDPRESS_DB_SSL = "true"
 ##    }
-  }
+  
 }
 resource "azurerm_monitor_action_group" "main" {
   name                = "sk-actiongroup"
@@ -139,7 +146,7 @@ resource "azurerm_monitor_action_group" "main" {
 
 
 resource "azurerm_monitor_metric_alert" "example" {
-  name                = "example-metricalert"
+  name                = "sk-metricalert"
   resource_group_name = var.resource_group_name
   scopes              = [azurerm_container_group.aci.id]
   description         = "Action will be triggered when CPU usage is greater than 80%."
