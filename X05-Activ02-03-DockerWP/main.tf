@@ -125,6 +125,18 @@ resource "azurerm_container_group" "aci" {
 ##    }
   }
 }
+resource "azurerm_monitor_action_group" "main" {
+  name                = "sk-actiongroup"
+  resource_group_name = var.resource_group_name
+  short_name          = "skact"
+
+  email_receiver {
+    name                    = "sendtoadmin"
+    email_address           = "skhalifa@simplonformations.onmicrosoft.com"
+    use_common_alert_schema = true
+  }
+}
+
 
 resource "azurerm_monitor_metric_alert" "example" {
   name                = "example-metricalert"
