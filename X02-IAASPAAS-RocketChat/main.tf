@@ -27,7 +27,7 @@ resource "azurerm_network_interface" "nic" {
 
 # Create a virtual network
 resource "azurerm_virtual_network" "vnet" {
-  name                = var.virtual_network
+  name                = var.vnet_name
   location            = var.location
   resource_group_name = var.resource_group_name
   address_space       = ["10.0.0.0/16"]
