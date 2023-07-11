@@ -1,0 +1,13 @@
+#cloud-config
+
+package_upgrade: true
+
+packages:
+ - python3-pip
+
+runcmd:
+ - curl -s https://raw.githubusercontent.com/zulip/zulip/master/scripts/lib/zulip_tools.py > /usr/local/bin/zulip_tools.py
+ - chmod +x /usr/local/bin/zulip_tools.py
+ - /usr/local/bin/zulip_tools.py setup-apt-repo
+ - apt-get update
+ - apt-get install --yes zulip
