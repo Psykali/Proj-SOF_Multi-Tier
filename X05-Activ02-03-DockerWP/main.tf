@@ -40,7 +40,7 @@ resource "azurerm_mariadb_server" "mariadb_server" {
   resource_group_name = var.resource_group_name
 
   administrator_login          = var.admin_username
-  administrator_login_password = var.admin_passwor
+  administrator_login_password = var.admin_password
 
   sku_name   = "B_Gen5_2"
   storage_mb = 5120
