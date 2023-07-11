@@ -34,6 +34,43 @@
 ##  requested_service_objective_name = "GP_Gen5_2"
 ##}
 ###############################################################
+resource "azurerm_mariadb_server" "mariadb_server" {
+  name                = var.sql_database_name
+  location            = var.location
+  resource_group_name = var.resource_group_name
+
+  administrator_login          = var.admin_username
+  administrator_login_password = var.admin_passwor
+
+  sku_name   = "B_Gen5_2"
+  storage_mb = 5120
+  version    = "10.2"
+
+  ssl_enforcement_enabled = true
+}
+
+resource "azurerm_mariadb_database" "mariadb_database" {
+  name                = "wordpress"
+  resource_group_name = var.resource_group_name
+  server_name         = azurerm_mariadb_server.mariadb_server.name
+  charset             = "utf8"
+  collation           = "utf8_general_ci"
+}
+
+resource "azurerm_storage_account" "storage_account" {
+  name                     = "skdwpsa"
+  resource_group_name      = var.resource_group_name
+  location                 = var.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+}
+
+resource "azurerm_storage_container" "storage_container" {
+  name                  = "skdwpblob"
+  storage_account_name  = azurerm_storage_account.storage_account.name
+  container_access_type = "private"
+}
+
 # Create the Azure Container Instance
 resource "azurerm_container_group" "aci" {
   name                = var.container_name
@@ -71,7 +108,14 @@ resource "azurerm_container_group" "aci" {
       port     = 8080
       protocol = "TCP"
     }
-
+    
+  environment_variables = {
+      WORDPRESS_DB_HOST     = azurerm_mariadb_server.mariadb_server.fqdn
+      WORDPRESS_DB_USER     = azurerm_mariadb_server.mariadb_server.administrator_login
+      WORDPRESS_DB_PASSWORD = azurerm_mariadb_server.mariadb_server.administrator_login_password
+      WORDPRESS_DB_NAME     = azurerm_mariadb_database.mariadb_database.name
+    }
+    
 ##    environment_variables = {
 ##      WORDPRESS_DB_HOST     = var.sql_server_fqdn
 ##      WORDPRESS_DB_USER     = var.admin_username
