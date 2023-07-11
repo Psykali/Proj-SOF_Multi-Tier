@@ -1,0 +1,11 @@
+#cloud-config
+
+package_upgrade: true
+
+packages:
+ - docker.io
+ - docker-compose
+
+runcmd:
+ - curl -L https://raw.githubusercontent.com/RocketChat/Rocket.Chat/develop/docker-compose.yml -o /home/${admin_username}/docker-compose.yml
+ - cd /home/${admin_username} && docker-compose up -d
