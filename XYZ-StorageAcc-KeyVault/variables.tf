@@ -10,7 +10,7 @@ variable "location" {
 
 variable "storage_account_name" {
   type        = string
-  description = "skpersop20sa"
+  description = "skpersop20tfsa"
 }
 
 variable "blob_container_name" {
