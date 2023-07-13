@@ -78,7 +78,7 @@ resource "null_resource" "vm" {
 
   connection {
     type        = "ssh"
-    host        = azurerm_public_ip.vm.ip_address
+    host        = azurerm_public_ip.public_ip.ip_address
     user        = var.admin_username
     password    = var.admin_password
     agent       = false
