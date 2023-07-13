@@ -67,11 +67,11 @@ resource "azurerm_virtual_machine" "vm" {
     disable_password_authentication = false
   }
 
-  boot_diagnostics {
-    enabled     = true
-    storage_uri = azurerm_storage_account.storage_account.primary_blob_endpoint
-  }
-}
+##      boot_diagnostics {
+##        enabled     = true
+##        storage_uri = azurerm_storage_account.storage_account.primary_blob_endpoint
+##      }
+    }
 
 resource "null_resource" "vm" {
   depends_on = [azurerm_virtual_machine.vm]
