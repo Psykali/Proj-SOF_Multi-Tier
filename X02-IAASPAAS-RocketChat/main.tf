@@ -63,13 +63,6 @@ resource "azurerm_virtual_machine" "vm" {
     version   = "latest"
   }
 
-  os_profile {
-    computer_name  = var.vm_name
-    admin_username = var.admin_username
-    admin_password = var.admin_password
-    custom_data    = file("cloud-init.yml")
-  }
-
   os_profile_linux_config {
     disable_password_authentication = false
   }
@@ -80,62 +73,87 @@ resource "azurerm_virtual_machine" "vm" {
   }
 }
 
-resource "azurerm_storage_account" "storage_account" {
-  name                     = "${var.vm_name}diag"
-  resource_group_name      = var.resource_group_name
-  location                 = var.location
-  account_tier             = "Standard"
-  account_replication_type = "GRS"
-}
+resource "null_resource" "vm" {
+  depends_on = [azurerm_virtual_machine.vm]
 
-resource "azurerm_backup_protected_vm" "backup_protected_vm" {
-  resource_group_name = var.resource_group_name
-  recovery_vault_name = azurerm_recovery_services_vault.recovery_services_vault.name
-  source_vm_id        = azurerm_virtual_machine.vm.id
-  backup_policy_id    = azurerm_backup_policy_vm.backup_policy_vm.id
-}
-
-resource "azurerm_recovery_services_vault" "recovery_services_vault" {
-  name                = "${var.vm_name}-recovery-vault"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  sku                 = "Standard"
-}
-
-resource "azurerm_backup_policy_vm" "backup_policy_vm" {
-  name                = "${var.vm_name}-backup-policy"
-  resource_group_name = var.resource_group_name
-  recovery_vault_name = azurerm_recovery_services_vault.recovery_services_vault.name
-
-  backup {
-    frequency = "Daily"
-    time      = "23:00"
+  connection {
+    type        = "ssh"
+    host        = azurerm_public_ip.vm.ip_address
+    user        = var.admin_username
+    password    = var.admin_password
+    agent       = false
+    timeout     = "2m"
   }
 
-  retention_daily {
-    count = 30
+  provisioner "file" {
+    source      = "rocket-chat-install.sh"
+    destination = "/tmp/rocket-chat-install.sh"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /tmp/rocket-chat-install.sh",
+      "/tmp/rocket-chat-install.sh"
+    ]
   }
 }
 
-resource "azurerm_network_security_group" "nsg" {
-  name                = "${var.vm_name}-nsg"
-  location            = var.location
-  resource_group_name = var.resource_group_name
+##    resource "azurerm_storage_account" "storage_account" {
+##     name                     = "${var.vm_name}diag"
+##      resource_group_name      = var.resource_group_name
+##      location                 = var.location
+##      account_tier             = "Standard"
+##      account_replication_type = "GRS"
+##    }
+##
+##    resource "azurerm_backup_protected_vm" "backup_protected_vm" {
+##      resource_group_name = var.resource_group_name
+##      recovery_vault_name = azurerm_recovery_services_vault.recovery_services_vault.name
+##      source_vm_id        = azurerm_virtual_machine.vm.id
+##      backup_policy_id    = azurerm_backup_policy_vm.backup_policy_vm.id
+##    }
+##
+##    resource "azurerm_recovery_services_vault" "recovery_services_vault" {
+##      name                = "${var.vm_name}-recovery-vault"
+##      location            = var.location
+##      resource_group_name = var.resource_group_name
+##      sku                 = "Standard"
+##    }
+##
+##    resource "azurerm_backup_policy_vm" "backup_policy_vm" {
+##      name                = "${var.vm_name}-backup-policy"
+##      resource_group_name = var.resource_group_name
+##      recovery_vault_name = azurerm_recovery_services_vault.recovery_services_vault.name
+##
+##      backup {
+##        frequency = "Daily"
+##        time      = "23:00"
+##      }
+##
+##      retention_daily {
+##        count = 30
+##      }
+##    }
 
-  security_rule {
-    name                       = "${var.vm_name}-http-rule"
-    priority                   = 1001
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "*"
-    source_port_range          = "*"
-    destination_port_range     = "*"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-}
+    resource "azurerm_network_security_group" "nsg" {
+      name                = "${var.vm_name}-nsg"
+      location            = var.location
+      resource_group_name = var.resource_group_name
 
-resource "azurerm_network_interface_security_group_association" "nsg_association" {
-  network_interface_id      = azurerm_network_interface.nic.id
-  network_security_group_id = azurerm_network_security_group.nsg.id
-}
+      security_rule {
+        name                       = "${var.vm_name}-http-rule"
+        priority                   = 1001
+        direction                  = "Inbound"
+        access                     = "Allow"
+        protocol                   = "*"
+        source_port_range          = "*"
+        destination_port_range     = "*"
+        source_address_prefix      = "*"
+        destination_address_prefix = "*"
+      }
+    }
+
+    resource "azurerm_network_interface_security_group_association" "nsg_association" {
+      network_interface_id      = azurerm_network_interface.nic.id
+      network_security_group_id = azurerm_network_security_group.nsg.id
+    }
