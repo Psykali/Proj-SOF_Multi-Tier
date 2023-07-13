@@ -1,0 +1,31 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)'
+    Contents: 'rocket-chat-install.sh'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: AzureFileCopy@4
+  inputs:
+    SourcePath: '$(Build.ArtifactStagingDirectory)/rocket-chat-install.sh'
+    azureSubscription: '<Azure service connection>'
+    Destination: 'AzureVMs'
+    storage: '<storage account name>'
+    resourceGroup: '<resource group name>'
+    MachineNames: '<VM name>'
+    vmsAdminUserName: '<VM admin username>'
+    vmsAdminPassword: '<VM admin password>'
+
+- task: SSH@0
+  inputs:
+    sshEndpoint: '<SSH service connection>'
+    runOptions: 'inline'
+    inline: |
+      chmod +x /tmp/rocket-chat-install.sh
+      /tmp/rocket-chat-install.sh
