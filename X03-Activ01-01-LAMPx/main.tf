@@ -64,9 +64,9 @@ resource "azurerm_network_security_group" "default" {
 security_rule {
     name                   = "allow-http"
     priority               = 100
-    direction              = "inbound"
+    direction              = "Inbound"
     access                 = "Allow"
-    protocol               = "tcp"
+    protocol               = "Tcp"
     source_port_range      = "*"
     destination_port_range = "80"
     source_address_prefix  = "*"
@@ -83,10 +83,10 @@ resource "azurerm_subnet" "default" {
 ## Bash Scripting
 # Deploy LAMP Server 
 resource "null_resource" "install_lamp" {
-  depends_on = [
-    azurerm_linux_virtual_machine.vm,
-  ]
-provisioner "remote-exec" {
+depends_on=[
+azurerm_linux_virtual_machine.vm,
+]
+provisioner"remote-exec"{
 inline=[
       "sudo apt-get update",
       "sudo apt-get install -y apache2 php mysql-server php-mysql",
