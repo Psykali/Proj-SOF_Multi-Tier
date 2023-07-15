@@ -35,6 +35,14 @@ admin_username= var.admin_username
 admin_password= var.admin_password
 }
 ## Networking
+## Creat Vnet
+resource "azurerm_virtual_network" "vnet" {
+  name                = var.virtual_network_name
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  address_space       = [var.address_space]
+}
+
 # Create Network Interface
 resource "azurerm_network_interface" "default" {
   name = var.network_interface
@@ -76,7 +84,7 @@ security_rule {
 # Create Subnet
 resource "azurerm_subnet" "default" {
   name                 = var.subnet
-  virtual_network_name = var.network_interface
+  virtual_network_name = azurerm_virtual_network.vnet.name
   resource_group_name  = var.resource_group_name
   address_prefixes     = ["10.0.1.0/24"]
 }
