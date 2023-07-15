@@ -30,6 +30,10 @@ variable "network_interface" {
   default = "skwpp20nic"
 }
 
+variable "network_security_group_name" {
+  default = "skwpp20nsg"
+}
+
 variable "ubuntu-ipconfig" {
   default = "skwpp20ip"
 }
