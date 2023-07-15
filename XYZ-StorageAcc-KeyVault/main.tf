@@ -9,7 +9,7 @@ data "azurerm_client_config" "current" {}
 ###########################################
 ## Create Storage Acc
 resource "azurerm_storage_account" "sppersotfstates" {
-  name = var.storage_account_name
+  name = "sppersotfstates"
   resource_group_name = "PERSO_SIEF"
   location = "francecentral"
   account_tier = "Standard"
