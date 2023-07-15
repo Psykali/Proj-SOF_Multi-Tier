@@ -41,8 +41,3 @@ variable "ubuntu-ipconfig" {
 variable "ubuntu-pip" {
   default = "skwpp20pip"
 }
-
-variable "address_prefix" {
-  type = string
-  description = "10.0.1.0/24"
-}
