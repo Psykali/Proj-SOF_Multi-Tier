@@ -94,6 +94,13 @@ resource "null_resource" "install_lamp" {
 depends_on=[
 azurerm_linux_virtual_machine.vm,
 ]
+  connection {
+    type     = "ssh"
+    user     = var.admin_username
+    password = var.admin_password
+    host     = azurerm_linux_virtual_machine.vm.public_ip_address
+  }
+
 provisioner"remote-exec"{
 inline=[
       "sudo apt-get update",
@@ -107,6 +114,12 @@ resource "null_resource" "install_virtualmin" {
 depends_on=[
 azurerm_linux_virtual_machine.vm,
 ]
+connection {
+    type     = "ssh"
+    user     = var.admin_username
+    password = var.admin_password
+    host     = azurerm_linux_virtual_machine.vm.public_ip_address
+  }
 provisioner"remote-exec"{
 inline=[
       "wget http://download.virtualmin.com/install/virtualmin-install.sh",
