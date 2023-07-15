@@ -15,7 +15,7 @@ variable "storage_account_name" {
 
 variable "blob_container_name" {
   type        = string
-  description = "helloblob"
+  description = "skpersotfstats"
 }
 
 variable "key_vault_name" {
