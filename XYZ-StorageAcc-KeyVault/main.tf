@@ -30,10 +30,9 @@ resource "azurerm_storage_container" "hello_container" {
 ##
 ## Create Blobs
 resource "azurerm_storage_blob" "hello_blob" {
-  name = "skpersotfstats"
-  storage_account_name = var.storage_account_name
+  name = "SaKvTF"
+  storage_account_name = azurerm_storage_account.sppersotfstates.name
   storage_container_name = azurerm_storage_container.hello_container.name
-  type                   = "Block"
   source_content         = "Hello, world!"
 }
 ##
