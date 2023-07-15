@@ -37,7 +37,7 @@ admin_password= var.admin_password
 ## Networking
 # Create Network Interface
 resource "azurerm_network_interface" "default" {
-  name = var.network_interface_name
+  name = var.network_interface
   location = var.location
   resource_group_name = var.resource_group_name
   network_security_group_id = var.network_security_group_id
@@ -68,7 +68,7 @@ resource "azurerm_network_security_group" "default" {
 }
 # Create Subnet
 resource "azurerm_subnet" "default" {
-  name = var.subnet_name
+  name = var.subnet
   location = var.location
   resource_group_name = var.resource_group_name
   network_security_group_id = var.network_security_group_id
@@ -78,7 +78,7 @@ resource "azurerm_subnet" "default" {
 # Deploy LAMP Server 
 resource "null_resource" "install_lamp" {
   depends_on = [
-    azurerm_virtual_machine.default,
+    azurerm_virtual_machine.vm,
   ]
   provisioner "remote-exec" {
     inline = [
@@ -91,7 +91,7 @@ resource "null_resource" "install_lamp" {
 # Install LAMP Server
 resource "null_resource" "install_virtualmin" {
   depends_on = [
-    azurerm_virtual_machine.default,
+    azurerm_virtual_machine.vm,
   ]
   provisioner "remote-exec" {
     inline = [
