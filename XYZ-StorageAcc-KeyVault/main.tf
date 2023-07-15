@@ -26,19 +26,13 @@ resource "azurerm_storage_account" "sppersotfstates" {
 resource "azurerm_storage_container" "hello_container" {
   name                  = "hello_container"
   storage_account_name  = azurerm_storage_account.sppersotfstates.name
-
-tags = {
-    Env = "Prod"
-    Why = "DiplomeP20"
-    CreatedBy = "SK"
-  }
 }
 ##
 ## Create Blobs
 resource "azurerm_storage_blob" "hello_blob" {
   name = var.blob_container_name
   storage_account_name = var.storage_account_name
-  container_name = azurerm_storage_container.hello_container.name
+  storage_container_name = azurerm_storage_container.hello_container.name
   type                   = "Block"
   source_content         = "Hello, world!"
 }
@@ -60,7 +54,7 @@ tags = {
 ##
 ## Create Secrets
 resource "azurerm_key_vault_secret" "hello_secret" {
-  name = "hello_secret"
+  name = "hellosecret"
   value = "hello world"
   key_vault_id = "${azurerm_key_vault.sppersosecrets.id}"
 tags = {
