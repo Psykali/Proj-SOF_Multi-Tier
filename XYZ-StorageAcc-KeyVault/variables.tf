@@ -20,7 +20,7 @@ variable "blob_container_name" {
 
 variable "key_vault_name" {
   type        = string
-  description = "skpersokv"
+  description = "sppersosecrets"
 }
 
 variable "key_vault_secret_name" {
