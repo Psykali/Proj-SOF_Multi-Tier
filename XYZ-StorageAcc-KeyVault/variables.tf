@@ -1,15 +1,12 @@
 variable "resource_group_name" {
-  type        = string
   description = "PERSO_SIEF"
 }
 
 variable "location" {
-  type        = string
   description = "francecentral"
 }
 
 variable "storage_account_name" {
-  type        = string
   description = "sppersotfstates"
 }
 
