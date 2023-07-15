@@ -30,7 +30,7 @@ resource "azurerm_storage_container" "hello_container" {
 ##
 ## Create Blobs
 resource "azurerm_storage_blob" "hello_blob" {
-  name = var.blob_container_name
+  name = "skpersotfstats"
   storage_account_name = var.storage_account_name
   storage_container_name = azurerm_storage_container.hello_container.name
   type                   = "Block"
