@@ -41,3 +41,8 @@ variable "ubuntu-ipconfig" {
 variable "ubuntu-pip" {
   default = "skwpp20pip"
 }
+
+variable "address_prefix" {
+  type = string
+  description = "The address prefix for the subnet"
+}
