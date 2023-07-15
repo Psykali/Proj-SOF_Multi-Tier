@@ -104,29 +104,30 @@ azurerm_linux_virtual_machine.vm,
 provisioner"remote-exec"{
 inline=[
       "sudo apt-get update",
-      "sudo apt-get install -y apache2 php mysql-server php-mysql",
+      "sudo apt-get install -y apache2 php mysql-server php-mysql wget",
       "sudo service apache2 restart",
 ]
 }
 }
 # Install Virtualmin Port 10000
 resource "null_resource" "install_virtualmin" {
-depends_on=[
-azurerm_linux_virtual_machine.vm,
-]
-connection {
+  depends_on = [
+    azurerm_linux_virtual_machine.vm,
+  ]
+
+  connection {
     type     = "ssh"
     user     = var.admin_username
     password = var.admin_password
     host     = azurerm_linux_virtual_machine.vm.public_ip_address
   }
-provisioner"remote-exec"{
-inline=[
+
+  provisioner "remote-exec" {
+    inline = [
       "sudo apt-get update",
-      "sudo apt-get install -y wget",
       "wget http://download.virtualmin.com/install/virtualmin-install.sh",
       "chmod +x virtualmin-install.sh",
       "./virtualmin-install.sh",
-]
-}
+    ]
+  }
 }
