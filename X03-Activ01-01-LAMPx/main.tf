@@ -136,7 +136,8 @@ resource "azurerm_storage_container" "state" {
   storage_account_name  = "sppersotfstates"
 }
 
-backend "azurerm" {
+terraform {
+  backend "azurerm" {
     resource_group_name  = "PERSO_SIEF"
     storage_account_name = "sppersotfstates"
     container_name       = "lampxvirtminstate"
