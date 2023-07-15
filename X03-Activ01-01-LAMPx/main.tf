@@ -40,8 +40,6 @@ resource "azurerm_network_interface" "default" {
   name = var.network_interface
   location = var.location
   resource_group_name = var.resource_group_name
-  network_security_group_id = var.network_security_group_id
-  subnet_id = var.subnet_id
 }
 # Create a public IP address
 resource "azurerm_public_ip" "pip" {
@@ -69,10 +67,9 @@ resource "azurerm_network_security_group" "default" {
 # Create Subnet
 resource "azurerm_subnet" "default" {
   name = var.subnet
-  location = var.location
+  virtual_network_name = var.network_interface
   resource_group_name = var.resource_group_name
-  network_security_group_id = var.network_security_group_id
-  address_prefix = var.address_prefix
+  address_prefixes = var.address_prefix
 }
 ## Bash Scripting
 # Deploy LAMP Server 
