@@ -43,16 +43,11 @@ tags = {
 }
 ##
 ## Create Secrets
-resource "azurerm_key_vault_secret" "hello_secret" {
-  name = "hellosecret"
-  value = "hello world"
-  key_vault_id = "${azurerm_key_vault.sppersosecrets.id}"
-tags = {
-    Env = "Prod"
-    Why = "DiplomeP20"
-    CreatedBy = "SK"
-  }
-}
+##resource "azurerm_key_vault_secret" "hello_secret" {
+##  name = "hellosecret"
+##  value = "hello world"
+##  key_vault_id = "${azurerm_key_vault.sppersosecrets.id}"
+##}
 ##
 # Terraform OutPut
 # Write the Terraform output to a local file
