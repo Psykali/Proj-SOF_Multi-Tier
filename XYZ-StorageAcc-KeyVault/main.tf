@@ -38,7 +38,7 @@ resource "azurerm_storage_container" "hello_container" {
 ##
 ## Create KeyVault
 resource "azurerm_key_vault" "sppersosecrets" {
-  name = var.key_vault_name
+  name = "sppersosecrets"
   resource_group_name = var.resource_group_name
   location = var.location
   sku_name            = "standard"
