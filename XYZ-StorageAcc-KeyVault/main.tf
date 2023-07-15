@@ -24,7 +24,7 @@ resource "azurerm_storage_account" "sppersotfstates" {
 ##
 ## Create Container
 resource "azurerm_storage_container" "hello_container" {
-  name                  = "hello_container"
+  name                  = "hellocontainer"
   storage_account_name  = azurerm_storage_account.sppersotfstates.name
 }
 ##
