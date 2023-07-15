@@ -12,6 +12,12 @@ resource "azurerm_container_registry" "acr" {
   location            = var.location_contreg
   sku                 = "Basic"
   admin_enabled       = true
+
+  tags = {
+    Env = "Prod"
+    Why = "DiplomeP20"
+    CreatedBy = "SK"
+  }
 }
 
 #resource "null_resource" "acr_import" {
