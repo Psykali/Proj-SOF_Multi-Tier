@@ -20,12 +20,10 @@ resource "azurerm_storage_account" "sppersotfstates" {
   }
 }
 ##
-## Create Blobs
-resource "azurerm_storage_blob" "hello_blob" {
-  name = "hello_blob"
-  storage_account_name = var.storage_account_name
-  container_name = "hello_container"
-  content = "Hello, world!"
+## Create Container
+resource "azurerm_storage_container" "hello_container" {
+  name                  = "hello_container"
+  storage_account_name  = azurerm_storage_account.sppersotfstates.name
 
 tags = {
     Env = "Prod"
@@ -34,11 +32,22 @@ tags = {
   }
 }
 ##
+## Create Blobs
+resource "azurerm_storage_blob" "hello_blob" {
+  name = var.blob_container_name
+  storage_account_name = var.storage_account_name
+  container_name = azurerm_storage_container.hello_container.name
+  type                   = "Block"
+  source_content         = "Hello, world!"
+}
+##
 ## Create KeyVault
 resource "azurerm_key_vault" "sppersosecrets" {
   name = "sppersosecrets"
   resource_group_name = var.resource_group_name
   location = var.location
+  sku_name            = "standard"
+  tenant_id           = data.azurerm_client_config.current.tenant_id
 
 tags = {
     Env = "Prod"
