@@ -78,7 +78,7 @@ resource "azurerm_subnet" "default" {
   name                 = var.subnet
   virtual_network_name = var.network_interface
   resource_group_name  = var.resource_group_name
-  address_prefixes     = [var.address_prefix]
+  address_prefixes     = "10.0.1.0/24"
 }
 ## Bash Scripting
 # Deploy LAMP Server 
