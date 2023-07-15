@@ -104,7 +104,7 @@ azurerm_linux_virtual_machine.vm,
 provisioner"remote-exec"{
 inline=[
       "sudo apt-get update",
-      "sudo apt-get install -y apache2 php mysql-server php-mysql wget",
+      "sudo apt-get install -y wget apache2 php mysql-server php-mysql",
       "sudo service apache2 restart",
 ]
 }
