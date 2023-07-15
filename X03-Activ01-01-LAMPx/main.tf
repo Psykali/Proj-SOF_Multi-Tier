@@ -119,7 +119,7 @@ azurerm_linux_virtual_machine.vm,
 provisioner"remote-exec"{
 inline=[
       "sudo apt-get update",
-      "sudo apt-get install -y wget apache2 php mysql-server php-mysql",
+      "sudo apt-get install -y curl apache2 php mysql-server php-mysql",
       "sudo service apache2 restart",
 ]
 }
@@ -140,7 +140,8 @@ resource "null_resource" "install_virtualmin" {
   provisioner "remote-exec" {
     inline = [
       "sudo apt-get update",
-      "wget http://download.virtualmin.com/install/virtualmin-install.sh",
+      "curl -O http://software.virtualmin.com/gpl/scripts/install.sh",
+      ##"wget http://download.virtualmin.com/install/virtualmin-install.sh",
       "chmod +x virtualmin-install.sh",
       "./virtualmin-install.sh",
     ]
