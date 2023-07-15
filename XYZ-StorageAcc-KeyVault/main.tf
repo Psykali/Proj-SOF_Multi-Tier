@@ -24,7 +24,7 @@ resource "azurerm_storage_account" "sppersotfstates" {
 ##
 ## Create Container
 resource "azurerm_storage_container" "hello_container" {
-  name                  = "SaKvTFstate"
+  name                  = "sakvtfstate"
   storage_account_name  = azurerm_storage_account.sppersotfstates.name
 }
 ##
@@ -66,7 +66,7 @@ tags = {
 # Terraform OutPut
 # Write the Terraform output to a local file
 resource "local_file" "output" {
-  content  = jsonencode(terraform.output)
+  content  = jsonencode(terraform.workspace)
   filename = "${path.module}/output.json"
 }
 
