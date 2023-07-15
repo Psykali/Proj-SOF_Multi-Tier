@@ -24,17 +24,17 @@ resource "azurerm_storage_account" "sppersotfstates" {
 ##
 ## Create Container
 resource "azurerm_storage_container" "hello_container" {
-  name                  = "hellocontainer"
+  name                  = "SaKvTFstate"
   storage_account_name  = azurerm_storage_account.sppersotfstates.name
 }
 ##
 ## Create Blobs
-resource "azurerm_storage_blob" "hello_blob" {
-  name = "SaKvTF"
-  storage_account_name = azurerm_storage_account.sppersotfstates.name
-  storage_container_name = azurerm_storage_container.hello_container.name
-  source_content         = "Hello, world!"
-}
+##resource "azurerm_storage_blob" "hello_blob" {
+##  name = "SaKvTF"
+##  storage_account_name = azurerm_storage_account.sppersotfstates.name
+##  storage_container_name = azurerm_storage_container.hello_container.name
+##  source_content         = "Hello, world!"
+##""}
 ##
 ## Create KeyVault
 resource "azurerm_key_vault" "sppersosecrets" {
@@ -61,4 +61,20 @@ tags = {
     Why = "DiplomeP20"
     CreatedBy = "SK"
   }
+}
+##
+# Terraform OutPut
+# Write the Terraform output to a local file
+resource "local_file" "output" {
+  content  = jsonencode(terraform.output)
+  filename = "${path.module}/output.json"
+}
+
+# Upload the local file to an Azure Blob storage container
+resource "azurerm_storage_blob" "output" {
+  name                   = "output.json"
+  storage_account_name   = azurerm_storage_account.sppersotfstates.name
+  storage_container_name = azurerm_storage_container.hello_container.name
+  type                   = "Block"
+  source                 = local_file.output.filename
 }
