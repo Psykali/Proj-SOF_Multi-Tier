@@ -10,7 +10,7 @@ data "azurerm_client_config" "current" {}
 ## Create Storage Acc
 resource "azurerm_storage_account" "sppersotfstates" {
   name = var.storage_account_name
-  resource_group_name = var.resource_group_name
+  resource_group_name = "PERSO_SIEF"
   location = "francecentral"
   account_tier = "Standard"
   account_replication_type = "LRS"
@@ -39,7 +39,7 @@ resource "azurerm_storage_container" "hello_container" {
 ## Create KeyVault
 resource "azurerm_key_vault" "sppersosecrets" {
   name = "sppersosecrets"
-  resource_group_name = var.resource_group_name
+  resource_group_name = "PERSO_SIEF"
   location = "francecentral"
   sku_name            = "standard"
   tenant_id           = data.azurerm_client_config.current.tenant_id
