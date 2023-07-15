@@ -44,5 +44,5 @@ variable "ubuntu-pip" {
 
 variable "address_prefix" {
   type = string
-  description = "The address prefix for the subnet"
+  description = "10.0.1.0/24"
 }
