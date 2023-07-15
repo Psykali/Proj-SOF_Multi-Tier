@@ -1,5 +1,12 @@
 data "azurerm_client_config" "current" {}
 
+locals {
+  common_tags = {
+    CreatedBy = "SK"
+    Env       = "Prod"
+    Why       = "DipP20"
+  }
+}
 ###########################################
 ## Create Resource Group
 ##resource "azurerm_resource_group" "rg" {
@@ -31,8 +38,10 @@ source_image_reference {
     version= "latest"
 }
 
-admin_username= var.admin_username
-admin_password= var.admin_password
+  admin_username= var.admin_username
+  admin_password= var.admin_password
+
+  tags = local.common_tags
 }
 ## Networking
 ## Creat Vnet
@@ -41,6 +50,7 @@ resource "azurerm_virtual_network" "vnet" {
   location            = var.location
   resource_group_name = var.resource_group_name
   address_space       = ["10.0.0.0/8"]
+  tags = local.common_tags
 }
 
 # Create Network Interface
@@ -55,6 +65,7 @@ resource "azurerm_network_interface" "default" {
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.pip.id
   }
+  tags = local.common_tags
 }
 # Create a public IP address
 resource "azurerm_public_ip" "pip" {
@@ -62,6 +73,7 @@ resource "azurerm_public_ip" "pip" {
   location            = var.location
   resource_group_name = var.resource_group_name
   allocation_method   = "Dynamic"
+  tags = local.common_tags
 }
 # Create NSG
 resource "azurerm_network_security_group" "default" {
@@ -80,6 +92,7 @@ security_rule {
     source_address_prefix  = "*"
     destination_address_prefix= "*"
   }
+  tags = local.common_tags
 }
 # Create Subnet
 resource "azurerm_subnet" "default" {
@@ -87,7 +100,10 @@ resource "azurerm_subnet" "default" {
   virtual_network_name = azurerm_virtual_network.vnet.name
   resource_group_name  = var.resource_group_name
   address_prefixes     = ["10.0.1.0/24"]
+  tags = local.common_tags
 }
+#######################################################################
+#######################################################################
 ## Bash Scripting
 # Deploy LAMP Server Ports 80, 443, 8050, 3306
 resource "null_resource" "install_lamp" {
