@@ -15,7 +15,7 @@ variable "admin_password" {
 }
 
 variable "ubuntu-vm" {
-  default = "skwpp20mdb"
+  default = "skwpp20lamp"
 }
 
 variable "subnet" {
