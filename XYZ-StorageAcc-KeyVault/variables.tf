@@ -13,10 +13,10 @@ variable "storage_account_name" {
   description = "sppersotfstates"
 }
 
-variable "blob_container_name" {
-  type        = string
-  description = "skpersotfstats"
-}
+##variable "blob_container_name" {
+##  type        = string
+##  description = "skpersotfstats"
+##}
 
 variable "key_vault_name" {
   type        = string
