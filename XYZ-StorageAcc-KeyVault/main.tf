@@ -7,7 +7,7 @@
 ###########################################
 ## Create Storage Acc
 resource "azurerm_storage_account" "sppersotfstates" {
-  name = "sppersotfstates"
+  name = var.storage_account_name
   resource_group_name = var.resource_group_name
   location = var.location
   account_tier = "Standard"
@@ -23,7 +23,7 @@ resource "azurerm_storage_account" "sppersotfstates" {
 ## Create Blobs
 resource "azurerm_storage_blob" "hello_blob" {
   name = "hello_blob"
-  storage_account_name = "sppersotfstates"
+  storage_account_name = var.storage_account_name
   container_name = "hello_container"
   content = "Hello, world!"
 
