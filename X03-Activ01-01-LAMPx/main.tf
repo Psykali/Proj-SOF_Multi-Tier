@@ -130,9 +130,3 @@ inline=[
 ]
 }
 }
-###############################################################################
-##resource "azurerm_storage_container" "state" {
-##  name                  = "lampxvirtminstate"
-##  storage_account_name  = "sppersotfstates"
-##}
-################################################################################
