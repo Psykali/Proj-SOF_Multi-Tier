@@ -23,7 +23,7 @@ variable "storage_account_name" {
 ##  description = "sppersosecrets"
 ##}
 
-variable "key_vault_secret_name" {
-  type        = string
-  description = "hellovault"
-}
+##variable "key_vault_secret_name" {
+##  type        = string
+##  description = "hellovault"
+##}
