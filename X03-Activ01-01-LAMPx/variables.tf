@@ -22,8 +22,12 @@ variable "subnet" {
   default = "skwpp20subnet"
 }
 
-variable "virtual_network" {
+variable "virtual_network_name" {
   default = "skwpp20vnet"
+}
+
+variable "virtual_network" {
+  default = "skwpp20net"
 }
 
 variable "network_interface" {
