@@ -115,3 +115,24 @@ inline=[
 ]
 }
 }
+###############################################################################
+# Terraform OutPut
+## Create Container
+resource "azurerm_storage_container" "hello_container" {
+  name                  = "lampxvirtmintfstate"
+  storage_account_name  = "sppersotfstates"
+}
+# Write the Terraform output to a local file
+resource "local_file" "output" {
+  content  = jsonencode(terraform.workspace)
+  filename = "${path.module}/output.json"
+}
+# Upload the local file to an Azure Blob storage container
+resource "azurerm_storage_blob" "output" {
+  name                   = "output.json"
+  storage_account_name   = "sppersotfstates"
+  storage_container_name = azurerm_storage_container.hello_container.name
+  type                   = "Block"
+  source                 = local_file.output.filename
+}
+################################################################################
