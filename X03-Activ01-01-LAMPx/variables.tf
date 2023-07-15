@@ -7,7 +7,7 @@ variable "resource_group_name" {
 }
 
 variable "admin_username" {
-  default = "skwp_admin"
+  default = "SkLoginDipP20"
 }
 
 variable "admin_password" {
