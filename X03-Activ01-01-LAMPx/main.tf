@@ -73,6 +73,7 @@ resource "azurerm_public_ip" "pip" {
   location            = var.location
   resource_group_name = var.resource_group_name
   allocation_method   = "Dynamic"
+  domain_name_label   = "sklampwp"
   tags = local.common_tags
 }
 # Create NSG
@@ -105,27 +106,7 @@ resource "azurerm_subnet" "default" {
 #######################################################################
 ## Bash Scripting
 # Deploy LAMP Server Ports 80, 443, 8050, 3306
-resource "null_resource" "install_lamp" {
-depends_on=[
-azurerm_linux_virtual_machine.vm,
-]
-  connection {
-    type     = "ssh"
-    user     = var.admin_username
-    password = var.admin_password
-    host     = azurerm_linux_virtual_machine.vm.public_ip_address
-  }
-
-provisioner"remote-exec"{
-inline=[
-      "sudo apt-get update",
-      "sudo apt-get install -y curl apache2 php mysql-server php-mysql",
-      "sudo service apache2 restart",
-]
-}
-}
-# Install Virtualmin Port 10000
-resource "null_resource" "install_virtualmin" {
+resource "null_resource" "install_wordpress" {
   depends_on = [
     azurerm_linux_virtual_machine.vm,
   ]
@@ -140,10 +121,14 @@ resource "null_resource" "install_virtualmin" {
   provisioner "remote-exec" {
     inline = [
       "sudo apt-get update",
-      "curl -O http://software.virtualmin.com/gpl/scripts/install.sh",
-      ##"wget http://download.virtualmin.com/install/virtualmin-install.sh",
-      "chmod +x virtualmin-install.sh",
-      "./virtualmin-install.sh",
+      "sudo apt-get install -y curl apache2 php libapache2-mod-php mysql-server php-mysql",
+      "cd /tmp",
+      "curl -O https://wordpress.org/latest.tar.gz",
+      "tar xzvf latest.tar.gz",
+      "sudo cp /tmp/wordpress/wp-config-sample.php /tmp/wordpress/wp-config.php",
+      "sudo cp -a /tmp/wordpress/. /var/www/html",
+      "sudo chown -R www-data:www-data /var/www/html",
+      "sudo service apache2 restart",
     ]
   }
 }
