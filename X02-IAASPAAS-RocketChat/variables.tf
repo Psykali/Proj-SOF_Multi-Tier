@@ -23,9 +23,9 @@ variable "vm_size" {
 }
 
 variable "admin_username" {
-  default = "skrcadmin"
+  default = "SkLoginDipP20"
 }
 
 variable "admin_password" {
-  default = "P@P@ssw0rd123P@ssw0rd123"
+  default = "P@ssw0rd123P@ssw0rd123"
 }
