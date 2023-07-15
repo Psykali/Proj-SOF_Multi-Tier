@@ -89,7 +89,7 @@ resource "azurerm_subnet" "default" {
   address_prefixes     = ["10.0.1.0/24"]
 }
 ## Bash Scripting
-# Deploy LAMP Server 
+# Deploy LAMP Server Ports 80, 443, 8050, 3306
 resource "null_resource" "install_lamp" {
 depends_on=[
 azurerm_linux_virtual_machine.vm,
@@ -109,7 +109,7 @@ inline=[
 ]
 }
 }
-# Install LAMP Server
+# Install Virtualmin Port 10000
 resource "null_resource" "install_virtualmin" {
 depends_on=[
 azurerm_linux_virtual_machine.vm,
@@ -122,6 +122,8 @@ connection {
   }
 provisioner"remote-exec"{
 inline=[
+      "sudo apt-get update",
+      "sudo apt-get install -y wget",
       "wget http://download.virtualmin.com/install/virtualmin-install.sh",
       "chmod +x virtualmin-install.sh",
       "./virtualmin-install.sh",
@@ -129,23 +131,12 @@ inline=[
 }
 }
 ###############################################################################
-# Terraform OutPut
-## Create Container
-resource "azurerm_storage_container" "hello_container" {
-  name                  = "lampxvirtmintfstate"
-  storage_account_name  = "sppersotfstates"
-}
-# Write the Terraform output to a local file
-resource "local_file" "output" {
-  content  = jsonencode(terraform.workspace)
-  filename = "${path.module}/output.json"
-}
-# Upload the local file to an Azure Blob storage container
-resource "azurerm_storage_blob" "output" {
-  name                   = "output.json"
-  storage_account_name   = "sppersotfstates"
-  storage_container_name = azurerm_storage_container.hello_container.name
-  type                   = "Block"
-  source                 = local_file.output.filename
+#terraform {
+  backend "azurerm" {
+    resource_group_name  = "PERSO_SIEF"
+    storage_account_name = "sppersotfstates"
+    container_name       = "lampxvirtminstate"
+    key                  = "terraform.tfstate"
+  }
 }
 ################################################################################
