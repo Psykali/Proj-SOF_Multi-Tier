@@ -6,7 +6,7 @@ terraform {
     }
   }
    backend "local" {
-    path = "./terraform.tfstate"
+    path = "tfstate/terraform.tfstate"
   }
 ##  backend "azurerm" {
 ##    resource_group_name  = "PERSO_SIEF"
