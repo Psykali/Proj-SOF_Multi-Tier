@@ -33,6 +33,7 @@ resource "azurerm_app_service_plan" "app_service_plan" {
 }
 
 ## Zulip Web App
+# Zulip Web App
 resource "azurerm_app_service" "zulip_app" {
   name                = var.zulip_app_name
   location            = var.location
@@ -45,12 +46,11 @@ resource "azurerm_app_service" "zulip_app" {
   }
 
   app_settings = {
-    "MYSQL_SERVER_NAME"         = azurerm_mysql_server.mysql.fqdn
-    "MYSQL_DATABASE_NAME"       = azurerm_mysql_database.mysql_db.name
-    "MYSQL_USERNAME"            = azurerm_mysql_server.mysql.administrator_login
-    "MYSQL_PASSWORD"            = azurerm_mysql_server.mysql.administrator_login_password
-    "ZULIP_EXTERNAL_HOST_NAME"  = azurerm_app_service.zulip_app.default_site_hostname
-    "PORT"                      = "8080"
+    "MYSQL_SERVER_NAME"   = azurerm_mysql_server.mysql.fqdn
+    "MYSQL_DATABASE_NAME" = azurerm_mysql_database.mysql_db.name
+    "MYSQL_USERNAME"      = azurerm_mysql_server.mysql.administrator_login
+    "MYSQL_PASSWORD"      = azurerm_mysql_server.mysql.administrator_login_password
+    "PORT"                = "8080"
   }
 }
 
@@ -67,12 +67,11 @@ resource "azurerm_app_service" "github_app" {
   }
 
   app_settings = {
-    "MYSQL_SERVER_NAME"         = azurerm_mysql_server.mysql.fqdn
-    "MYSQL_DATABASE_NAME"       = azurerm_mysql_database.mysql_db.name
-    "MYSQL_USERNAME"            = azurerm_mysql_server.mysql.administrator_login
-    "MYSQL_PASSWORD"            = azurerm_mysql_server.mysql.administrator_login_password
-    "GITHUB_EXTERNAL_HOST_NAME" = azurerm_app_service.github_app.default_site_hostname
-    "PORT"                      = "8081"
+    "MYSQL_SERVER_NAME"   = azurerm_mysql_server.mysql.fqdn
+    "MYSQL_DATABASE_NAME" = azurerm_mysql_database.mysql_db.name
+    "MYSQL_USERNAME"      = azurerm_mysql_server.mysql.administrator_login
+    "MYSQL_PASSWORD"      = azurerm_mysql_server.mysql.administrator_login_password
+    "PORT"                = "8081"
   }
 }
 
