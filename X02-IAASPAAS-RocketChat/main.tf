@@ -7,10 +7,10 @@ resource "azurerm_mysql_server" "mysql" {
   administrator_login_password = var.mysql_server_admin_password
   sku_name            = "B_Gen5_1"
   version             = "5.7"
-  storage_profile {
-    storage_mb            = 5120
-  }
+  storage_mb          = 5120
+  ssl_enforcement_enabled = true
 }
+
 
 # MySQL Database
 resource "azurerm_mysql_database" "mysql_db" {
@@ -32,23 +32,25 @@ resource "azurerm_app_service_plan" "app_service_plan" {
   }
 }
 
-# Zulip Web App
+## Zulip Web App
 resource "azurerm_app_service" "zulip_app" {
   name                = var.zulip_app_name
   location            = var.location
   resource_group_name = var.resource_group_name
   app_service_plan_id = azurerm_app_service_plan.app_service_plan.id
+
   site_config {
     dotnet_framework_version = "v4.0"
     scm_type                 = "LocalGit"
-    app_settings = {
-      "MYSQL_SERVER_NAME"         = azurerm_mysql_server.mysql.fqdn
-      "MYSQL_DATABASE_NAME"       = azurerm_mysql_database.mysql_db.name
-      "MYSQL_USERNAME"            = azurerm_mysql_server.mysql.administrator_login
-      "MYSQL_PASSWORD"            = azurerm_mysql_server.mysql.administrator_login_password
-      "ZULIP_EXTERNAL_HOST_NAME"  = azurerm_app_service.zulip_app.default_site_hostname
-      "PORT"                      = "8080"
-    }
+  }
+
+  app_settings = {
+    "MYSQL_SERVER_NAME"         = azurerm_mysql_server.mysql.fqdn
+    "MYSQL_DATABASE_NAME"       = azurerm_mysql_database.mysql_db.name
+    "MYSQL_USERNAME"            = azurerm_mysql_server.mysql.administrator_login
+    "MYSQL_PASSWORD"            = azurerm_mysql_server.mysql.administrator_login_password
+    "ZULIP_EXTERNAL_HOST_NAME"  = azurerm_app_service.zulip_app.default_site_hostname
+    "PORT"                      = "8080"
   }
 }
 
@@ -58,17 +60,19 @@ resource "azurerm_app_service" "github_app" {
   location            = var.location
   resource_group_name = var.resource_group_name
   app_service_plan_id = azurerm_app_service_plan.app_service_plan.id
+
   site_config {
     dotnet_framework_version = "v4.0"
     scm_type                 = "LocalGit"
-    app_settings = {
-      "MYSQL_SERVER_NAME"         = azurerm_mysql_server.mysql.fqdn
-      "MYSQL_DATABASE_NAME"       = azurerm_mysql_database.mysql_db.name
-      "MYSQL_USERNAME"            = azurerm_mysql_server.mysql.administrator_login
-      "MYSQL_PASSWORD"            = azurerm_mysql_server.mysql.administrator_login_password
-      "GITHUB_EXTERNAL_HOST_NAME" = azurerm_app_service.github_app.default_site_hostname
-      "PORT"                      = "8081"
-    }
+  }
+
+  app_settings = {
+    "MYSQL_SERVER_NAME"         = azurerm_mysql_server.mysql.fqdn
+    "MYSQL_DATABASE_NAME"       = azurerm_mysql_database.mysql_db.name
+    "MYSQL_USERNAME"            = azurerm_mysql_server.mysql.administrator_login
+    "MYSQL_PASSWORD"            = azurerm_mysql_server.mysql.administrator_login_password
+    "GITHUB_EXTERNAL_HOST_NAME" = azurerm_app_service.github_app.default_site_hostname
+    "PORT"                      = "8081"
   }
 }
 
@@ -76,7 +80,7 @@ resource "azurerm_app_service" "github_app" {
 resource "azurerm_lb" "lb" {
   name                = "my-lb"
   location            = var.location
-  resource_group_name = resource_group_name
+  resource_group_name = var.resource_group_name
 
   frontend_ip_configuration {
     name                          = "PublicIPAddress"
@@ -131,7 +135,7 @@ resource "azurerm_lb_rule" "zulip_rule" {
   protocol                = "Tcp"
   frontend_port           = 8080
   backend_port            = 8080
-  frontend_ip_configuration_id = azurerm_lb.frontend_ip_configuration[0].id
+  frontend_ip_configuration_id = azurerm_lb.lb.frontend_ip_configuration[0].id
   backend_address_pool_id        = azurerm_lb_backend_address_pool.zulip_backend_pool.id
 }
 
@@ -141,6 +145,6 @@ resource "azurerm_lb_rule" "github_rule" {
   protocol                = "Tcp"
   frontend_port           = 8081
   backend_port            = 8081
-  frontend_ip_configuration_id = azurerm_lb.frontend_ip_configuration[0].id
+  frontend_ip_configuration_id = azurerm_lb.lb.frontend_ip_configuration[0].id
   backend_address_pool_id        = azurerm_lb_backend_address_pool.github_backend_pool.id
 }
