@@ -63,7 +63,7 @@ resource "azurerm_backup_policy_vm" "backup_policy" {
   }
 
   retention_daily {
-    count = 5
+    count = 8
   }
 }
 
@@ -119,14 +119,39 @@ security_rule {
   access                 = "Allow"
   protocol               = "Tcp"
   source_port_range      = "*"
-  destination_port_range = "80,8080"
+  destination_port_range = "80"
   source_address_prefix  = "*"
   destination_address_prefix= "*"
 }
 
-  tags = local.common_tags
+security_rule {
+  name                   = "allow-https"
+  priority               = 200
+  direction              = "Inbound"
+  access                 = "Allow"
+  protocol               = "Tcp"
+  source_port_range      = "*"
+  destination_port_range = "443"
+  source_address_prefix  = "*"
+  destination_address_prefix= "*"
+}
+
+security_rule {
+    name                   = "allow-custom"
+    priority               = 300
+    direction              = "Inbound"
+    access                 = "Allow"
+    protocol               = "Tcp"
+    source_port_range      = "*"
+    destination_port_range = "8080"
+    source_address_prefix  = "*"
+    destination_address_prefix= "*"
+}
+
+tags = local.common_tags
 
 }
+
 # Create Subnet
 resource "azurerm_subnet" "default" {
   name                 = var.subnet
@@ -153,16 +178,19 @@ resource "null_resource" "install_wordpress" {
 provisioner "remote-exec" {
   inline = [
     "sudo apt-get update",
-    "sudo apt-get install -y curl apache2 php libapache2-mod-php mysql-server php-mysql",
+    "sudo apt-get install -y curl apache2 php libapache2-mod-php mariadb-server php-mysql",
     "cd /tmp",
     "curl -O https://wordpress.org/latest.tar.gz",
     "tar xzvf latest.tar.gz",
     "sudo cp /tmp/wordpress/wp-config-sample.php /tmp/wordpress/wp-config.php",
     "sudo sed -i 's/define( 'DB_HOST', 'localhost' );/define( 'DB_HOST', '127.0.0.1:3306' );/' /tmp/wordpress/wp-config.php",
-    "sudo cp -a /tmp/wordpress/. /var/www/html",
+    "sudo cp -a /tmp/wordpress/. /var/www/html/wordpress",
     "sudo chown -R www-data:www-data /var/www/html",
-    "sudo sed -i 's/Listen 80/Listen 8080/' /etc/apache2/ports.conf",
-    "sudo sed -i 's/<VirtualHost \\*:80>/<VirtualHost \\*:8080>/' /etc/apache2/sites-available/000-default.conf",
+    "sudo sed -i 's/Listen 80/Listen 80\\nListen 8080/' /etc/apache2/ports.conf",
+    "sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/wordpress.conf",
+    "sudo sed -i 's/<VirtualHost \\*:80>/<VirtualHost \\*:8080>/' /etc/apache2/sites-available/wordpress.conf",
+    "sudo sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/wordpress|' /etc/apache2/sites-available/wordpress.conf",
+    "sudo a2ensite wordpress.conf",
     "sudo service apache2 restart",
   ]
 }
