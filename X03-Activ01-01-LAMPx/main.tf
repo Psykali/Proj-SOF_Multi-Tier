@@ -43,6 +43,47 @@ source_image_reference {
 
   tags = local.common_tags
 }
+
+## Create Backup
+resource "azurerm_recovery_services_vault" "recovery_vault" {
+  name                = "skrv"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_recovery_services_backup_policy_vm" "backup_policy" {
+  name                = "skrvpolicy"
+  resource_group_name = var.resource_group_name
+  backup_policy {
+    frequency = "Daily"
+    time      = "23:00"
+    retention_daily {
+      count = 5
+    }
+  }
+  operation_mode = "Complete"
+}
+
+resource "azurerm_recovery_services_protected_vm" "protected_vm" {
+  resource_group_name     = var.resource_group_name
+  recovery_vault_name     = azurerm_recovery_services_vault.recovery_vault.name
+  source_vm_id            = azurerm_linux_virtual_machine.vm.id
+  backup_policy_id        = azurerm_recovery_services_backup_policy_vm.backup_policy.id
+}
+
+resource "azurerm_recovery_services_protection_policy_vm" "recovery_vault_policy" {
+  name                = var.recovery_vault_protection_policy_name
+  resource_group_name = azurerm_resource_group.recovery_vault_rg.name
+  backup {
+    retention_duration {
+      count = 5
+      type  = "Days"
+    }
+  }
+
+  azure_vm_resource_id          = azurerm_linux_virtual_machine.vm.id
+  source_vm_storage_type_to_use = "GRS"
+
 ## Networking
 ## Creat Vnet
 resource "azurerm_virtual_network" "vnet" {
