@@ -104,48 +104,34 @@ resource "azurerm_public_ip" "lb_ip" {
 
 # Zulip Web App Backend Pool
 resource "azurerm_lb_backend_address_pool" "zulip_backend_pool" {
-  name                = "zulip-backend-pool"
-  loadbalancer_id     = azurerm_lb.lb.id
-  resource_group_name = var.resource_group_name
-
-  dynamic "ip_configuration" {
-    for_each = azurerm_app_service.zulip_app.ip_addresses
-    content {
-      ip_address = ip_configuration.value
-    }
-  }
+  name            = "zulip-backend-pool"
+  loadbalancer_id = azurerm_lb.lb.id
 }
 
 # GitHub Web App Backend Pool
 resource "azurerm_lb_backend_address_pool" "github_backend_pool" {
-  name                = "github-backend-pool"
-  loadbalancer_id     = azurerm_lb.lb.id
-  resource_group_name = var.resource_group_name
-
-  dynamic "ip_configuration" {
-    for_each = azurerm_app_service.github_app.ip_addresses
-    content {
-      ip_address = ip_configuration.value
-    }
-  }
+  name            = "github-backend-pool"
+  loadbalancer_id = azurerm_lb.lb.id
 }
 
 # Zulip Web App Load Balancer Rule
 resource "azurerm_lb_rule" "zulip_rule" {
-  name                    = "zulip-lb-rule"
-  protocol                = "Tcp"
-  frontend_port           = 8080
-  backend_port            = 8080
-  frontend_ip_configuration_id = azurerm_lb.lb.frontend_ip_configuration[0].id
-  backend_address_pool_id        = azurerm_lb_backend_address_pool.zulip_backend_pool.id
+  name                           = "zulip-lb-rule"
+  protocol                       = "Tcp"
+  frontend_port                  = 8080
+  backend_port                   = 8080
+  frontend_ip_configuration_name = azurerm_lb.lb.frontend_ip_configuration[0].name
+  loadbalancer_id                = azurerm_lb.lb.id
+  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.zulip_backend_pool.id]
 }
 
 # GitHub Web App Load Balancer Rule
 resource "azurerm_lb_rule" "github_rule" {
-  name                    = "github-lb-rule"
-  protocol                = "Tcp"
-  frontend_port           = 8081
-  backend_port            = 8081
-  frontend_ip_configuration_id = azurerm_lb.lb.frontend_ip_configuration[0].id
-  backend_address_pool_id        = azurerm_lb_backend_address_pool.github_backend_pool.id
+  name                           = "github-lb-rule"
+  protocol                       = "Tcp"
+  frontend_port                  = 8081
+  backend_port                   = 8081
+  frontend_ip_configuration_name = azurerm_lb.lb.frontend_ip_configuration[0].name
+  loadbalancer_id                = azurerm_lb.lb.id
+  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.github_backend_pool.id]
 }
