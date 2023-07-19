@@ -14,18 +14,34 @@ variable "subnet_name" {
   default = "skrcsubnet"
 }
 
-variable "vm_name" {
-  default = "skrcvm"
-}
-
-variable "vm_size" {
-  default = "Standard_B2s"
-}
-
-variable "admin_username" {
+variable "mysql_server_admin_username" {
   default = "SkLoginDipP20"
 }
 
-variable "admin_password" {
+variable "mysql_server_admin_password" {
   default = "P@ssw0rd123P@ssw0rd123"
+}
+
+variable "app_service_plan_name" {
+  default = "sk-app-service-plan"
+}
+
+variable "app_service_sku" {
+  default = "F1"
+}
+
+variable "mysql_server_name" {
+  default = "sk-mysql-server"
+}
+
+variable "mysql_database_name" {
+  default = "skproj02"
+}
+
+variable "zulip_app_name" {
+  default = "zulip-app"
+}
+
+variable "github_app_name" {
+  default = "github-app"
 }
