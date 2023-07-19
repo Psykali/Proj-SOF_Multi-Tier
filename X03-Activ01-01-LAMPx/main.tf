@@ -83,17 +83,19 @@ resource "azurerm_network_security_group" "default" {
   resource_group_name = var.resource_group_name
 
 security_rule {
-    name                   = "allow-http"
-    priority               = 100
-    direction              = "Inbound"
-    access                 = "Allow"
-    protocol               = "Tcp"
-    source_port_range      = "*"
-    destination_port_range = "80"
-    source_address_prefix  = "*"
-    destination_address_prefix= "*"
-  }
+  name                   = "allow-http"
+  priority               = 100
+  direction              = "Inbound"
+  access                 = "Allow"
+  protocol               = "Tcp"
+  source_port_range      = "*"
+  destination_port_range = "80,8080"
+  source_address_prefix  = "*"
+  destination_address_prefix= "*"
+}
+
   tags = local.common_tags
+
 }
 # Create Subnet
 resource "azurerm_subnet" "default" {
@@ -118,17 +120,20 @@ resource "null_resource" "install_wordpress" {
     host     = azurerm_linux_virtual_machine.vm.public_ip_address
   }
 
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt-get update",
-      "sudo apt-get install -y curl apache2 php libapache2-mod-php mysql-server php-mysql",
-      "cd /tmp",
-      "curl -O https://wordpress.org/latest.tar.gz",
-      "tar xzvf latest.tar.gz",
-      "sudo cp /tmp/wordpress/wp-config-sample.php /tmp/wordpress/wp-config.php",
-      "sudo cp -a /tmp/wordpress/. /var/www/html",
-      "sudo chown -R www-data:www-data /var/www/html",
-      "sudo service apache2 restart",
-    ]
-  }
+provisioner "remote-exec" {
+  inline = [
+    "sudo apt-get update",
+    "sudo apt-get install -y curl apache2 php libapache2-mod-php mysql-server php-mysql",
+    "cd /tmp",
+    "curl -O https://wordpress.org/latest.tar.gz",
+    "tar xzvf latest.tar.gz",
+    "sudo cp /tmp/wordpress/wp-config-sample.php /tmp/wordpress/wp-config.php",
+    "sudo sed -i 's/define( 'DB_HOST', 'localhost' );/define( 'DB_HOST', '127.0.0.1:3306' );/' /tmp/wordpress/wp-config.php",
+    "sudo cp -a /tmp/wordpress/. /var/www/html",
+    "sudo chown -R www-data:www-data /var/www/html",
+    "sudo sed -i 's/Listen 80/Listen 8080/' /etc/apache2/ports.conf",
+    "sudo sed -i 's/<VirtualHost \\*:80>/<VirtualHost \\*:8080>/' /etc/apache2/sites-available/000-default.conf",
+    "sudo service apache2 restart",
+  ]
+}
 }
