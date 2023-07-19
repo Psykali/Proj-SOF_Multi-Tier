@@ -2,7 +2,7 @@
 resource "azurerm_mysql_server" "mysql" {
   name                = var.mysql_server_name
   location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = var.resource_group_name
   administrator_login = var.mysql_server_admin_username
   administrator_login_password = var.mysql_server_admin_password
   sku_name            = "B_Gen5_1"
@@ -15,7 +15,7 @@ resource "azurerm_mysql_server" "mysql" {
 # MySQL Database
 resource "azurerm_mysql_database" "mysql_db" {
   name                = var.mysql_database_name
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = var.resource_group_name
   server_name         = azurerm_mysql_server.mysql.name
   charset             = "UTF8"
   collation           = "UTF8_GENERAL_CI"
@@ -25,7 +25,7 @@ resource "azurerm_mysql_database" "mysql_db" {
 resource "azurerm_app_service_plan" "app_service_plan" {
   name                = var.app_service_plan_name
   location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = var.resource_group_name
   sku {
     tier = var.app_service_sku
     size = "Small"
@@ -36,7 +36,7 @@ resource "azurerm_app_service_plan" "app_service_plan" {
 resource "azurerm_app_service" "zulip_app" {
   name                = var.zulip_app_name
   location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = var.resource_group_name
   app_service_plan_id = azurerm_app_service_plan.app_service_plan.id
   site_config {
     dotnet_framework_version = "v4.0"
@@ -56,7 +56,7 @@ resource "azurerm_app_service" "zulip_app" {
 resource "azurerm_app_service" "github_app" {
   name                = var.github_app_name
   location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = var.resource_group_name
   app_service_plan_id = azurerm_app_service_plan.app_service_plan.id
   site_config {
     dotnet_framework_version = "v4.0"
@@ -76,7 +76,7 @@ resource "azurerm_app_service" "github_app" {
 resource "azurerm_lb" "lb" {
   name                = "my-lb"
   location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = resource_group_name
 
   frontend_ip_configuration {
     name                          = "PublicIPAddress"
@@ -93,7 +93,7 @@ resource "azurerm_lb" "lb" {
 resource "azurerm_public_ip" "lb_ip" {
   name                = "my-lb-ip"
   location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = var.resource_group_name
   allocation_method   = "Dynamic"
 }
 
@@ -101,7 +101,7 @@ resource "azurerm_public_ip" "lb_ip" {
 resource "azurerm_lb_backend_address_pool" "zulip_backend_pool" {
   name                = "zulip-backend-pool"
   loadbalancer_id     = azurerm_lb.lb.id
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = var.resource_group_name
 
   dynamic "ip_configuration" {
     for_each = azurerm_app_service.zulip_app.ip_addresses
@@ -115,7 +115,7 @@ resource "azurerm_lb_backend_address_pool" "zulip_backend_pool" {
 resource "azurerm_lb_backend_address_pool" "github_backend_pool" {
   name                = "github-backend-pool"
   loadbalancer_id     = azurerm_lb.lb.id
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = var.resource_group_name
 
   dynamic "ip_configuration" {
     for_each = azurerm_app_service.github_app.ip_addresses
