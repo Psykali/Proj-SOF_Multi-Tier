@@ -83,7 +83,7 @@ resource "azurerm_recovery_services_protection_policy_vm" "recovery_vault_policy
 
   azure_vm_resource_id          = azurerm_linux_virtual_machine.vm.id
   source_vm_storage_type_to_use = "GRS"
-
+}
 ## Networking
 ## Creat Vnet
 resource "azurerm_virtual_network" "vnet" {
