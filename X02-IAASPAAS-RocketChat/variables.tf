@@ -39,9 +39,9 @@ variable "mysql_database_name" {
 }
 
 variable "zulip_app_name" {
-  default = "zulip-app"
+  default = "sk-zulip-app"
 }
 
 variable "github_app_name" {
-  default = "github-app"
+  default = "sk-github-app"
 }
