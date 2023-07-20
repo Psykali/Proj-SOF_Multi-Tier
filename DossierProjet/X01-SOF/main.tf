@@ -1,4 +1,4 @@
-data "azurerm_client_config" "current" {}
+##data "azurerm_client_config" "current" {}
 
 locals {
   common_tags = {
