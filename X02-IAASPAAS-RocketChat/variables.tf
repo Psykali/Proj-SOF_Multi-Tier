@@ -36,10 +36,6 @@ variable "mysql_server_admin_password" {
 variable "mysql_database_name" {
   default = "skproj02"
 }
-####
-variable "mysql_database_name" {
-  default = "skproj02"
-}
 ##################
 ## Service Plan ##
 ##################
