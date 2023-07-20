@@ -123,3 +123,4 @@ provisioner "remote-exec" {
 ## https://github.com/alamorre/fullstack-chat
 ## https://www.youtube.com/watch?v=Fzv-rgwcFKk
 ## https://www.youtube.com/watch?v=eXAvBN5tKfU&t=580s
+## https://github.com/frdmn/docker-rocketchat/tree/master
