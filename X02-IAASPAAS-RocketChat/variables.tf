@@ -21,25 +21,25 @@ variable "subnet_name" {
 ################
 ## SQL Server ##
 ################
-##        variable "mysql_server_name" {
-##          default = "sk-mysql-server"
-##        }
+variable "mysql_server_name" {
+ default = "sk-mysql-server"
+}
+
+variable "mysql_server_admin_username" {
+  default = "SkLoginDipP20"
+}
+
+variable "mysql_server_admin_password" {
+  default = "P@ssw0rd123P@ssw0rd123"
+}
 ####
-##        variable "mysql_server_admin_username" {
-##          default = "SkLoginDipP20"
-##        }
+variable "mysql_database_name" {
+  default = "skproj02"
+}
 ####
-##        variable "mysql_server_admin_password" {
-##          default = "P@ssw0rd123P@ssw0rd123"
-##        }
-####
-##        variable "mysql_database_name" {
-##          default = "skproj02"
-##        }
-####
-##        variable "mysql_database_name" {
-##          default = "skproj02"
-##        }
+variable "mysql_database_name" {
+  default = "skproj02"
+}
 ##################
 ## Service Plan ##
 ##################
@@ -61,24 +61,44 @@ variable "server_wiki_app" {
 #################
 ## PostGres DB ##
 #################
+##variable "postgres_server_name" {
+##  default = "sk-postgres-server"
+##}
+######
+##variable "postgres_admin_username" {
+##  default = "SkLoginDipP20"
+##}
+######
+##variable "postgres_admin_password" {
+##  default = "P@ssw0rd123P@ssw0rd123"
+##}
+######
+##variable "postgres_database_name" {
+##  default = "skprojpg02"
+##}
+#################
+## Cosmos DB ##
+#################
 variable "postgres_server_name" {
   default = "sk-postgres-server"
+} 
+#################
+## RocketChat ##
+#################
+variable "rocketchat_app_name" {
+  default = "sk-rc"
 }
-####
-variable "postgres_admin_username" {
-  default = "SkLoginDipP20"
+##                  ####
+variable "rocketchat_mail_url" {
+  default = ""
 }
-####
-variable "postgres_admin_password" {
-  default = "P@ssw0rd123P@ssw0rd123"
-}
-####
-variable "postgres_database_name" {
-  default = "skprojpg02"
-}
+##                  ####
+variable "rocketchat_root_url" {
+  default = ""
+} 
 ###########
 ## Redis ##
 ###########
-variable "redis_name" {
-  default = "sk-redis-server"
-}
+##variable "redis_name" {
+##  default = "sk-redis-server"
+##}
