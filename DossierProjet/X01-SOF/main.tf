@@ -51,3 +51,6 @@ provisioner "remote-exec" {
     }
 }
 }
+
+## https://gpt.h2o.ai/
+## https://www.youtube.com/watch?v=Coj72EzmX20
