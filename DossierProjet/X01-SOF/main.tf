@@ -55,7 +55,7 @@ provisioner "remote-exec" {
         type     = "ssh"
         user     = var.admin_username
         password = var.admin_password
-        host     = azurerm_public_ip.pip.ip_address
+        host     = azurerm_public_ip.vm.ip_address
     }
 }
 }
