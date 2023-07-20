@@ -75,8 +75,8 @@ variable "server_wiki_app" {
 #################
 ## Cosmos DB ##
 #################
-variable "postgres_server_name" {
-  default = "sk-postgres-server"
+variable "cosmosdb_account_name" {
+  default = "sk-cosmosdb"
 } 
 #################
 ## RocketChat ##
