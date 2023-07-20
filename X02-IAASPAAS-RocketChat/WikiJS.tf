@@ -31,3 +31,5 @@ resource "azurerm_app_service" "server_wiki_app" {
     ##        "DB_NAME"             = azurerm_postgresql_database.postgres_db.name
     ##    }
 }
+##https://hub.docker.com/r/linuxserver/wikijs
+##https://hub.docker.com/_/mediawiki
