@@ -1,8 +1,16 @@
+locals {
+  common_tags = {
+    CreatedBy = "SK"
+    Env       = "Prod"
+    Why       = "DipP20"
+  }
+}
+
 # Create a virtual machine
 resource "azurerm_linux_virtual_machine" "vm" {
   name                = "h2ogpt-vm"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = var.location
+  resource_group_name = var.resource_group_name
   size                = "Standard_B1s"
 
   network_interface_ids = [
