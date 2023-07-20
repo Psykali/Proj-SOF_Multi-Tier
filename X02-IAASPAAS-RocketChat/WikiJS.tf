@@ -13,11 +13,21 @@ resource "azurerm_app_service" "server_wiki_app" {
   app_settings = {
     "WIKI_ADMIN_EMAIL"    = var.wiki_admin_email
     "WIKI_ADMIN_PASSWORD" = var.wiki_admin_password
-    "DB_TYPE"             = "postgres"
-    "DB_HOST"             = azurerm_postgresql_server.postgres.fqdn
-    "DB_PORT"             = 5432
-    "DB_USER"             = azurerm_postgresql_server.postgres.administrator_login
-    "DB_PASS"             = azurerm_postgresql_server.postgres.administrator_login_password
-    "DB_NAME"             = azurerm_postgresql_database.postgres_db.name
+    "DB_TYPE"             = "mysql"
+    "DB_HOST"             = azurerm_mysql_server.mysql.fqdn
+    "DB_PORT"             = 3306
+    "DB_USER"             = azurerm_mysql_server.mysql.administrator_login
+    "DB_PASS"             = azurerm_mysql_server.mysql.administrator_login_password
+    "DB_NAME"             = azurerm_mysql_database.mysql_db.name
   }
+    ##    app_settings = {
+    ##        "WIKI_ADMIN_EMAIL"    = var.wiki_admin_email
+    ##        "WIKI_ADMIN_PASSWORD" = var.wiki_admin_password
+    ##        "DB_TYPE"             = "postgres"
+    ##        "DB_HOST"             = azurerm_postgresql_server.postgres.fqdn
+    ##        "DB_PORT"             = 5432
+    ##        "DB_USER"             = azurerm_postgresql_server.postgres.administrator_login
+    ##        "DB_PASS"             = azurerm_postgresql_server.postgres.administrator_login_password
+    ##        "DB_NAME"             = azurerm_postgresql_database.postgres_db.name
+    ##    }
 }
