@@ -34,6 +34,11 @@ variable "mysql_server_name" {
   default = "sk-mysql-server"
 }
 
+variable "postgres_server_name" {
+  default = "sk-postgres-server"
+}
+
+
 variable "mysql_database_name" {
   default = "skproj02"
 }
