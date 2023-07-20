@@ -14,7 +14,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   size                = "Standard_B1s"
 
   network_interface_ids = [
-    azurerm_network_interface.nic.id,
+    azurerm_network_interface.default.id,
   ]
 
   os_disk {
