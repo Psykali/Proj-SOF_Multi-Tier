@@ -1,3 +1,6 @@
+#####################
+## Ressource Group ##
+#####################
 variable "location" {
   default = "francecentral"
 }
@@ -5,7 +8,9 @@ variable "location" {
 variable "resource_group_name" {
   default = "PERSO_SIEF"
 }
-
+############
+## Admin  ##
+############
 variable "admin_username" {
   default = "SkLoginDipP20"
 }
@@ -13,11 +18,15 @@ variable "admin_username" {
 variable "admin_password" {
   default = "P@ssw0rd123P@ssw0rd123"
 }
-
+########
+## VM ##
+########
 variable "ubuntu-vm" {
   default = "skwpp20lamp"
 }
-
+################
+## Networking ##
+################
 variable "subnet" {
   default = "skwpp20subnet"
 }
