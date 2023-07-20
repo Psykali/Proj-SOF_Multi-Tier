@@ -42,6 +42,6 @@ variable "zulip_app_name" {
   default = "sk-zulip-app"
 }
 
-variable "github_app_name" {
-  default = "sk-github-app"
+variable "server_wiki_app" {
+  default = "sk-wiki-app"
 }
