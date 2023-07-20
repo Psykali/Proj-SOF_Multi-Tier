@@ -11,7 +11,8 @@ resource "azurerm_app_service" "rocketchat_app" {
   }
 
   app_settings = {
-    "MONGO_URL"       = var.rocketchat_mongo_url
+    "MONGO_URL"       = azurerm_cosmosdb_account.cosmosdb.connection_strings[0]
+    "MONGO_OPLOG_URL" = azurerm_cosmosdb_account.cosmosdb.connection_strings[0]
     "ROOT_URL"        = var.rocketchat_root_url
     "MAIL_URL"        = var.rocketchat_mail_url
     "PORT"            = "3000"
