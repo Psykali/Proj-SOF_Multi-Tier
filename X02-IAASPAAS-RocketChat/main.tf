@@ -39,16 +39,19 @@ resource "azurerm_app_service" "zulip_app" {
   app_service_plan_id = azurerm_app_service_plan.app_service_plan.id
 
   site_config {
-    linux_fx_version = "DOCKER|<DockerImageName>"
+    linux_fx_version = "DOCKER|zulip/docker-zulip:4.8-0"
     scm_type         = "None"
   }
 
   app_settings = {
-    "MYSQL_SERVER_NAME"   = azurerm_mysql_server.mysql.fqdn
-    "MYSQL_DATABASE_NAME" = azurerm_mysql_database.mysql_db.name
-    "MYSQL_USERNAME"      = azurerm_mysql_server.mysql.administrator_login
-    "MYSQL_PASSWORD"      = azurerm_mysql_server.mysql.administrator_login_password
-    "PORT"                = "8080"
+    "SECRETS_email_password"      = var.zulip_email_password
+    "SECRETS_rabbitmq_password"   = var.zulip_rabbitmq_password
+    "SECRETS_postgres_password"   = var.zulip_postgres_password
+    "SECRETS_memcached_password"  = var.zulip_memcached_password
+    "SECRETS_redis_password"      = var.zulip_redis_password
+    "SETTING_EXTERNAL_HOST"       = var.zulip_external_host
+    "SETTING_ZULIP_ADMINISTRATOR" = var.zulip_administrator_email
+    "SETTING_ADMIN_DOMAIN"        = var.zulip_admin_domain
   }
 }
 
@@ -60,16 +63,19 @@ resource "azurerm_app_service" "server_wiki_app" {
   app_service_plan_id = azurerm_app_service_plan.app_service_plan.id
 
   site_config {
-    linux_fx_version = "DOCKER|<DockerImageName>"
+    linux_fx_version = "DOCKER|requarks/wiki:2"
     scm_type         = "None"
   }
 
   app_settings = {
-    "MYSQL_SERVER_NAME"   = azurerm_mysql_server.mysql.fqdn
-    "MYSQL_DATABASE_NAME" = azurerm_mysql_database.mysql_db.name
-    "MYSQL_USERNAME"      = azurerm_mysql_server.mysql.administrator_login
-    "MYSQL_PASSWORD"      = azurerm_mysql_server.mysql.administrator_login_password
-    "PORT"                = "8081"
+    "WIKI_ADMIN_EMAIL"    = var.wiki_admin_email
+    "WIKI_ADMIN_PASSWORD" = var.wiki_admin_password
+    "DB_TYPE"             = "mysql"
+    "DB_HOST"             = azurerm_mysql_server.mysql.fqdn
+    "DB_PORT"             = 3306
+    "DB_USER"             = azurerm_mysql_server.mysql.administrator_login
+    "DB_PASS"             = azurerm_mysql_server.mysql.administrator_login_password
+    "DB_NAME"             = azurerm_mysql_database.mysql_db.name
   }
 }
 
