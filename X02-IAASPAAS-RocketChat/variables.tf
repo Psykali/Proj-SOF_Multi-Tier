@@ -98,3 +98,15 @@ variable "rocketchat_root_url" {
 ##variable "redis_name" {
 ##  default = "sk-redis-server"
 ##}
+###########
+## WikiJs ##
+###########
+variable "server_wiki_app_name" {
+  default = "sk-wikijs"
+}
+variable "wiki_admin_email" {
+  default = "helahopahelahopa1@gmail.com"
+}
+variable "wiki_admin_password" {
+  default = "P@ssw0rd123P@ssw0rd1!2!3?"
+}
