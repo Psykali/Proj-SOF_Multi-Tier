@@ -79,17 +79,11 @@ resource "null_resource" "install_wordpress" {
       # Enable SSL and the default-ssl site in Apache
 #      "sudo a2enmod ssl",
  #     "sudo a2ensite default-ssl",
+#      "sudo systemctl reload apache2",
 
       # Create a virtual host for the Donut app on port 80
-#      "echo '<VirtualHost *:80>' | sudo tee /etc/apache2/sites-available/donut.conf",
- #     "echo '  ServerName localhost' | sudo tee -a /etc/apache2/sites-available/donut.conf",
- #     "echo '  DocumentRoot /var/www/html/Donut' | sudo tee -a /etc/apache2/sites-available/donut.conf",
- #     "echo '</VirtualHost>' | sudo tee -a /etc/apache2/sites-available/donut.conf",
-#      "sudo a2ensite donut",
+#      "
 
-      # Restart the Apache service
-#      "sudo service apache2 restart",
-#    ]
 #}
 provisioner "remote-exec" {
     inline = [
