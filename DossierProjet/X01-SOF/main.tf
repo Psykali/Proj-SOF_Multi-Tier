@@ -114,7 +114,7 @@ source_image_reference {
 #    host     = azurerm_linux_virtual_machine.vm.public_ip_address
 #  }
 # }
-}
+#}
 ## https://github.com/alamorre/fullstack-chat
 ## https://www.youtube.com/watch?v=Fzv-rgwcFKk
 ## https://www.youtube.com/watch?v=eXAvBN5tKfU&t=580s
