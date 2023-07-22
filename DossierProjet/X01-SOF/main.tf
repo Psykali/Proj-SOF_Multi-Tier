@@ -34,7 +34,7 @@ os_disk {
 source_image_reference {
     publisher= "Canonical"
     offer    = "UbuntuServer"
-    sku      = "18.04-LTS"
+    sku      = "22.04-LTS"
     version= "latest"
 }
 
@@ -47,10 +47,10 @@ source_image_reference {
 #######################################################################
 ## Bash Scripting
 # Deploy LAMP Server Ports 80, 443, 8050, 3306
-resource "null_resource" "install_wordpress" {
-  depends_on = [
-    azurerm_linux_virtual_machine.vm,
-  ]
+#resource "null_resource" "install_wordpress" {
+#  depends_on = [
+#    azurerm_linux_virtual_machine.vm,
+#  ]
 
 #  connection {
  #   type     = "ssh"
@@ -85,35 +85,35 @@ resource "null_resource" "install_wordpress" {
 #      "
 
 #}
-provisioner "remote-exec" {
-    inline = [
-      # Update packages
-      "sudo apt-get update",
-      "sudo apt-get upgrade -y ",
-      "sudo apt-get install -y apache2 curl git",
-      # Install Node.js
-      "curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -",
-      "sudo apt-get install -y nodejs",
-      # Install MongoDB
-      "sudo apt-get install -y mongodb",
-      # Clone the Fullstack Chat repository
-      "git clone https://github.com/alamorre/fullstack-chat.git",
-      # Change to the fullstack-chat directory
-      "cd fullstack-chat",
-      # Install Node.js packages
-      "npm install",
-      # Start the application
-      "npm start",
-       # Start the application on port 8080
+#provisioner "remote-exec" {
+#    inline = [
+#      # Update packages
+#      "sudo apt-get update",
+#      "sudo apt-get upgrade -y ",
+#      "sudo apt-get install -y apache2 curl git",
+#      # Install Node.js
+#      "curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -",
+#      "sudo apt-get install -y nodejs",
+#      # Install MongoDB
+#      "sudo apt-get install -y mongodb",
+#      # Clone the Fullstack Chat repository
+#      "git clone https://github.com/alamorre/fullstack-chat.git",
+#      # Change to the fullstack-chat directory
+#      "cd fullstack-chat",
+#      # Install Node.js packages
+#      "npm install",
+#      # Start the application
+#      "npm start",
+#       # Start the application on port 8080
  ##     "PORT=8080 npm start &",
-    ]
-  connection {
-    type     = "ssh"
-    user     = var.admin_username
-    password = var.admin_password
-    host     = azurerm_linux_virtual_machine.vm.public_ip_address
-  }
-}
+#    ]
+#  connection {
+#    type     = "ssh"
+#    user     = var.admin_username
+#    password = var.admin_password
+#    host     = azurerm_linux_virtual_machine.vm.public_ip_address
+#  }
+# }
 }
 ## https://github.com/alamorre/fullstack-chat
 ## https://www.youtube.com/watch?v=Fzv-rgwcFKk
