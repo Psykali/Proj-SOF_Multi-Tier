@@ -1,6 +1,7 @@
 #######################
 ### Install Updates ###
 #######################
+sudo -i
 # Fetch latest updates
 sudo apt -qqy update && sudo apt upgrade -y
 
