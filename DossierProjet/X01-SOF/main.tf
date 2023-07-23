@@ -7,6 +7,9 @@ locals {
     Why       = "DipP20"
   }
 }
+locals {
+  dns_name = "${data.azurerm_public_ip.vm_public_ip.name}.cloudapp.azure.com"
+}
 ###########################################
 ## Create Resource Group
 ##resource "azurerm_resource_group" "rg" {
@@ -50,6 +53,50 @@ os_disk {
 #######################################################################
 #######################################################################
 ## Bash Scripting
+resource "null_resource" "update_gitlab_config" {
+  provisioner "remote-exec" {
+    inline = [
+      #######################
+### Install Updates ###
+#######################
+# Fetch latest updates
+"sudo apt -qqy update && sudo apt upgrade -y",
+
+###################################
+### Installing the Dependencies ###
+###################################
+"sudo apt install ca-certificates curl openssh-server postfix tzdata perl",
+
+#########################
+### Installing Gitlab ###
+#########################
+"cd /tmp",
+"curl -LO https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh",
+"sudo bash /tmp/script.deb.sh",
+"sudo apt install gitlab-ce",
+################
+### FireWall ###
+################
+#sudo ufw allow http
+#sudo ufw allow https
+#sudo ufw allow OpenSSH
+
+##########################
+### Gitlab File Config ###
+##########################
+"sudo sed -i 's/http://your_domain/http://${local.dns_name}/' /etc/gitlab/gitlab.rb",
+"sudo gitlab-ctl reconfigure"
+    ]
+
+    connection {
+      type        = "ssh"
+      user        = var.admin_username
+      password    = var.admin_password
+      host        = data.azurerm_public_ip.vm_public_ip.ip_address
+    }
+  }
+}
+
 # Deploy LAMP Server Ports 80, 443, 8050, 3306
 #resource "null_resource" "install_wordpress" {
 #  depends_on = [
