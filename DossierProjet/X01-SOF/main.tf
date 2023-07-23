@@ -31,13 +31,17 @@ os_disk {
     storage_account_type= "Standard_LRS"
 }
 
-source_image_reference {
-    publisher= "Canonical"
-    offer    = "UbuntuServer"
-    sku      = "20.04-LTS"
-    version= "latest"
-}
-
+#source_image_reference {
+#    publisher= "Canonical"
+#    offer    = "UbuntuServer"
+#    sku      = "20.04-LTS"
+#    version= "latest"
+#}
+ plan {
+    publisher = "articentgroupllc1635512619530"
+    product   = "wiki-js-wiki-engine-server-debian-11"
+    name      = "wiki-js-wiki-engine-server-debian-11"
+  }
   admin_username= var.admin_username
   admin_password= var.admin_password
 
