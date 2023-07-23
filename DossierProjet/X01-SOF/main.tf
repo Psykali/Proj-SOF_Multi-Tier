@@ -52,7 +52,10 @@ os_disk {
 }
 #######################################################################
 #######################################################################
-## Bash Scripting
+### Bash Scripting ###
+#########################
+### Installing Gitlab ###
+######################### 
 resource "null_resource" "update_gitlab_config" {
   provisioner "remote-exec" {
     inline = [
@@ -96,6 +99,7 @@ resource "null_resource" "update_gitlab_config" {
     }
   }
 }
+### Links: https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-gitlab-on-ubuntu-20-04
 
 # Deploy LAMP Server Ports 80, 443, 8050, 3306
 #resource "null_resource" "install_wordpress" {
