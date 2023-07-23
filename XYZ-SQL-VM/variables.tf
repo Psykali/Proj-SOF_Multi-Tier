@@ -1,39 +1,112 @@
-variable "location" {
-  default = "westeurope"
-}
-
+#####################
+## Ressource Group ##
+#####################
 variable "resource_group_name" {
   default = "PERSO_SIEF"
 }
+####
+variable "location" {
+  default = "francecentral"
+}
+################
+## Networking ##
+################
+variable "vnet_name" {
+  default = "skrcvnet"
+}
+####
+variable "subnet_name" {
+  default = "skrcsubnet"
+}
+################
+## SQL Server ##
+################
+variable "mysql_server_name" {
+ default = "sk-mysql-server"
+}
 
-variable "admin_username" {
+variable "mysql_server_admin_username" {
   default = "SkLoginDipP20"
 }
 
-variable "admin_password" {
+variable "mysql_server_admin_password" {
   default = "P@ssw0rd123P@ssw0rd123"
 }
-
-variable "ubuntu-vm" {
-  default = "skwpp20mdb"
+####
+variable "mysql_database_name" {
+  default = "skproj02"
 }
-
-variable "subnet" {
-  default = "skwpp20subnet"
+##################
+## Service Plan ##
+##################
+variable "app_service_plan_name" {
+  default = "sk-app-service-plan"
 }
-
-variable "virtual_network" {
-  default = "skwpp20vnet"
+####
+variable "app_service_sku" {
+  default = "F1"
 }
-
-variable "network_interface" {
-  default = "skwpp20nic"
+####
+variable "zulip_app_name" {
+  default = "sk-zulip-app"
 }
-
-variable "ubuntu-ipconfig" {
-  default = "skwpp20ip"
+####
+variable "server_wiki_app" {
+  default = "sk-wiki-app"
 }
-
-variable "ubuntu-pip" {
-  default = "skwpp20pip"
+#################
+## PostGres DB ##
+#################
+##variable "postgres_server_name" {
+##  default = "sk-postgres-server"
+##}
+######
+##variable "postgres_admin_username" {
+##  default = "SkLoginDipP20"
+##}
+######
+##variable "postgres_admin_password" {
+##  default = "P@ssw0rd123P@ssw0rd123"
+##}
+######
+##variable "postgres_database_name" {
+##  default = "skprojpg02"
+##}
+#################
+## Cosmos DB ##
+#################
+variable "cosmosdb_account_name" {
+  default = "sk-cosmosdb"
+} 
+#################
+## RocketChat ##
+#################
+variable "rocketchat_app_name" {
+  default = "sk-rc"
+}
+##                  ####
+variable "rocketchat_mail_url" {
+  default = ""
+}
+##                  ####
+variable "rocketchat_root_url" {
+  default = ""
+} 
+###########
+## Redis ##
+###########
+##variable "redis_name" {
+##  default = "sk-redis-server"
+##}
+###########
+## WikiJs ##
+###########
+variable "server_wiki_app_name" {
+  default = "sk-wikijs"
+}
+variable "wiki_admin_email" {
+  default = "helahopahelahopa1@gmail.com"
+}
+variable "wiki_admin_password" {
+  default = "P@ssw0rd123P@ssw0rd1!2!3?"
 }
