@@ -10,6 +10,6 @@ variable "location_contreg" {
   description = "westeurope"
 }
 
-variable "contreg_name" {
-  description = "skP20ContReg"
-}
+##variable "contreg_name" {
+##  description = "skP20ContReg"
+##}
