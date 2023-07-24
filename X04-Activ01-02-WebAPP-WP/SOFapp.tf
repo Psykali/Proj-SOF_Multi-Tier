@@ -24,7 +24,7 @@ resource "docker_image" "my_image" {
   name = "sksof:latest"
   build {
     context = "./dockerfile"
-  "features": {
+  features: {
     "buildkit": false
   }
   }
