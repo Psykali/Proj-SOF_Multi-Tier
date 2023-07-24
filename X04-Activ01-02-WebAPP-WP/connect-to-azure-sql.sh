@@ -2,7 +2,7 @@
 
 # Read environment variables
 DB_SERVER=sksqldbservdprop20
-DB_NAME=skwp_sqldb
+DB_NAME=skdpprosqldb
 DB_USER=SkLoginDipP20
 DB_PASSWORD=P@ssw0rd123P@ssw0rd123
 
