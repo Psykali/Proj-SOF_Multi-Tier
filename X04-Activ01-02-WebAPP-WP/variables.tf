@@ -19,11 +19,11 @@ variable "app_service" {
 }
 
 variable "sql_server_name" {
-  default = "sksqlserver"
+  default = "sksqldbservdprop20"
 }
 
 variable "sql_database_name" {
-  default = "skwp_sqldb"
+  default = "skdpprosqldb"
 }
 
 variable "storage_account_name" {
