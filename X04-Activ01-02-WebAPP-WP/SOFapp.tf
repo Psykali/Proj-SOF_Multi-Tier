@@ -43,7 +43,7 @@ resource "azurerm_container_group" "cg" {
   name                = "skcontgrp"
   resource_group_name = var.resource_group_name
   location            = var.location
-  ip_address_type     = "public"
+  ip_address_type     = "Public"
   dns_name_label      = "sksof"
   os_type             = "Linux"
 
