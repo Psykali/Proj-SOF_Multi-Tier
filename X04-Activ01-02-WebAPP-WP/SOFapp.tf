@@ -31,7 +31,12 @@ resource "docker_image" "my_image" {
 resource "docker_container" "my_container" {
   image = docker_image.my_image.latest
   name  = "sksofcont"
-  depends_on = [docker_image.my_image]
+  env = [
+    "DB_SERVER=${azurerm_sql_server.sqlserver.fully_qualified_domain_name}",
+    "DB_NAME=${azurerm_sql_database.sqldb.name}",
+    "DB_USER=${azurerm_sql_server.sqlserver.administrator_login}",
+    "DB_PASSWORD=${azurerm_sql_server.sqlserver.administrator_login_password}"
+  ]
 }
 
 resource "azurerm_container_group" "cg" {
