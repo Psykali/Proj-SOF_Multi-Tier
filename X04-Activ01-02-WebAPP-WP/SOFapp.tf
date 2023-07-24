@@ -24,6 +24,9 @@ resource "docker_image" "my_image" {
   name = "sksof:latest"
   build {
     context = "./dockerfile"
+  "features": {
+    "buildkit": false
+  }
   }
   depends_on = [azurerm_sql_database.sqldb]
 }
