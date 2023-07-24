@@ -19,7 +19,7 @@ variable "app_service" {
 }
 
 variable "sql_server_name" {
-  default = "skwp_sqlserver"
+  default = "sksqlserver"
 }
 
 variable "sql_database_name" {
