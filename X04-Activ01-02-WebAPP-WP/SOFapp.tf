@@ -29,7 +29,7 @@ resource "docker_image" "my_image" {
 }
 
 resource "docker_container" "my_container" {
-  image = docker_image.my_image.latest
+  image = docker_image.my_image.name
   name  = "sksofcont"
   env = [
     "DB_SERVER=${azurerm_sql_server.sqlserver.fully_qualified_domain_name}",
