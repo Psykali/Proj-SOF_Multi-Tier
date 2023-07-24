@@ -7,10 +7,12 @@
 ############################################################
 # Create the container registry
 resource "azurerm_container_registry" "acr" {
-# ## name                = var.contreg_name
+## name                = var.contreg_name
+##  resource_group_name = var.resource_group_name
+##  location            = var.location_contreg
   name                = "skP20ContReg"
-  resource_group_name = var.resource_group_name
-  location            = var.location_contreg
+  resource_group_name = "PERSO_SIEF"
+  location            = "westeurope"
   sku                 = "Basic"
   admin_enabled       = true
 
@@ -18,5 +20,6 @@ resource "azurerm_container_registry" "acr" {
     Env = "Prod"
     Why = "DiplomeP20"
     CreatedBy = "SK"
+    
   }
 }
