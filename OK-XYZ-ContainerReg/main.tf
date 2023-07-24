@@ -7,7 +7,8 @@
 ############################################################
 # Create the container registry
 resource "azurerm_container_registry" "acr" {
-  name                = var.contreg_name
+#  name                = var.contreg_name
+  name                = "skP20ContReg"
   resource_group_name = var.resource_group_name
   location            = var.location_contreg
   sku                 = "Basic"
