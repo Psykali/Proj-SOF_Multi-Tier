@@ -5,7 +5,7 @@
 #}
 ############################################
 resource "azurerm_sql_server" "sqlserver" {
-  name                         = "sksqldb"
+  name                         = var.sql_server_name
   resource_group_name          = var.resource_group_name
   location                     = var.location
   version                      = "12.0"
@@ -14,7 +14,7 @@ resource "azurerm_sql_server" "sqlserver" {
 }
 
 resource "azurerm_sql_database" "sqldb" {
-  name                = "sksofdb"
+  name                = var.sql_server_name
   resource_group_name = var.resource_group_name
   location            = var.location
   server_name         = azurerm_sql_server.sqlserver.name
