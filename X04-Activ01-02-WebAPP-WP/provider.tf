@@ -5,7 +5,12 @@ terraform {
       version = "3.40.0"
     }
   }
-
+  required_providers {
+      docker = {
+        source  = "kreuzwerker/docker"
+        version = "~> 3.0"
+      }
+    }
   backend "azurerm" {
     resource_group_name  = "PERSO_SIEF"
     storage_account_name = "sppersotfstates"
