@@ -60,11 +60,57 @@ This Terraform script deploys the necessary infrastructure components to set up 
 
 The front-end service will be accessible using the public IP provided by the LoadBalancer service.
 
+# Diagram
++-------------------------------------+
+|          Azure Resource Group       |
+|                (RG)                 |
++-------------------------------------+
+                |
+                |
++------------------------------------------------------+
+|       Virtual Network & Subnet                      |
+|     (azurerm_virtual_network & azurerm_subnet)       |
++------------------------------------------------------+
+                |
+                |
++--------------------------------------------------------------+
+|       Public IP Address & Load Balancer                      |
+|   (azurerm_public_ip & azurerm_lb)                           |
++--------------------------------------------------------------+
+                |
+                |
++--------------------------------------------------------------+
+|         Network Interface & AKS Cluster                     |
+|   (azurerm_network_interface & azurerm_kubernetes_cluster)   |
++--------------------------------------------------------------+
+                |
+                |
++--------------------------------------------------+
+|         Kubernetes Namespace                      |
+|       (azurerm_kubernetes_namespace)              |
++--------------------------------------------------+
+
+In this diagram, each box represents a step or component in the project flow for deploying Azure Kubernetes Service (AKS) infrastructure. Here's a brief explanation of each step:
+
+Azure Resource Group (RG): Create an Azure Resource Group to logically group all the resources related to the AKS deployment.
+
+Virtual Network & Subnet: Provision a Virtual Network and a Subnet within the resource group to isolate the AKS cluster's networking.
+
+Public IP Address & Load Balancer: Create a Public IP Address and a Load Balancer that will be used to expose the AKS services to the internet.
+
+Network Interface & AKS Cluster: Set up a Network Interface for the AKS cluster's virtual machines and create the AKS cluster with desired configurations, such as node count, VM size, and Kubernetes version.
+
+Kubernetes Namespace: Create a Kubernetes Namespace within the AKS cluster. Namespaces provide an additional level of isolation and organization within the cluster.
+
+This flow represents the infrastructure deployment steps for setting up an Azure Kubernetes Service (AKS) cluster. After completing these steps, you can proceed with deploying applications and services within the AKS cluster. Depending on your project's requirements, you may also need to integrate AKS with Azure DevOps for CI/CD pipelines or configure other features like monitoring and scaling.
+
 # Cleanup
 To destroy the AKS infrastructure and associated resources, run the following command: terraform destroy
 
 # Note
 Please ensure that you have the appropriate permissions and access rights in your Azure subscription to create the resources specified in the Terraform script
+
+
 
 ## Usage
 
