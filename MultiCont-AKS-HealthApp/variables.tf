@@ -27,7 +27,7 @@ variable "admin_password" {
 #########################
 variable "contreg_name" {
   type        = string
-  default = "psykprojs-acr"
+  default = "psykprojsacr"
 }
 
 variable "location_contreg" {
@@ -40,12 +40,12 @@ variable "location_contreg" {
 ###############
 variable "kubernetes_cluster_name" {
   type        = string
-  default = "psykprojs-aks"
+  default = "psykprojsaks"
 }
 
 variable "dns_prefix" {
   type        = string
-  default = "psykprojs-aks"
+  default = "psykprojsaks"
 }
 
 variable "node_pool_name" {
