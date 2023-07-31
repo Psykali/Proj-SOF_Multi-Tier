@@ -1,6 +1,6 @@
 ### Create Azure Container Registry
 resource "azurerm_container_registry" "psykprojs" {
-  name                = "psykprojs-acr"
+  name                = var.contreg_name
   resource_group_name = var.resource_group_name
   location            = var.location_contreg
   sku                 = "Standard"
