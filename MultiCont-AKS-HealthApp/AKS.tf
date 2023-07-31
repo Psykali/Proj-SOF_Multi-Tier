@@ -9,24 +9,17 @@ resource "azurerm_kubernetes_cluster" "psykprojs" {
   kubernetes_version  = "1.14.7"
 
   default_node_pool {
-    name                = var.node_pool_name
-    node_count          = 3
-    vm_size             = "Standard_D2_v2"
-    os_type             = "Linux"
-    os_disk_size_gb     = 0
-  }
-
-  linux_profile {
-    admin_username = var.admin_username
-    ssh_key {
-      key_data = "ssh-rsa AAAAB...snip...UcyupgH azureuser@linuxvm"
-    }
+    name            = var.node_pool_name
+    node_count      = 3
+    vm_size         = "Standard_DS2_v2"
+    os_disk_size_gb = 30
   }
 
   identity {
     type = "SystemAssigned"
   }
-  
+
+
   depends_on = [
     azurerm_subnet.aks,
   ]
