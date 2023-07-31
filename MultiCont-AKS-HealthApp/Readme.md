@@ -24,7 +24,8 @@ Before you begin, make sure you have the following prerequisites:
 
 - Kubernetes cluster (AKS or any other Kubernetes cluster)
 - Azure Container Registry (ACR) to store the container images
-- Docker installed on your local machine to build and push the container images to ACR
+- Terraform
+- Docker to build and push the container images to ACR
 
 ## Getting Started
 
@@ -36,9 +37,45 @@ To get started with the My Health Clinic application, follow these steps:
 4. Update the `mhc-front.yaml` file with the correct ACR information in the `image` field.
 5. Deploy the application to your Kubernetes cluster using the provided YAML files.
 
+
 ## Application Deployment
 
-The application can be deployed to a Kubernetes cluster using the provided YAML files. Follow the steps below to deploy the application:
+# Azure Kubernetes Service (AKS) Infrastructure Deployment
+This Terraform script deploys the necessary infrastructure components to set up an Azure Kubernetes Service (AKS) cluster. The script will create the following resources:
 
-1. Deploy the Redis backend service:
+- Azure Virtual Network
+- Subnet for AKS
+- Public IP Address for the Load Balancer
+- Load Balancer
+- Backend Address Pool for the Load Balancer
+- Load Balancer Rule
+- Network Interface for AKS
+- AKS Cluster
+
+
+1. Deploy the Redis backend service: kubectl apply -f mhc-back.yaml
+2. Deploy the front-end service: kubectl apply -f mhc-front.yaml
+3. Expose the front-end service to the internet:  kubectl apply -f mhc-front-service.yaml
+
+
+The front-end service will be accessible using the public IP provided by the LoadBalancer service.
+
+# Cleanup
+To destroy the AKS infrastructure and associated resources, run the following command: terraform destroy
+
+# Note
+Please ensure that you have the appropriate permissions and access rights in your Azure subscription to create the resources specified in the Terraform script
+
+## Usage
+
+Once the application is deployed and the front-end service is exposed, you can access the My Health Clinic web application using the public IP provided by the LoadBalancer service. Open a web browser and navigate to the front-end service's public IP to interact with the application.
+
+## Contributing
+
+We welcome contributions to this Terraform script. If you find any issues or have suggestions for improvements, feel free to submit a pull request.
+
+## License
+
+This Terraform script is licensed under the MIT License. See the LICENSE file for more details..
+
 
