@@ -6,7 +6,6 @@ resource "azurerm_kubernetes_cluster" "psykprojs" {
   location            = var.location
   resource_group_name = var.resource_group_name
   dns_prefix          = var.dns_prefix
-  kubernetes_version  = "1.14.7"
 
   default_node_pool {
     name            = var.node_pool_name
