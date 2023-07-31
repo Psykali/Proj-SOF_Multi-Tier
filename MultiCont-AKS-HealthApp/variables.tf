@@ -44,33 +44,6 @@ variable "node_pool_name" {
   description = "psykprojs-agentpool"
 }
 
-################
-## Networking ##
-################
-variable "subnet" {
-  default = "skwpp20subnet"
-}
-
-variable "virtual_network_name" {
-  default = "skwpp20vnet"
-}
-
-variable "virtual_network" {
-  default = "skwpp20net"
-}
-
-variable "network_interface" {
-  default = "skwpp20nic"
-}
-
-variable "network_security_group_name" {
-  default = "skwpp20nsg"
-}
-
-variable "ubuntu-ipconfig" {
-  default = "skwpp20ip"
-}
-
-variable "ubuntu-pip" {
-  default = "skwpp20pip"
+variable "namespace_name" {
+  description = "healthappli"
 }
