@@ -50,7 +50,7 @@ variable "dns_prefix" {
 
 variable "node_pool_name" {
   type        = string
-  default = "psykprojspool"
+  default = "psykprojspl"
 }
 
 variable "namespace_name" {
