@@ -32,7 +32,7 @@ variable "contreg_name" {
 
 variable "location_contreg" {
   type        = string
-  description = "westeurope"
+  default = "westeurope"
 }
 
 ###############
@@ -45,15 +45,15 @@ variable "kubernetes_cluster_name" {
 
 variable "dns_prefix" {
   type        = string
-  description = "psykprojs-aks"
+  default = "psykprojs-aks"
 }
 
 variable "node_pool_name" {
   type        = string
-  description = "psykprojs-agentpool"
+  default = "psykprojs-agentpool"
 }
 
 variable "namespace_name" {
   type        = string
-  description = "healthappli"
+  default = "healthappli"
 }
