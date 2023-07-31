@@ -61,34 +61,34 @@ This Terraform script deploys the necessary infrastructure components to set up 
 The front-end service will be accessible using the public IP provided by the LoadBalancer service.
 
 # Diagram
-+-------------------------------------+
-|          Azure Resource Group       |
-|                (RG)                 |
-+-------------------------------------+
-                |
-                |
-+------------------------------------------------------+
-|       Virtual Network & Subnet                      |
-|     (azurerm_virtual_network & azurerm_subnet)       |
-+------------------------------------------------------+
-                |
-                |
-+--------------------------------------------------------------+
-|       Public IP Address & Load Balancer                      |
-|   (azurerm_public_ip & azurerm_lb)                           |
-+--------------------------------------------------------------+
-                |
-                |
-+--------------------------------------------------------------+
-|         Network Interface & AKS Cluster                     |
-|   (azurerm_network_interface & azurerm_kubernetes_cluster)   |
-+--------------------------------------------------------------+
-                |
-                |
-+--------------------------------------------------+
-|         Kubernetes Namespace                      |
-|       (azurerm_kubernetes_namespace)              |
-+--------------------------------------------------+
+                                        +-------------------------------------+
+                                        |          Azure Resource Group       |
+                                        |                (RG)                 |
+                                        +-------------------------------------+
+                                                        |
+                                                        |
+                                        +------------------------------------------------------+
+                                        |       Virtual Network & Subnet                      |
+                                        |     (azurerm_virtual_network & azurerm_subnet)       |
+                                        +------------------------------------------------------+
+                                                        |
+                                                        |
+                                        +--------------------------------------------------------------+
+                                        |       Public IP Address & Load Balancer                      |
+                                        |   (azurerm_public_ip & azurerm_lb)                           |
+                                        +--------------------------------------------------------------+
+                                                        |
+                                                        |
+                                        +--------------------------------------------------------------+
+                                        |         Network Interface & AKS Cluster                     |
+                                        |   (azurerm_network_interface & azurerm_kubernetes_cluster)   |
+                                        +--------------------------------------------------------------+
+                                                        |
+                                                        |
+                                        +--------------------------------------------------+
+                                        |         Kubernetes Namespace                      |
+                                        |       (azurerm_kubernetes_namespace)              |
+                                        +--------------------------------------------------+
 
 In this diagram, each box represents a step or component in the project flow for deploying Azure Kubernetes Service (AKS) infrastructure. Here's a brief explanation of each step:
 
