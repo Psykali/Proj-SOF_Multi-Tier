@@ -24,6 +24,10 @@ resource "azurerm_kubernetes_cluster" "psykprojs" {
   identity {
     type = "SystemAssigned"
   }
+  
+  depends_on = [
+    azurerm_subnet.aks,
+  ]
 }
 
 resource "azurerm_kubernetes_namespace" "psykprojs" {
