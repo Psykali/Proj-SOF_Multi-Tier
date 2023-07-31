@@ -3,8 +3,8 @@
 ######################
 resource "azurerm_kubernetes_cluster" "psykprojs" {
   name                = var.kubernetes_cluster_name
-  location            = var.resource_group_name
-  resource_group_name = var.location
+  location            = var.location
+  resource_group_name = var.resource_group_name
   dns_prefix          = var.dns_prefix
   kubernetes_version  = "1.14.7"
 
