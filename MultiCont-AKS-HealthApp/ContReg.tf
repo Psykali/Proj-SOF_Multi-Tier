@@ -1,4 +1,6 @@
-### Create Azure Container Registry
+#####################################
+## Create Azure Container Registry ##
+#####################################
 resource "azurerm_container_registry" "psykprojs" {
   name                = var.contreg_name
   resource_group_name = var.resource_group_name
