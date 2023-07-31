@@ -1,4 +1,6 @@
-### Create SQL Server
+#######################
+## Create SQL Server ##
+#######################
 resource "azurerm_sql_server" "psykprojs" {
   name                         = "psykprojs-sqlserver"
   resource_group_name          = var.resource_group_name
@@ -7,7 +9,9 @@ resource "azurerm_sql_server" "psykprojs" {
   administrator_login          = var.admin_username
   administrator_login_password = var.admin_password
 }
-### Create SQL DB
+###################
+## Create SQL DB ##
+###################
 resource "azurerm_sql_database" "psykprojs" {
   name                = "psykprojs-mhcdb"
   resource_group_name = var.resource_group_name
@@ -17,7 +21,9 @@ resource "azurerm_sql_database" "psykprojs" {
   collation           = "SQL_Latin1_General_CP1_CI_AS"
   max_size_bytes      = 1073741824
 }
-### SQL FireWall Setting
+##########################
+## SQL FireWall Setting ##
+##########################
 resource "azurerm_sql_firewall_rule" "psykprojs" {
   name                = "psykprojs-AllowAllWindowsAzureIps"
   resource_group_name = var.resource_group_name
