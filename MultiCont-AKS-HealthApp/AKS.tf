@@ -27,11 +27,11 @@ resource "azurerm_kubernetes_cluster" "psykprojs" {
 #######################
 ## Define Name space ##
 #######################
-resource "azurerm_kubernetes_namespace" "psykprojs" {
-  name                = var.namespace_name
-  depends_on          = [azurerm_kubernetes_cluster.psykprojs]
-  kubernetes_cluster_id = azurerm_kubernetes_cluster.psykprojs.id
-}
+#resource "azurerm_kubernetes_namespace" "psykprojs" {
+#  name                = var.namespace_name
+#  depends_on          = [azurerm_kubernetes_cluster.psykprojs]
+#  kubernetes_cluster_id = azurerm_kubernetes_cluster.psykprojs.id
+#}
 #############
 ## Outputs ##
 #############
