@@ -5,6 +5,10 @@ variable "location" {
   default = "francecentral"
 }
 
+variable "location_contreg" {
+  description = "westeurope"
+}
+
 variable "resource_group_name" {
   default = "PERSO_SIEF"
 }
