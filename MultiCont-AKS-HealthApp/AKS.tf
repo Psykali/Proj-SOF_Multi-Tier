@@ -21,10 +21,15 @@ resource "azurerm_kubernetes_cluster" "psykprojs" {
     }
   }
 
-  service_principal {
-    client_id     = "n/a"
-    client_secret = "n/a"
+  identity {
+    type = "SystemAssigned"
   }
+}
+
+resource "azurerm_kubernetes_namespace" "psykprojs" {
+  name                = var.namespace_name
+  depends_on          = [azurerm_kubernetes_cluster.psykprojs]
+  kubernetes_cluster_id = azurerm_kubernetes_cluster.psykprojs.id
 }
 
 output "acrLoginServer" {
