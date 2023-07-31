@@ -1,5 +1,8 @@
-### Create Load balancer
-name                = "aks-lb"
+##########################
+## Create Load balancer ##
+##########################
+resource "azurerm_lb" "aks" {
+  name             = "psykprojs-aks-lb"
   location            = var.location
   resource_group_name = var.resource_group_name
 
@@ -8,16 +11,18 @@ name                = "aks-lb"
     public_ip_address_id  = azurerm_public_ip.aks.id
   }
 }
-
-### Define the load balancer backend address pool
+###################################################
+## Define the load balancer backend address pool ##
+###################################################
 resource "azurerm_lb_backend_address_pool" "aks" {
-  name            = "aks-lb-backend-pool"
+  name            = "psykprojs-aks-lb-bknd-pool"
   loadbalancer_id = azurerm_lb.aks.id
 }
-
-### Define the load balancer rule
+###################################
+## Define the load balancer rule ##
+###################################
 resource "azurerm_lb_rule" "aks" {
-  name                   = "aks-lb-rule"
+  name                   = "psykprojs-aks-lb-rule"
   frontend_ip_configuration_name = azurerm_lb.aks.frontend_ip_configuration[0].name
   loadbalancer_id        = azurerm_lb.aks.id
   protocol               = "Tcp"
