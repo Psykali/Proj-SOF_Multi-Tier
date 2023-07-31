@@ -1,4 +1,6 @@
-### Create Azure AKS
+######################
+## Create Azure AKS ##
+######################
 resource "azurerm_kubernetes_cluster" "psykprojs" {
   name                = var.kubernetes_cluster_name
   location            = var.resource_group_name
@@ -29,13 +31,17 @@ resource "azurerm_kubernetes_cluster" "psykprojs" {
     azurerm_subnet.aks,
   ]
 }
-
+#######################
+## Define Name space ##
+#######################
 resource "azurerm_kubernetes_namespace" "psykprojs" {
   name                = var.namespace_name
   depends_on          = [azurerm_kubernetes_cluster.psykprojs]
   kubernetes_cluster_id = azurerm_kubernetes_cluster.psykprojs.id
 }
-
+#############
+## Outputs ##
+#############
 output "acrLoginServer" {
   value = azurerm_container_registry.psykprojs.login_server
 }
