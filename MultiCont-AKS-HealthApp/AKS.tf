@@ -18,10 +18,9 @@ resource "azurerm_kubernetes_cluster" "psykprojs" {
     type = "SystemAssigned"
   }
 
-
-  depends_on = [
-    azurerm_subnet.aks,
-  ]
+#  depends_on = [
+#    azurerm_subnet.aks,
+#  ]
 }
 #######################
 ## Define Name space ##
