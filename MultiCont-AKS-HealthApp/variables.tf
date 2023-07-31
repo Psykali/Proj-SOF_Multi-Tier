@@ -5,10 +5,6 @@ variable "location" {
   default = "francecentral"
 }
 
-variable "location_contreg" {
-  description = "westeurope"
-}
-
 variable "resource_group_name" {
   default = "PERSO_SIEF"
 }
@@ -22,12 +18,17 @@ variable "admin_username" {
 variable "admin_password" {
   default = "P@ssw0rd123P@ssw0rd123"
 }
-########
-## VM ##
-########
-variable "ubuntu-vm" {
-  default = "skwpp20lamp"
+#########################
+## Container Registrey ##
+#########################
+variable "contreg_name" {
+  default = "psykprojs-acr"
 }
+
+variable "location_contreg" {
+  description = "westeurope"
+}
+
 ################
 ## Networking ##
 ################
