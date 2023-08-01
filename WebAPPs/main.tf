@@ -40,7 +40,6 @@ resource "azurerm_app_service" "example" {
       file_system {
         retention_in_days = 7
         retention_in_mb   = 35
-        enabled           = true
       }
     }
 
@@ -49,7 +48,6 @@ resource "azurerm_app_service" "example" {
         level             = "Error"
         retention_in_days = 7
         retention_in_mb   = 35
-        enabled           = true
       }
     }
   }
