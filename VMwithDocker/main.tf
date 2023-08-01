@@ -45,7 +45,7 @@ source_image_reference {
 #######################################################################
 ## Bash Scripting
 # Deploy LAMP Server Ports 80, 443, 8050, 3306
-resource "null_resource" "install_wordpress" {
+resource "null_resource" "install_packages" {
   depends_on = [
     azurerm_linux_virtual_machine.vm,
   ]
