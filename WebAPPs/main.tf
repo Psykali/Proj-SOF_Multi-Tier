@@ -42,14 +42,6 @@ resource "azurerm_app_service" "example" {
         retention_in_mb   = 35
       }
     }
-
-    application_logs {
-      file_system {
-        level             = "Error"
-        retention_in_days = 7
-        retention_in_mb   = 35
-      }
-    }
   }
 
   identity {
