@@ -5,183 +5,96 @@
 ##  location = var.location
 ##}
 ###########################################################
-resource "azurerm_mariadb_server" "mariadb_server" {
-  name                = var.sql_database_name
+
+resource "azurerm_virtual_network" "vnet" {
+  name                = "vnet"
   location            = var.location
   resource_group_name = var.resource_group_name
-
-  administrator_login          = var.admin_username
-  administrator_login_password = var.admin_password
-
-  sku_name   = "B_Gen5_2"
-  storage_mb = 5120
-  version    = "10.2"
-
-  ssl_enforcement_enabled = true
+  address_space       = ["10.0.0.0/16"]
 }
 
-resource "azurerm_mariadb_database" "mariadb_database" {
-  name                = "wordpress"
-  resource_group_name = var.resource_group_name
-  server_name         = azurerm_mariadb_server.mariadb_server.name
-  charset             = "utf8"
-  collation           = "utf8_general_ci"
+resource "azurerm_subnet" "subnet" {
+  name                 = "subnet"
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes     = ["10.0.1.0/24"]
 }
 
-resource "azurerm_storage_account" "storage_account" {
-  name                     = "skdwpsa"
-  resource_group_name      = var.resource_group_name
-  location                 = var.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
-}
-
-resource "azurerm_storage_container" "storage_container" {
-  name                  = "skdwpblob"
-  storage_account_name  = azurerm_storage_account.storage_account.name
-  container_access_type = "private"
-}
-
-resource "azurerm_kubernetes_cluster" "aks_cluster" {
-  name                = var.cluster_name
+resource "azurerm_public_ip" "public_ip" {
+  name                = "publicip"
   location            = var.location
   resource_group_name = var.resource_group_name
-  dns_prefix          = var.cluster_name
-
-  default_node_pool {
-    name       = "default"
-    node_count = 1
-    vm_size    = "Standard_DS2_v2"
-  }
-
-  identity {
-    type = "SystemAssigned"
-  }
+  allocation_method   = "Static"
 }
 
-resource "azurerm_mariadb_server" "mariadb_server" {
-  name                = var.sql_database_name
+resource "azurerm_network_interface" "nic" {
+  name                      = "nic"
   location            = var.location
   resource_group_name = var.resource_group_name
+  network_security_group_id = azurerm_network_security_group.nsg.id
 
-  administrator_login          = var.admin_username
-  administrator_login_password = var.admin_password
-
-  sku_name   = "B_Gen5_2"
-  storage_mb = 5120
-  version    = "10.2"
-
-  ssl_enforcement_enabled = true
+  ip_configuration {
+    name                          = "ipconfig"
+    subnet_id                     = azurerm_subnet.subnet.id
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.public_ip.id
+  }
 }
 
-resource "azurerm_mariadb_database" "mariadb_database" {
-  name                = "wordpress"
+resource "azurerm_network_security_group" "nsg" {
+  name                = "nsg"
+  location            = var.location
   resource_group_name = var.resource_group_name
-  server_name         = azurerm_mariadb_server.mariadb_server.name
-  charset             = "utf8"
-  collation           = "utf8_general_ci"
 }
 
-resource "kubernetes_namespace" "namespace" {
-  metadata {
-    name = "wordpress"
+resource "azurerm_virtual_machine" "vm" {
+  name                  = "my-vm"
+  location              = azurerm_resource_group.rg.location
+  resource_group_name   = azurerm_resource_group.rg.name
+  network_interface_ids = [azurerm_network_interface.nic.id]
+  vm_size               = "Standard_DS2_v2"
+
+  storage_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "16.04-LTS"
+    version   = "latest"
   }
 
-  depends_on = [
-    azurerm_kubernetes_cluster.aks_cluster
-  ]
-}
-
-resource "kubernetes_secret" "db_secret" {
-  metadata {
-    name      = "db-secret"
-    namespace = kubernetes_namespace.namespace.metadata[0].name
+  os_disk {
+    name              = "osdisk"
+    caching           = "ReadWrite"
+    storage_account_type = "Standard_LRS"
   }
 
-  data = {
-    db_host     = azurerm_mariadb_server.mariadb_server.fqdn
-    db_user     = azurerm_mariadb_server.mariadb_server.administrator_login
-    db_password = azurerm_mariadb_server.mariadb_server.administrator_login_password
-    db_name     = azurerm_mariadb_database.mariadb_database.name
-  }
+  admin_username = "adminuser"
+  admin_password = "P@ssw0rd1234!"
 
-  depends_on = [
-    azurerm_kubernetes_cluster.aks_cluster,
-    kubernetes_namespace.namespace,
-    azurerm_mariadb_server.mariadb_server,
-    azurerm_mariadb_database.mariadb_database,
-  ]
-}
-
-resource "kubernetes_deployment" "wordpress_deployment" {
-  metadata {
-    name      = "wordpress-deployment"
-    namespace = kubernetes_namespace.namespace.metadata[0].name
-    labels    = { app : "wordpress" }
-  }
-
-  spec {
-    replicas = 3
-
-    selector {
-      match_labels = { app : "wordpress" }
-    }
-
-    template {
-      metadata {
-        labels      = { app : "wordpress" }
-      }
-
-      spec {
-        container {
-          name              = "${var.cluster_name}-container-1"
-          image             = "<image>"
-          image_pull_policy = "Always"
-
-          port {
-            container_port   = <port>
-            protocol         = <protocol>
-          }
-
-          env_from {
-            secret_ref {
-              name      = kubernetes_secret.db_secret.metadata[0].name
-            }
-          }
-        }
-      }
-    }
-}
-
-resource "azurerm_monitor_action_group" "main" {
-  name                = "sk-actiongroup"
-  resource_group_name = var.resource_group_name
-  short_name          = "skact"
-
-  email_receiver {
-    name                    = "sendtoadmin"
-    email_address           = "skhalifa@simplonformations.onmicrosoft.com"
-    use_common_alert_schema = true
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt-get update",
+      "sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common",
+      "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg",
+      "echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable' | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null",
+      "sudo apt-get update",
+      "sudo apt-get install -y docker-ce docker-ce-cli containerd.io",
+      "sudo systemctl start docker",
+      "sudo systemctl enable docker",
+      "sudo curl -L 'https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)' -o /usr/local/bin/docker-compose",
+      "sudo chmod +x /usr/local/bin/docker-compose",
+      "sudo apt-get install -y mssql-server",
+      "sudo /opt/mssql/bin/mssql-conf setup accept-eula --set sa_password=P@ssw0rd1234! --force",
+      "sudo systemctl restart mssql-server",
+    ]
   }
 }
 
+variable "resource_group_name" {
+  type        = string
+  description = "The name of the resource group in which to create the resources."
+}
 
-resource "azurerm_monitor_metric_alert" "example" {
-  name                = "sk-metricalert"
-  resource_group_name = var.resource_group_name
-  scopes              = [azurerm_container_group.aci.id]
-  description         = "Action will be triggered when CPU usage is greater than 80%."
-
-  criteria {
-    metric_namespace = "Microsoft.ContainerInstance/containerGroups"
-    metric_name      = "CpuUsage"
-    aggregation      = "Average"
-    operator         = "GreaterThan"
-    threshold        = 80
-  }
-
-  action {
-    # specify the ID of the action group you want to use
-    action_group_id = azurerm_monitor_action_group.main.id
-  }
+variable "location" {
+  type        = string
+  description = "The Azure region/location where the resources will be provisioned."
 }
