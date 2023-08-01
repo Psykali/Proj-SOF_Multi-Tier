@@ -2,58 +2,55 @@
 ## Ressource Group ##
 #####################
 variable "location" {
-  type        = string
   default = "francecentral"
 }
 
 variable "resource_group_name" {
-  type        = string
   default = "PERSO_SIEF"
 }
 ############
 ## Admin  ##
 ############
 variable "admin_username" {
-  type        = string
-  default = "PsykProjsP20"
+  default = "SkLoginDipP20"
 }
 
 variable "admin_password" {
-  type        = string
-  default = "x*axbUNUeBJE^Jpwc%4*h"
+  default = "P@ssw0rd123P@ssw0rd123"
 }
-#########################
-## Container Registrey ##
-#########################
-variable "contreg_name" {
-  type        = string
-  default = "psykprojsacr"
+########
+## VM ##
+########
+variable "ubuntu-vm" {
+  default = "skwpp20lamp"
 }
-
-variable "location_contreg" {
-  type        = string
-  default = "westeurope"
-}
-
-###############
-## Azure AKS ##
-###############
-variable "kubernetes_cluster_name" {
-  type        = string
-  default = "psykprojsaks"
+################
+## Networking ##
+################
+variable "subnet" {
+  default = "skwpp20subnet"
 }
 
-variable "dns_prefix" {
-  type        = string
-  default = "psykprojsaks"
+variable "virtual_network_name" {
+  default = "skwpp20vnet"
 }
 
-variable "node_pool_name" {
-  type        = string
-  default = "psykprojspl"
+variable "virtual_network" {
+  default = "skwpp20net"
 }
 
-variable "namespace_name" {
-  type        = string
-  default = "healthappli"
+variable "network_interface" {
+  default = "skwpp20nic"
+}
+
+variable "network_security_group_name" {
+  default = "skwpp20nsg"
+}
+
+variable "ubuntu-ipconfig" {
+  default = "skwpp20ip"
+}
+
+variable "ubuntu-pip" {
+  default = "skwpp20pip"
 }
