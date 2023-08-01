@@ -67,6 +67,7 @@ resource "azurerm_application_insights" "example" {
   name                = "app-insights"
   location            = "France Central"
   resource_group_name = "PERSO_SIEF"
+  application_type = "Web"
 }
 
 resource "azurerm_monitor_diagnostic_setting" "example" {
@@ -92,13 +93,9 @@ resource "azurerm_monitor_diagnostic_setting" "example" {
 
 resource "azurerm_log_analytics_workspace" "example" {
   name                = "app-log-analytics"
-  location            = "France Central"
-  resource_group_name = "PERSO_SIEF"
+  location            = azurerm_resource_group.example.location
+  resource_group_name = azurerm_resource_group.example.name
   sku                 = "PerGB2018"
-
-  retention_policy {
-    enabled = false
-  }
 }
 
 resource "azurerm_storage_account" "example" {
