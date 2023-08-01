@@ -48,15 +48,15 @@ resource "azurerm_network_security_group" "nsg" {
 
 resource "azurerm_virtual_machine" "vm" {
   name                  = "my-vm"
-  location              = azurerm_resource_group.rg.location
-  resource_group_name   = azurerm_resource_group.rg.name
+  location            = var.location
+  resource_group_name = var.resource_group_name
   network_interface_ids = [azurerm_network_interface.nic.id]
   vm_size               = "Standard_DS2_v2"
 
   storage_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
-    sku       = "16.04-LTS"
+    sku       = "20.04-LTS"
     version   = "latest"
   }
 
