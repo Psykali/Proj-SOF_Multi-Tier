@@ -1,24 +1,24 @@
-resource "azurerm_app_service" "webapp_docker" {
-  name                = "psykprojwbdckr"
-  location            = "France Central"
-  resource_group_name = "PERSO_SIEF"
-  app_service_plan_id = azurerm_app_service_plan.example.id
+#resource "azurerm_app_service" "webapp_docker" {
+#  name                = "psykprojwbdckr"
+#  location            = "France Central"
+#  resource_group_name = "PERSO_SIEF"
+#  app_service_plan_id = azurerm_app_service_plan.example.id
 
-  site_config {
-    always_on = true
+#  site_config {
+#    always_on = true
 
     # Set the container settings for the Docker image deployment
-    linux_fx_version = "DOCKER|climatemind/webapp:production"
-  }
+#    linux_fx_version = "DOCKER|climatemind/webapp:production"
+#  }
 
-  identity {
-    type = "SystemAssigned"
-  }
+#  identity {
+#    type = "SystemAssigned"
+#  }
 
-  tags = {
-    environment = "Production"
-  }
-}
+#  tags = {
+#    environment = "Production"
+#  }
+#}
 
 resource "azurerm_app_service" "sof20" {
   name                = "psykprojsofdck"
@@ -30,7 +30,7 @@ resource "azurerm_app_service" "sof20" {
     always_on = true
 
     # Set the container settings for the Docker image deployment
-    linux_fx_version = "DOCKER|psykali/stackoverp20kcab:latest"
+    linux_fx_version = "DOCKER|siscc/dotstatsuite-webapp-template:latest"
   }
 
   identity {
@@ -52,7 +52,7 @@ resource "azurerm_app_service" "wikijs" {
     always_on = true
 
     # Set the container settings for the Docker image deployment
-    linux_fx_version = "DOCKER|linuxserver/wikijs:latest"
+    linux_fx_version = "DOCKER|stackstorm/st2chatops:latest"
   }
 
   identity {
