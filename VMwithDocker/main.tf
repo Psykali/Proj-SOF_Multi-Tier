@@ -59,7 +59,7 @@ resource "null_resource" "install_wordpress" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo apt-get update",
+      "sudo apt-get update && sudo apt-get -y upgrade",
       "sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common",
       "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg",
       "echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable' | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null",
@@ -77,6 +77,10 @@ resource "null_resource" "install_wordpress" {
     "sudo apt-get install -y mysql-server",
     "sudo systemctl start mysql",
     "sudo systemctl enable mysql",
+    "sudo apt-get install -y python3-pip",  # Install pip for Python 3
+    "sudo ln -s /usr/bin/python3 /usr/bin/python",  # Create a symbolic link for python command
+    "sudo -H pip3 install --upgrade pip",  # Upgrade pip to the latest version
+    "sudo -H pip3 install streamlit langchain openai wikipedia chromadb tiktoken",
   ]
   }
 }
