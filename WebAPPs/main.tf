@@ -67,7 +67,7 @@ resource "azurerm_application_insights" "example" {
   name                = "app-insights"
   location            = "France Central"
   resource_group_name = "PERSO_SIEF"
-  application_type = "Web"
+  application_type = "web"
 }
 
 resource "azurerm_monitor_diagnostic_setting" "example" {
