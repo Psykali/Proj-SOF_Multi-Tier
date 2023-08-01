@@ -21,7 +21,7 @@ resource "azurerm_app_service_plan" "example" {
 }
 
 resource "azurerm_app_service" "example" {
-  name                = "my-webapp"
+  name                = "psykprojwb"
   location            = "France Central"
   resource_group_name = "PERSO_SIEF"
   app_service_plan_id = azurerm_app_service_plan.example.id
@@ -89,7 +89,7 @@ resource "azurerm_log_analytics_workspace" "example" {
 }
 
 resource "azurerm_storage_account" "example" {
-  name                     = "appstorage${random_string.example.id}"
+  name                     = "psykprojstrgwebapp"
   location            = "France Central"
   resource_group_name = "PERSO_SIEF"
   account_tier             = "Standard"
