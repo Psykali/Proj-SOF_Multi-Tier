@@ -1,4 +1,4 @@
-resource "azurerm_app_service" "example" {
+resource "azurerm_app_service" "webapp_docker" {
   name                = "psykprojwbdckr"
   location            = "France Central"
   resource_group_name = "PERSO_SIEF"
@@ -20,7 +20,7 @@ resource "azurerm_app_service" "example" {
   }
 }
 
-resource "azurerm_app_service" "example" {
+resource "azurerm_app_service" "sof20" {
   name                = "psykprojsofdck"
   location            = "France Central"
   resource_group_name = "PERSO_SIEF"
@@ -42,7 +42,7 @@ resource "azurerm_app_service" "example" {
   }
 }
 
-resource "azurerm_app_service" "example" {
+resource "azurerm_app_service" "wikijs" {
   name                = "psykprojwikidck"
   location            = "France Central"
   resource_group_name = "PERSO_SIEF"
