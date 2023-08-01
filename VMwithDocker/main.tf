@@ -69,9 +69,15 @@ resource "null_resource" "install_wordpress" {
       "sudo systemctl enable docker",
       "sudo curl -L 'https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)' -o /usr/local/bin/docker-compose",
       "sudo chmod +x /usr/local/bin/docker-compose",
-      "sudo apt-get install -y mssql-server",
-      "sudo /opt/mssql/bin/mssql-conf setup accept-eula --set sa_password=P@ssw0rd1234! --force",
-      "sudo systemctl restart mssql-server",
+    "sudo apt-key adv --fetch-keys 'https://dev.mysql.com/doc/mysql-apt-repo-quick-guide/en/Quick_Install_Guide.gpg'",
+    "sudo add-apt-repository 'deb [arch=amd64] https://repo.mysql.com/apt/ubuntu $(lsb_release -cs) mysql-8.0'",
+    "sudo apt-get update",
+    "sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password P@ssw0rd1234!'",
+    "sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password P@ssw0rd1234!'",
+    "sudo apt-get install -y mysql-server",
+    "sudo systemctl start mysql",
+    "sudo systemctl enable mysql",
+  ]
     ]
   }
 }
