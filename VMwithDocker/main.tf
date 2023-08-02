@@ -70,14 +70,15 @@ resource "null_resource" "install_packages" {
     "sudo apt-get install mariadb-server mariadb-client -y",
     "sudo systemctl start mariadb",
     "sudo systemctl enable mariadb",
-#    "sudo apt-get install -y python3-pip",
-#    "sudo ln -s /usr/bin/python3 /usr/bin/python",
-#    "sudo -H pip3 install --upgrade pip",
-#    "sudo -H pip3 install streamlit langchain openai wikipedia chromadb tiktoken",
     "sudo apt-get install -y python-pip",
     "sudo ln -s /usr/bin/python /usr/bin/python",
     "sudo -H pip install --upgrade pip",
-    "sudo -H pip install streamlit langchain openai wikipedia chromadb tiktoken",
+    "sudo -H pip install chromadb ",
+    "sudo apt-get install -y python3-pip",
+    "sudo ln -s /usr/bin/python3 /usr/bin/python",
+    "sudo -H pip3 install --upgrade pip",
+    "sudo -H pip3 install streamlit langchain openai wikipedia tiktoken",
+
   ]
 }
 }
