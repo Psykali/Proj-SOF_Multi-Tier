@@ -57,21 +57,21 @@ variable "server_wiki_app" {
 #################
 ## PostGres DB ##
 #################
-##variable "postgres_server_name" {
-##  default = "sk-postgres-server"
-##}
-######
-##variable "postgres_admin_username" {
-##  default = "SkLoginDipP20"
-##}
-######
-##variable "postgres_admin_password" {
-##  default = "P@ssw0rd123P@ssw0rd123"
-##}
-######
-##variable "postgres_database_name" {
-##  default = "skprojpg02"
-##}
+variable "postgres_server_name" {
+  default = "sk-postgres-server"
+}
+
+variable "postgres_admin_username" {
+  default = "SkLoginDipP20"
+}
+
+variable "postgres_admin_password" {
+  default = "P@ssw0rd123P@ssw0rd123"
+}
+
+variable "postgres_database_name" {
+  default = "skprojpg02"
+}
 #################
 ## Cosmos DB ##
 #################
@@ -95,9 +95,9 @@ variable "rocketchat_root_url" {
 ###########
 ## Redis ##
 ###########
-##variable "redis_name" {
-##  default = "sk-redis-server"
-##}
+variable "redis_name" {
+  default = "sk-redis-server"
+}
 ###########
 ## WikiJs ##
 ###########
