@@ -34,7 +34,7 @@ resource "azurerm_app_service" "example" {
     always_on = true
 
     # Set the container settings for the Docker image deployment
-    linux_fx_version = "DOCKER|jokobsk/pi.alert"
+    linux_fx_version = "DOCKER|wordpress"
   }
 
   app_settings = {
