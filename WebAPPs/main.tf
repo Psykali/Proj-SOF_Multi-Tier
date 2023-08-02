@@ -26,8 +26,15 @@ resource "azurerm_app_service" "example" {
   resource_group_name = "PERSO_SIEF"
   app_service_plan_id = azurerm_app_service_plan.example.id
 
+##  site_config {
+##    dotnet_framework_version = "v4.0"
+##  }
+  
   site_config {
-    dotnet_framework_version = "v4.0"
+    always_on = true
+
+    # Set the container settings for the Docker image deployment
+    linux_fx_version = "DOCKER|requarks/wiki:2"
   }
 
   app_settings = {
