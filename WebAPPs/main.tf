@@ -21,7 +21,7 @@ resource "azurerm_app_service_plan" "example" {
 }
 
 resource "azurerm_app_service" "example" {
-  name                = "psykprojwb"
+  name                = "psykprojpi"
   location            = "France Central"
   resource_group_name = "PERSO_SIEF"
   app_service_plan_id = azurerm_app_service_plan.example.id
