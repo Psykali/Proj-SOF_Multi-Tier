@@ -20,6 +20,70 @@ resource "azurerm_app_service_plan" "example" {
   }
 }
 
+resource "azurerm_app_service" "vault" {
+  name                = "psykprojpipi"
+  location            = "France Central"
+  resource_group_name = "PERSO_SIEF"
+  app_service_plan_id = azurerm_app_service_plan.example.id
+
+##  site_config {
+##    dotnet_framework_version = "v4.0"
+##  }
+  
+  site_config {
+    always_on = true
+
+    # Set the container settings for the Docker image deployment
+    linux_fx_version = "DOCKER|vault"
+  }
+  tags = {
+    environment = "Production"
+  }
+}
+
+resource "azurerm_app_service" "wiki" {
+  name                = "psykprojwiki"
+  location            = "France Central"
+  resource_group_name = "PERSO_SIEF"
+  app_service_plan_id = azurerm_app_service_plan.example.id
+
+##  site_config {
+##    dotnet_framework_version = "v4.0"
+##  }
+  
+  site_config {
+    always_on = true
+
+    # Set the container settings for the Docker image deployment
+    linux_fx_version = "DOCKER|xwiki"
+  }
+  tags = {
+    environment = "Production"
+  }
+}
+
+
+resource "azurerm_app_service" "php" {
+  name                = "psykprojwiki"
+  location            = "France Central"
+  resource_group_name = "PERSO_SIEF"
+  app_service_plan_id = azurerm_app_service_plan.example.id
+
+##  site_config {
+##    dotnet_framework_version = "v4.0"
+##  }
+  
+  site_config {
+    always_on = true
+
+    # Set the container settings for the Docker image deployment
+    linux_fx_version = "DOCKER|phpmyadmin"
+  }
+  tags = {
+    environment = "Production"
+  }
+}
+
 resource "azurerm_app_service" "example" {
   name                = "psykprojpi"
   location            = "France Central"
