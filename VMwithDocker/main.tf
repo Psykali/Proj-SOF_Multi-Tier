@@ -57,7 +57,7 @@ resource "null_resource" "install_packages" {
     host     = azurerm_linux_virtual_machine.vm.public_ip_address
   }
 
-  provisioner "remote-exec" {
+provisioner "remote-exec" {
   inline = [
     "sudo apt-get update",
     "sudo apt-get upgrade -y",
@@ -70,10 +70,8 @@ resource "null_resource" "install_packages" {
     "sudo apt-get install mariadb-server mariadb-client -y",
     "sudo systemctl start mariadb",
     "sudo systemctl enable mariadb",
-    "sudo git clone https://github.com/mckaywrigley/clarity-ai.git",
-    "cd clarity-ai",
-    "sudo npm i",
-    "sudo npm run dev",
+    "git clone https://github.com/mckaywrigley/clarity-ai.git",
+    "cd clarity-ai && npm i && npm run dev"
   ]
 }
 }
