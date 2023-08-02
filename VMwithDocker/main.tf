@@ -17,7 +17,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   name                = var.ubuntu-vm
   location            = var.location
   resource_group_name = var.resource_group_name
-  size                = "Standard_B1s"
+  size                = "Standard_B2ms"
   disable_password_authentication= false
 
 network_interface_ids= [
@@ -70,8 +70,29 @@ provisioner "remote-exec" {
     "sudo apt-get install mariadb-server mariadb-client -y",
     "sudo systemctl start mariadb",
     "sudo systemctl enable mariadb",
+"sudo apt-get remove nodejs",
+"sudo apt-get remove npm",
+"curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash",
+"chmod +x ~/.nvm/nvm.sh",
+"source ~/.bashrc",
+"nvm install 14",
+"nvm install 16",
+"nvm install 17",
+"nvm install 18",
+"sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 3000",
+     "sudo npm install -g n",
+    "sudo n stable",
+    "sudo npm install -g npm",
     "git clone https://github.com/mckaywrigley/clarity-ai.git",
-    "cd clarity-ai && npm i && npm run dev"
+    "cd clarity-ai ",
+    "npm i ",
+    "npm audit fix",
+    "npm run dev",
   ]
+  ## https://github.com/mckaywrigley/paul-graham-gpt
+  ## https://github.com/mckaywrigley
+  ## https://github.com/mckaywrigley/clarity-ai
+  ## https://stackoverflow.com/questions/24750253/how-npm-start-runs-a-server-on-port-8000
+  ## OpenAi API Key = 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
 }
 }
