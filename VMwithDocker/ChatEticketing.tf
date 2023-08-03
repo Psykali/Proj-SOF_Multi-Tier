@@ -87,14 +87,10 @@ resource "null_resource" "install_packages_rocketchat_and_tickting" {
 provisioner "remote-exec" {
   inline = [
         "sudo apt-get update && sudo apt-get -y upgrade",
-        "sudo apt-get install -y apache2",
-        "sudo apt-get install -y mariadb-server",
-        "sudo apt-get install -y php libapache2-mod-php php-mysql",
-        "wget -c http://wordpress.org/latest.tar.gz",
-        "tar -xzvf latest.tar.gz",
-        "sudo rsync -av wordpress/* /var/www/html/",
-        "sudo chown -R www-data:www-data /var/www/html/",
-        "sudo chmod -R 755 /var/www/html/",
+        "sudo apt install -y git wget openssl",
+        "sudo wget https://www.zulip.org/dist/releases/zulip-server-latest.tar.gz",
+        "sudo tar -xvzf zulip-server-latest.tar.gz",
+        "sudo -s ./zulip-server-*/scripts/setup/install --certbot --email=skhalifa@simplonformations.onmicrosoft.com --hostname=${azurerm_public_ip.chattickting_pip.fqdn}",     
   ]
 }
 }
