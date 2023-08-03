@@ -64,9 +64,9 @@ resource "azurerm_public_ip" "admin_pip" {
 ###################
 ## SQL Databases ##
 ###################
-resource "azurerm_mysql_database" "mysql_db" {
+resource "azurerm_mysql_database" "admin_db" {
   count               = 3
-  name                = "adminsql-${count.index}"
+  name                = "admindb-${count.index}"
   resource_group_name = var.resource_group_name
   server_name         = azurerm_mysql_server.mysql.name
   charset             = "UTF8"
