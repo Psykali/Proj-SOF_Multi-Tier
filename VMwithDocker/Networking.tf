@@ -12,7 +12,7 @@ resource "azurerm_virtual_network" "vnet" {
 
 # Create Subnet
 resource "azurerm_subnet" "default" {
-  name                 = var.subnet
+  name                 = var.subnet_name
   virtual_network_name = azurerm_virtual_network.vnet.name
   resource_group_name  = var.resource_group_name
   address_prefixes     = ["10.0.1.0/24"]
