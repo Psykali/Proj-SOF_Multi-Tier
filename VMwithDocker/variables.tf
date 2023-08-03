@@ -28,17 +28,17 @@ variable "admin_password" {
 ## VM ##
 ########
 ## VM pour Administer and developper
-variable "admin_vm" {
+variable "admin_01_vm" {
   description = "Value of the Ressource Group Locations"
   type        = string
   default = "dev01psykprojs"
 }
-variable "admin_vm" {
+variable "admin_02_vm" {
   description = "Value of the Ressource Group Locations"
   type        = string
   default = "dev02psykprojs"
 }
-variable "admin_vm" {
+variable "admin_03_vm" {
   description = "Value of the Ressource Group Locations"
   type        = string
   default = "dev03psykprojs"
