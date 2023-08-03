@@ -22,6 +22,7 @@ source_image_reference {
     offer     = "0001-com-ubuntu-server-jammy"
     sku       = "22_04-lts-gen2"
     version   = "latest"
+  }
 
   admin_username= var.admin_username
   admin_password= var.admin_password
