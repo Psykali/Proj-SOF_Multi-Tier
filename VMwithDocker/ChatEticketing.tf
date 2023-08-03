@@ -71,7 +71,7 @@ resource "azurerm_mysql_database" "chattickting_db" {
 ## Bash Scripting ##
 ####################
 # Deploy Git Server
-resource "null_resource" "install_packages" {
+resource "null_resource" "install_packages_rocketchat_and_tickting" {
    depends_on = [
     azurerm_linux_virtual_machine.chattickting_vm,
     azurerm_mysql_database.chattickting_db,
