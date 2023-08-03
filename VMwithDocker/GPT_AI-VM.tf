@@ -71,7 +71,7 @@ resource "azurerm_mysql_database" "clearenceai_db" {
 ## Bash Scripting ##
 ####################
 # Deploy ClearenceAI Server
-resource "null_resource" "install_packages" {
+resource "null_resource" "install_packages_gpt" {
   depends_on = [
     azurerm_linux_virtual_machine.clearenceai_vm,
     azurerm_mysql_database.clearenceai_db,
