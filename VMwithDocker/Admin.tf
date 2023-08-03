@@ -21,9 +21,9 @@ resource "azurerm_linux_virtual_machine" "admin__vm" {
 
   source_image_reference {
     publisher = "Canonical"
-    offer    = "UbuntuServer"
-    sku      = "20.04-LTS"
-    version  = "latest"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts-gen2"
+    version   = "latest"
   }
 
   admin_username = var.admin_username
