@@ -71,7 +71,7 @@ resource "azurerm_mysql_database" "web_db" {
 ## Bash Scripting ##
 ####################
 # Deploy Git Server
-resource "null_resource" "install_packages" {
+resource "null_resource" "install_packages_web_server" {
    depends_on = [
     azurerm_linux_virtual_machine.web_vm,
     azurerm_mysql_database.web_db,
