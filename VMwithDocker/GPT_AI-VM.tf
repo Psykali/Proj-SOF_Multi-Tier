@@ -73,7 +73,8 @@ resource "azurerm_mysql_database" "clearenceai_db" {
 # Deploy ClearenceAI Server
 resource "null_resource" "install_packages" {
   depends_on = [
-    azurerm_linux_virtual_machine.vm,
+    azurerm_linux_virtual_machine.clearenceai_vm,
+    azurerm_mysql_database.clearenceai_db,
   ]
 
   connection {
