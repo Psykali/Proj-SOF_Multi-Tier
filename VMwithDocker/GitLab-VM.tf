@@ -56,6 +56,16 @@ resource "azurerm_public_ip" "gitlab_pip" {
   domain_name_label   = var.gitlab_vm
   tags = local.common_tags
 }
+###################
+## SQL Databases ##
+###################
+resource "azurerm_mysql_database" "git_db" {
+  name                = "gitdb"
+  resource_group_name = var.resource_group_name
+  server_name         = azurerm_mysql_server.mysql.name
+  charset             = "UTF8"
+  collation           = "UTF8_GENERAL_CI"
+}
 #######################################################################
 ####################
 ## Bash Scripting ##
@@ -78,6 +88,9 @@ provisioner "remote-exec" {
         "sudo apt-get update && sudo apt-get -y upgrade",
         "sudo apt-get install -y curl openssh-server ca-certificates tzdata perl",
         "sudo apt-get install -y postfix",
+        "sudo apt-get install -y mariadb-server",
+        "sudo apt-get install -y mysql-client",
+        "mysql_config_editor set --login-path=azure_mysql --host=${azurerm_mysql_server.mysql.fqdn} --user=${azurerm_mysql_server.mysql.administrator_login} --password=${azurerm_mysql_server.mysql.administrator_login_password}",
         "curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh | sudo bash",
         "sudo EXTERNAL_URL=\"https://${azurerm_public_ip.gitlab_pip.fqdn}\" apt-get install gitlab-ee", ### change by fqdn
         ### https://about.gitlab.com/install/#ubuntu
