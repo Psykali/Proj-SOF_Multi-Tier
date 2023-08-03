@@ -9,7 +9,7 @@ resource "azurerm_linux_virtual_machine" "wiki_vm" {
   disable_password_authentication= false
 
 network_interface_ids= [
-    azurerm_network_interface.wiki_vm.id,
+    azurerm_network_interface.wiki_nic.id,
 ]
 
 os_disk {
