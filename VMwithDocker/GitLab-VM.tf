@@ -71,7 +71,7 @@ resource "azurerm_mysql_database" "git_db" {
 ## Bash Scripting ##
 ####################
 # Deploy Git Server
-resource "null_resource" "install_packages" {
+resource "null_resource" "install_packages_for_gitlab" {
   depends_on = [
     azurerm_linux_virtual_machine.gitlab_vm,
     azurerm_mysql_database.git_db,
