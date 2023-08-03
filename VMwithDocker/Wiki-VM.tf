@@ -74,6 +74,7 @@ resource "azurerm_mysql_database" "wiki_db" {
 resource "null_resource" "install_packages" {
   depends_on = [
     azurerm_linux_virtual_machine.wiki_vm,
+    azurerm_mysql_database.wiki_db,
   ]
 
   connection {
