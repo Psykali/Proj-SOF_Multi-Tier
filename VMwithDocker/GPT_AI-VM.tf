@@ -1,4 +1,6 @@
-# Create VM
+###############
+## Create VM ##
+###############
 resource "azurerm_linux_virtual_machine" "vm" {
   name                = var.ubuntu-vm
   location            = var.location
@@ -27,10 +29,38 @@ source_image_reference {
 
   tags = local.common_tags
 }
+##############################
+## Create Network Interface ##
+##############################
+resource "azurerm_network_interface" "default" {
+  name = var.network_interface
+  location = var.location
+  resource_group_name = var.resource_group_name
+
+  ip_configuration {
+    name                          = "ipconfig1"
+    subnet_id                     = azurerm_subnet.default.id
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.pip.id
+  }
+  tags = local.common_tags
+}
+################################
+## Create a public IP address ##
+################################
+resource "azurerm_public_ip" "pip" {
+  name                = var.ubuntu-pip
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  allocation_method   = "Dynamic"
+  domain_name_label   = "sklampwp"
+  tags = local.common_tags
+}
 #######################################################################
-#######################################################################
-## Bash Scripting
-# Deploy LAMP Server Ports 80, 443, 8050, 3306
+####################
+## Bash Scripting ##
+####################
+# Deploy ClearenceAI Server
 resource "null_resource" "install_packages" {
   depends_on = [
     azurerm_linux_virtual_machine.vm,
