@@ -89,7 +89,7 @@ resource "null_resource" "install_packages_for_the_devs" {
     type     = "ssh"
     user     = var.admin_username
     password = var.admin_password
-    host     = azurerm_linux_virtual_machine.admin__vm.public_ip_address
+    host     = azurerm_linux_virtual_machine.${var.admin__vm}-${count.index}.public_ip_address
   }
 
 provisioner "remote-exec" {
