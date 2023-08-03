@@ -28,30 +28,20 @@ variable "admin_password" {
 ## VM ##
 ########
 ## VM pour Administer and developper
-variable "admin_01_vm" {
-  description = "Value of the Ressource Group Locations"
+variable "admin__vm" {
+  description = "Value of the Dev 01 VM"
   type        = string
-  default = "dev01psykprojs"
-}
-variable "admin_02_vm" {
-  description = "Value of the Ressource Group Locations"
-  type        = string
-  default = "dev02psykprojs"
-}
-variable "admin_03_vm" {
-  description = "Value of the Ressource Group Locations"
-  type        = string
-  default = "dev03psykprojs"
+  default = "admin"
 }
 ## VM pour deployer les sites web
 variable "web_vm" {
-  description = "Value of the Ressource Group Locations"
+  description = "Value of the Web VM"
   type        = string
   default = "webpsykprojs"
 }
 ## VM pour Docs 
 variable "wiki_vm" {
-  description = "Value of the Ressource Group Locations"
+  description = "Value of the Wiki Locale"
   type        = string
   default = "wikipsykprojs"
 }
@@ -66,23 +56,23 @@ variable "wiki_admin_password" {
   type        = string
   default = "P@ssw0rd123P@ssw0rd1!2!3?"
 }
-## VM pour GitLabIntern
+## GitLab Intern
 variable "gitlab_vm" {
-  description = "Value of the Ressource Group Locations"
+  description = "Value of the GitLab Intern"
   type        = string
   default = "gitpsykprojs"
 }
-##VM pour GPT-AI locale
+## GPT-AI locale
 variable "clearenceai_vm" {
-  description = "Value of the Ressource Group Locations"
+  description = "Value of the GPT-AI Locale"
   type        = string
   default = "clearenceaipsykprojs"
 }
-## VM Pour ChatServer and Etickting
+## ChatServer and Etickting
 variable "chattickting_vm" {
-  description = "Value of the Ressource Group Locations"
+  description = "Value of the RocketChat and E-Tickting VM"
   type        = string
-  default = "clearenceaipsykprojs"
+  default = "rcpsykprojs"
 }
 variable "rocketchat_mail_url" {
   default = ""
@@ -106,28 +96,82 @@ variable "virtual_network_name" {
   default = "vnetpsyckprojs"
 }
 
-variable "network_interface_name" {
-  description = "Value of the NIC name"
-  type        = string
-  default = "nicpsyckprojs"
-}
-
 variable "network_security_group_name" {
   description = "Value of the NSG name"
   type        = string
   default = "nsgpsyckprojs"
 }
 
-variable "public_ip_name" {
-  description = "Value of the Public IP name"
-  type        = string
-  default = "pippsyckprojs"
-}
-
 variable "load_balancer_name" {
   description = "Value of the Load Balancer name"
   type        = string
   default = "lbpsyckprojs"
+}
+## GPT-AI locale
+variable "clearenceai_nic" {
+  description = "Value of the GPT-AI NIC name"
+  type        = string
+  default = "clearenceainic"
+}
+variable "clearenceai_pip" {
+  description = "Value of the GPT-AI Public IP name"
+  type        = string
+  default = "clearenceaipip"
+}
+## GitLab Intern
+variable "gitlab_nic" {
+  description = "Value of the GitLab Intern NIC name"
+  type        = string
+  default = "gitnic"
+}
+variable "gitlab_pip" {
+  description = "Value of the GitLab Intern Public IP name"
+  type        = string
+  default = "gitpip"
+}
+## VM pour Docs
+variable "wiki_nic" {
+  description = "Value of the VM pour Docs NIC name"
+  type        = string
+  default = "wikinic"
+}
+variable "wiki_pip" {
+  description = "Value of the VM pour Docs Public IP name"
+  type        = string
+  default = "wikipip"
+}
+## ChatServer and Etickting
+variable "chattickting_nic" {
+  description = "Value of the RocketChat and E-Tickting NIC name"
+  type        = string
+  default = "rcnic"
+}
+variable "chattickting_pip" {
+  description = "Value of the RocketChat and E-Tickting Public IP name"
+  type        = string
+  default = "rcpip"
+}
+## VM pour deployer les sites web
+variable "web_nic" {
+  description = "Value of the web NIC name"
+  type        = string
+  default = "webnic"
+}
+variable "web_pip" {
+  description = "Value of the web Public IP name"
+  type        = string
+  default = "webpip"
+}
+## Administer and developper
+variable "admin_nic" {
+  description = "Value of the admin NIC name"
+  type        = string
+  default = "adminnic"
+}
+variable "admin_pip" {
+  description = "Value of the admin Public IP name"
+  type        = string
+  default = "adminpip"
 }
 #####################
 ## Storage Account ##
