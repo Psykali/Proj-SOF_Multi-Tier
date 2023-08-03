@@ -1,8 +1,3 @@
-#####################
-## Ressource Group ##
-#####################
-location = francecentral
-resource_group_name = PERSO_SIEF
 ############
 ## Admin  ##
 ############
