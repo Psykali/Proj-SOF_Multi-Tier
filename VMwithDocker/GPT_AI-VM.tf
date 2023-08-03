@@ -20,7 +20,7 @@ os_disk {
 source_image_reference {
     publisher= "Canonical"
     offer    = "UbuntuServer"
-    sku      = "18.04-LTS"
+    sku      = "20.04-LTS"
     version= "latest"
 }
 
@@ -78,24 +78,16 @@ provisioner "remote-exec" {
     "sudo apt-get update",
     "sudo apt-get upgrade -y",
     "sudo apt-get install -y git npm apt-transport-https ca-certificates curl software-properties-common",
-    "sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'",
-    "sudo curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash",
-    "sudo apt-get update",   
-#    "echo 'mariadb-server-10.6 mysql-server/root_password password P@ssw0rd1234!' | sudo debconf-set-selections",
-#    "echo 'mariadb-server-10.6 mysql-server/root_password_again password P@ssw0rd1234!' | sudo debconf-set-selections",
-    "sudo apt-get install mariadb-server mariadb-client -y",
-    "sudo systemctl start mariadb",
-    "sudo systemctl enable mariadb",
-"sudo apt-get remove nodejs",
-"sudo apt-get remove npm",
-"curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash",
-"chmod +x ~/.nvm/nvm.sh",
-"source ~/.bashrc",
-"nvm install 14",
-"nvm install 16",
-"nvm install 17",
-"nvm install 18",
-"sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 3000",
+    "sudo apt-get remove nodejs",
+    "sudo apt-get remove npm",
+    "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash",
+    "chmod +x ~/.nvm/nvm.sh",
+    "source ~/.bashrc",
+    "nvm install 14",
+    "nvm install 16",
+    "nvm install 17",
+    "nvm install 18",
+    "sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 3000",
      "sudo npm install -g n",
     "sudo n stable",
     "sudo npm install -g npm",
