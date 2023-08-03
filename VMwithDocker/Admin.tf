@@ -61,21 +61,35 @@ resource "azurerm_public_ip" "admin_pip" {
   domain_name_label   = "${var.admin__vm}-${count.index}"
   tags                = local.common_tags
 }
+###################
+## SQL Databases ##
+###################
+resource "azurerm_mysql_database" "mysql_db" {
+  count               = 3
+  name                = "adminsql-${count.index}"
+  resource_group_name = var.resource_group_name
+  server_name         = azurerm_mysql_server.mysql.name
+  charset             = "UTF8"
+  collation           = "UTF8_GENERAL_CI"
+}
 #######################################################################
 ####################
 ## Bash Scripting ##
 ####################
 # Deploy Git Server
 resource "null_resource" "install_packages" {
+ count = 3
+
   depends_on = [
-    azurerm_linux_virtual_machine.gitlab_vm,
+    azurerm_linux_virtual_machine.admin__vm,
+    azurerm_mysql_database.mysql_db,
   ]
 
   connection {
     type     = "ssh"
     user     = var.admin_username
     password = var.admin_password
-    host     = azurerm_linux_virtual_machine.gitlab_vm.public_ip_address
+    host     = azurerm_linux_virtual_machine.admin_vm.public_ip_address
   }
 
 provisioner "remote-exec" {
@@ -88,6 +102,8 @@ provisioner "remote-exec" {
         "sudo apt -y install docker.io",
         "sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose",
         "sudo chmod +x /usr/local/bin/docker-compose",
+        "sudo apt-get install -y mysql-client",
+        "mysql_config_editor set --login-path=azure_mysql --host=${azurerm_mysql_server.mysql.fqdn} --user=${azurerm_mysql_server.mysql.administrator_login} --password=${azurerm_mysql_server.mysql.administrator_login_password}",
   ]
 }
 }
