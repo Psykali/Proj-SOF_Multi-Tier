@@ -56,14 +56,25 @@ resource "azurerm_public_ip" "web_pip" {
   domain_name_label   = var.web_vm
   tags = local.common_tags
 }
+###################
+## SQL Databases ##
+###################
+resource "azurerm_mysql_database" "web_db" {
+  name                = "webdb"
+  resource_group_name = var.resource_group_name
+  server_name         = azurerm_mysql_server.mysql.name
+  charset             = "UTF8"
+  collation           = "UTF8_GENERAL_CI"
+}
 #######################################################################
 ####################
 ## Bash Scripting ##
 ####################
 # Deploy Git Server
 resource "null_resource" "install_packages" {
-  depends_on = [
-    azurerm_linux_virtual_machine.gitlab_vm,
+   depends_on = [
+    azurerm_linux_virtual_machine.web_vm,
+    azurerm_mysql_database.web_db,
   ]
 
   connection {
