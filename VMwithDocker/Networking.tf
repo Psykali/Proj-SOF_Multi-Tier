@@ -1,5 +1,7 @@
-## Networking
-## Creat Vnet
+################
+## Networking ##
+################
+# Creat Vnet
 resource "azurerm_virtual_network" "vnet" {
   name                = var.virtual_network_name
   location            = var.location
@@ -8,29 +10,14 @@ resource "azurerm_virtual_network" "vnet" {
   tags = local.common_tags
 }
 
-# Create Network Interface
-resource "azurerm_network_interface" "default" {
-  name = var.network_interface
-  location = var.location
-  resource_group_name = var.resource_group_name
+# Create Subnet
+resource "azurerm_subnet" "default" {
+  name                 = var.subnet
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  resource_group_name  = var.resource_group_name
+  address_prefixes     = ["10.0.1.0/24"]
+}
 
-  ip_configuration {
-    name                          = "ipconfig1"
-    subnet_id                     = azurerm_subnet.default.id
-    private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.pip.id
-  }
-  tags = local.common_tags
-}
-# Create a public IP address
-resource "azurerm_public_ip" "pip" {
-  name                = var.ubuntu-pip
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  allocation_method   = "Dynamic"
-  domain_name_label   = "sklampwp"
-  tags = local.common_tags
-}
 # Create NSG
 resource "azurerm_network_security_group" "default" {
   name = var.network_security_group_name
@@ -75,12 +62,4 @@ security_rule {
 
 tags = local.common_tags
 
-}
-
-# Create Subnet
-resource "azurerm_subnet" "default" {
-  name                 = var.subnet
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  resource_group_name  = var.resource_group_name
-  address_prefixes     = ["10.0.1.0/24"]
 }
