@@ -82,6 +82,9 @@ provisioner "remote-exec" {
   inline = [
         "sudo apt-get update && sudo apt-get -y upgrade", 
         "sudo apt update && sudo apt -y upgrade",
+        "sudo apt-get install -y apache2",
+        "sudo apt-get install -y mariadb-server",
+        "sudo apt-get install -y php libapache2-mod-php php-mysql",
         "sudo apt -y install docker.io",
         "sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose",
         "sudo chmod +x /usr/local/bin/docker-compose",
