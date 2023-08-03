@@ -116,7 +116,12 @@ variable "clearenceai_nic" {
 variable "clearenceai_pip" {
   description = "Value of the GPT-AI Public IP name"
   type        = string
-  default = "clearenceaipip"
+  default = "clearenceaiip"
+}
+variable "clearenceai_pip" {
+  description = "Value of the GPT-AI Public IP name"
+  type        = string
+  default = "clearenceaiip"
 }
 ## GitLab Intern
 variable "gitlab_nic" {
@@ -129,6 +134,11 @@ variable "gitlab_pip" {
   type        = string
   default = "gitpip"
 }
+variable "gitlab_ip" {
+  description = "Value of the GitLab Intern Public IP name"
+  type        = string
+  default = "gitip"
+}
 ## VM pour Docs
 variable "wiki_nic" {
   description = "Value of the VM pour Docs NIC name"
@@ -139,6 +149,11 @@ variable "wiki_pip" {
   description = "Value of the VM pour Docs Public IP name"
   type        = string
   default = "wikipip"
+}
+variable "wiki_ip" {
+  description = "Value of the VM pour Docs Public IP name"
+  type        = string
+  default = "wikiip"
 }
 ## ChatServer and Etickting
 variable "chattickting_nic" {
@@ -151,6 +166,11 @@ variable "chattickting_pip" {
   type        = string
   default = "rcpip"
 }
+variable "chattickting_ip" {
+  description = "Value of the RocketChat and E-Tickting Public IP name"
+  type        = string
+  default = "rcip"
+}
 ## VM pour deployer les sites web
 variable "web_nic" {
   description = "Value of the web NIC name"
@@ -162,6 +182,11 @@ variable "web_pip" {
   type        = string
   default = "webpip"
 }
+variable "web_ip" {
+  description = "Value of the web Public IP name"
+  type        = string
+  default = "webip"
+}
 ## Administer and developper
 variable "admin_nic" {
   description = "Value of the admin NIC name"
@@ -172,6 +197,11 @@ variable "admin_pip" {
   description = "Value of the admin Public IP name"
   type        = string
   default = "adminpip"
+}
+variable "admin_ip" {
+  description = "Value of the admin Public IP name"
+  type        = string
+  default = "adminip"
 }
 #####################
 ## Storage Account ##
