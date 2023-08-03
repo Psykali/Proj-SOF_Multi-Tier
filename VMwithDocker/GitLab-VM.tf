@@ -20,7 +20,7 @@ os_disk {
 source_image_reference {
     publisher= "Canonical"
     offer    = "UbuntuServer"
-    sku      = "18.04-LTS"
+    sku      = "20.04-LTS"
     version= "latest"
 }
 
@@ -75,8 +75,12 @@ resource "null_resource" "install_packages" {
 
 provisioner "remote-exec" {
   inline = [
-    "sudo apt-get update",
-    "sudo apt-get upgrade -y",
+        "sudo apt-get update && sudo apt-get -y upgrade",
+        "sudo apt-get install -y curl openssh-server ca-certificates tzdata perl",
+        "sudo apt-get install -y postfix",
+        "curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh | sudo bash",
+        "sudo EXTERNAL_URL=\"https://${azurerm_public_ip.gitlab_pip.fqdn}\" apt-get install gitlab-ee", ### change by fqdn
+        ### https://about.gitlab.com/install/#ubuntu
   ]
 }
 }
