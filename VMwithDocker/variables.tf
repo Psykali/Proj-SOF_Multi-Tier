@@ -118,7 +118,7 @@ variable "clearenceai_pip" {
   type        = string
   default = "clearenceaiip"
 }
-variable "clearenceai_pip" {
+variable "clearenceai_ip" {
   description = "Value of the GPT-AI Public IP name"
   type        = string
   default = "clearenceaiip"
