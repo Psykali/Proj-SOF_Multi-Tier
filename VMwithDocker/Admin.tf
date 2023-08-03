@@ -77,7 +77,7 @@ resource "azurerm_mysql_database" "admin_db" {
 ## Bash Scripting ##
 ####################
 # Deploy Git Server
-resource "null_resource" "install_packages_for_the devs" {
+resource "null_resource" "install_packages_for_the_devs" {
  count = 3
 
   depends_on = [
