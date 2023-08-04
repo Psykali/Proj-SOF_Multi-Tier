@@ -43,13 +43,15 @@ resource "azurerm_lb" "sqldbbkndlb" {
   name                = "sqldbbkndlb"
   location            = var.location
   resource_group_name = var.resource_group_name
+  sku                 = "Standard"
 
-  frontend_ip_configuration {
-    name                 = "PublicIPAddress"
-    public_ip_address_id = azurerm_public_ip.example.id
+  private_frontend_ip_configuration {
+    name                          = "PrivateIPAddress"
+    private_ip_address_allocation = "Dynamic"
+    subnet_id                     = azurerm_subnet.example.id
   }
 }
-####################################################################
+#######################################
 ## Add the SQL databases to the backend pool of the load balancer ##
 ####################################################################
 resource "azurerm_lb_backend_address_pool_address" "example" {
