@@ -90,7 +90,7 @@ provisioner "remote-exec" {
     "sudo apt-get upgrade -y",
     "sudo apt-get install -y git npm apt-transport-https ca-certificates curl software-properties-common",
     "sudo apt-get install -y mysql-client",
-    "mysql_config_editor set --login-path=azure_mysql --host=${azurerm_mysql_server.mysql.fqdn} --user=${azurerm_mysql_server.mysql.administrator_login} --password=${azurerm_mysql_server.mysql.administrator_login_password}",
+#    "mysql_config_editor set --login-path=azure_mysql --host=${azurerm_mysql_server.mysql.fqdn} --user=${azurerm_mysql_server.mysql.administrator_login} --password=${azurerm_mysql_server.mysql.administrator_login_password}",
     "sudo apt-get remove nodejs",
     "sudo apt-get remove npm",
     "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash",
@@ -105,10 +105,10 @@ provisioner "remote-exec" {
     "sudo n stable",
     "sudo npm install -g npm",
     "git clone https://github.com/mckaywrigley/clarity-ai.git",
-    "cd clarity-ai ",
-    "npm i ",
-    "npm audit fix",
-    "npm run dev",
+#    "cd clarity-ai ",
+#    "npm i ",
+#    "npm audit fix",
+#    "npm run dev",
   ]
   ## https://github.com/mckaywrigley/paul-graham-gpt
   ## https://github.com/mckaywrigley
