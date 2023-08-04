@@ -44,7 +44,7 @@ resource "azurerm_network_interface" "admin_nic" {
     name                          = "ipconfig1"
     subnet_id                     = azurerm_subnet.default.id
     private_ip_address_allocation = "Dynamic"
-#    public_ip_address_id          = azurerm_public_ip.admin_pip[count.index].id
+    public_ip_address_id          = azurerm_public_ip.admin_pip[count.index].id
   }
 
   tags = local.common_tags
@@ -52,15 +52,15 @@ resource "azurerm_network_interface" "admin_nic" {
 ################################
 ## Create a public IP address ##
 ################################
-#resource "azurerm_public_ip" "admin_pip" {
-#  count               = 3
-#  name                = "${var.admin_pip}-${count.index}"
-#  location            = var.location
-#  resource_group_name = var.resource_group_name
-#  allocation_method   = "Dynamic"
-#  domain_name_label   = "${var.admin__vm}-${count.index}"
-#  tags                = local.common_tags
-#}
+resource "azurerm_public_ip" "admin_pip" {
+  count               = 3
+  name                = "${var.admin_pip}-${count.index}"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  allocation_method   = "Dynamic"
+  domain_name_label   = "${var.admin__vm}-${count.index}"
+  tags                = local.common_tags
+}
 ###################
 ## SQL Databases ##
 ###################
