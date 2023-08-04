@@ -116,7 +116,7 @@ resource "null_resource" "install_packages_gpt" {
     type     = "ssh"
     user     = var.admin_username
     password = var.admin_password
-    host     = azurerm_linux_virtual_machine.vm.public_ip_address
+    host     = azurerm_linux_virtual_machine.clearenceai_vm.public_ip_address
   }
 
 provisioner "remote-exec" {
