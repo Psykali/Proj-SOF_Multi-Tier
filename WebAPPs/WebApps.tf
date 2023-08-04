@@ -51,7 +51,7 @@ resource "azurerm_lb" "sqldbbkndlb" {
     name                          = "PrivateIPAddress"
     private_ip_address_allocation = "Dynamic"
     private_ip_address_version    = "IPv4"
-    subnet_id                     = azurerm_subnet.example.id
+    subnet_id                     = azurerm_subnet.example.id # Update this to reference an existing subnet resource
   }
 }
 
@@ -59,11 +59,10 @@ resource "azurerm_lb" "sqldbbkndlb" {
 ## Add the SQL databases to the backend pool of the load balancer ##
 ####################################################################
 resource "azurerm_lb_backend_address_pool_address" "sql_backend_pool" {
-  count                     = length(azurerm_sql_database.sql_backend_pool)
-  loadbalancer_id           = azurerm_lb.sqldbbkndlb.id
-  backend_address_pool_name = azurerm_lb.sqldbbkndlb.backend_address_pool[0].name
-  name                      = "sql_backend_pool-${count.index}"
-  virtual_machine_id        = azurerm_sql_database.sql_backend_pool[count.index].id
+  count                   = length(azurerm_sql_database.sql_backend_pool)
+  backend_address_pool_id = azurerm_lb.sqldbbkndlb.backend_address_pool[0].id # Add this argument
+  name                    = "sql_backend_pool-${count.index}"
+  ip_address              = azurerm_sql_database.sql_backend_pool[count.index].id # Update this argument
 }
 #####################
 ## Create App Plan ##
@@ -143,11 +142,7 @@ resource "azurerm_lb" "lb" {
     name                 = "PublicIPAddress"
     public_ip_address_id = azurerm_public_ip.lb_pip.id
   }
-
-  backend_address_pool {
-    name = "BackendPool"
-  }
-
+}
   tags = local.common_tags
 }
 #######################################
@@ -198,11 +193,13 @@ resource "azurerm_frontdoor" "frontdoor" {
 ################################
 ## Create Front Door EndPoint ##
 ################################
-resource "azurerm_frontdoor_frontend_endpoint" "frontend" {
-  name                              = "webapp-frontend"
+resource "azurerm_frontdoor_custom_https_configuration" "frontend" {
   front_door_name                   = azurerm_frontdoor.frontdoor.name
+  frontend_endpoint_name            = azurerm_frontdoor.frontdoor.frontend_endpoint[0].name
   resource_group_name               = var.resource_group_name
-  host_name                         = azurerm_public_ip.lb_pip.fqdn
-  session_affinity_enabled          = true
-  session_affinity_ttl_seconds      = 300
+  custom_https_provisioning_enabled = true
+
+  custom_https_configuration {
+    certificate_source = "FrontDoor"
+  }
 }
