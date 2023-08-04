@@ -155,10 +155,9 @@ resource "azurerm_lb_backend_address_pool" "example" {
 ## Add the Web Apps to the backend pool of the load balancer ##
 ###############################################################
 resource "azurerm_lb_backend_address_pool_address" "example" {
-  loadbalancer_id         = azurerm_lb.lb.id
   backend_address_pool_id = azurerm_lb_backend_address_pool.example.id
   name                    = "wordpressbkndpl"
-  virtual_machine_id      = azurerm_linux_virtual_machine.example.id
+  ip_address              = azurerm_linux_virtual_machine.example.private_ip_address # Update this argument
 }
 #######################
 ## Create Front Door ##
@@ -189,16 +188,32 @@ resource "azurerm_frontdoor" "frontdoor" {
 
   tags = local.common_tags
 }
-################################
-## Create Front Door EndPoint ##
-################################
-resource "azurerm_frontdoor_custom_https_configuration" "frontend" {
-  front_door_name                   = azurerm_frontdoor.frontdoor.name
-  frontend_endpoint_name            = azurerm_frontdoor.frontdoor.frontend_endpoint[0].name
-  resource_group_name               = var.resource_group_name
-  custom_https_provisioning_enabled = true
+#######################
+## Create Front Door ##
+#######################
+resource "azurerm_frontdoor" "frontdoor" {
+  name                = "webapp-frontdoor"
+  location            = var.location
+  resource_group_name = var.resource_group_name
 
-  custom_https_configuration {
-    certificate_source = "FrontDoor"
+  routing_rule {
+    name               = "webapp-routing-rule"
+    frontend_endpoints = [azurerm_frontdoor.frontdoor.frontend_endpoint[0].id] # Update this argument
+    accepted_protocols = ["Http", "Https"]
+    patterns_to_match  = ["/*"]
+    forwarding_configuration {
+      backend_pool_name = azurerm_lb_backend_address_pool.backend_pool.name
+      backend_protocol  = "Http"
+      backend_host_header = azurerm_app_service.wordpress.default_site_hostname
+    }
   }
+
+  frontend_endpoint {
+    name                 = "webapp-frontend"
+    host_name            = azurerm_public_ip.lb_pip.fqdn
+    session_affinity_enabled = true
+    session_affinity_ttl_seconds = 300
+  }
+
+  tags = local.common_tags
 }
