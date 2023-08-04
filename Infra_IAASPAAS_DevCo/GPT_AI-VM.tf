@@ -76,21 +76,21 @@ resource "azurerm_network_interface" "clearenceai_nic" {
     name                          = "ipconfig1"
     subnet_id                     = azurerm_subnet.default.id
     private_ip_address_allocation = "Dynamic"
-#    public_ip_address_id          = azurerm_public_ip.clearenceai_pip.id
+    public_ip_address_id          = azurerm_public_ip.clearenceai_pip.id
   }
   tags = local.common_tags
 }
 ################################
 ## Create a public IP address ##
 ################################
-#resource "azurerm_public_ip" "clearenceai_pip" {
-#  name                = var.clearenceai_pip
-#  location            = var.location
-#  resource_group_name = var.resource_group_name
-#  allocation_method   = "Dynamic"
-#  domain_name_label   = "sklampwp"
-#  tags = local.common_tags
-#}
+resource "azurerm_public_ip" "clearenceai_pip" {
+  name                = var.clearenceai_pip
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  allocation_method   = "Dynamic"
+  domain_name_label   = "sklampwp"
+  tags = local.common_tags
+}
 ###################
 ## SQL Databases ##
 ###################
