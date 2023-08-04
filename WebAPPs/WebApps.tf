@@ -142,7 +142,6 @@ resource "azurerm_lb" "lb" {
     name                 = "PublicIPAddress"
     public_ip_address_id = azurerm_public_ip.lb_pip.id
   }
-}
   tags = local.common_tags
 }
 #######################################
