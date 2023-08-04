@@ -31,6 +31,7 @@ resource "azurerm_linux_virtual_machine" "admin__vm" {
 
   tags = local.common_tags
 }
+## Metrecs and Alerts
 resource "azurerm_monitor_metric_alert" "admin__vm" {
   name                = "adminvm-CPU"
   resource_group_name = var.resource_group_name
