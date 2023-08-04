@@ -29,6 +29,41 @@ source_image_reference {
 
   tags = local.common_tags
 }
+## Metrics and Alerts
+resource "azurerm_monitor_metric_alert" "wiki_vm" {
+  name                = "wiki-CPU"
+  resource_group_name = var.resource_group_name
+  scopes              = azurerm_linux_virtual_machine.wiki_vm.id
+  description         = "Action will be triggered when CPU usage exceeds 80% for 5 minutes."
+
+  criteria {
+    metric_namespace = "Microsoft.Compute/virtualMachines"
+    metric_name      = "Percentage CPU"
+    aggregation      = "Average"
+    operator         = "GreaterThan"
+    threshold        = 80
+  }
+
+  window_size        = "PT15M"
+  frequency          = "PT5M"
+}
+resource "azurerm_monitor_metric_alert" "wikivm" {
+  name                = "wiki-MeM"
+  resource_group_name = var.resource_group_name
+  scopes              = azurerm_linux_virtual_machine.wiki_vm.id
+  description         = "Action will be triggered when available memory falls below 20% for 5 minutes."
+
+  criteria {
+    metric_namespace = "Microsoft.Compute/virtualMachines"
+    metric_name      = "Available Memory Bytes"
+    aggregation      = "Average"
+    operator         = "LessThan"
+    threshold        = 0.2
+  }
+
+  window_size        = "PT15M"
+  frequency          = "PT5M"
+}
 ##############################
 ## Create Network Interface ##
 ##############################
