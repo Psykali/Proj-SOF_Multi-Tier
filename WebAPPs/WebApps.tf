@@ -18,7 +18,7 @@ locals {
 ###########################
 ## Create the SQL Server ##
 ###########################
-resource "azurerm_sql_server" "example" {
+resource "azurerm_sql_server" "sql_backend_pool" {
   name                         = "sqlserv"
   resource_group_name          = var.resource_group_name
   location                     = var.location
@@ -26,16 +26,18 @@ resource "azurerm_sql_server" "example" {
   administrator_login          = var.admin_username
   administrator_login_password = var.admin_password
 }
+
 ##############################
 ## Create the SQL databases ##
 ##############################
-resource "azurerm_sql_database" "example" {
+resource "azurerm_sql_database" "sql_backend_pool" {
   count               = 3
   name                = "sqldb-${count.index}"
   resource_group_name = var.resource_group_name
   location            = var.location
-  server_name         = azurerm_sql_server.example.name
+  server_name         = azurerm_sql_server.sql_backend_pool.name
 }
+
 ######################################
 ## Create the load balancer for SQL ##
 ######################################
@@ -53,17 +55,16 @@ resource "azurerm_lb" "sqldbbkndlb" {
   }
 }
 
-#######################################
+####################################################################
 ## Add the SQL databases to the backend pool of the load balancer ##
 ####################################################################
-resource "azurerm_lb_backend_address_pool_address" "example" {
-  count                     = length(azurerm_sql_database.example)
+resource "azurerm_lb_backend_address_pool_address" "sql_backend_pool" {
+  count                     = length(azurerm_sql_database.sql_backend_pool)
   loadbalancer_id           = azurerm_lb.sqldbbkndlb.id
   backend_address_pool_name = azurerm_lb.sqldbbkndlb.backend_address_pool[0].name
-  name                      = "example-${count.index}"
-  virtual_machine_id        = azurerm_sql_database.example[count.index].id
+  name                      = "sql_backend_pool-${count.index}"
+  virtual_machine_id        = azurerm_sql_database.sql_backend_pool[count.index].id
 }
-
 #####################
 ## Create App Plan ##
 #####################
@@ -115,10 +116,9 @@ resource "azurerm_app_service_slot" "example" {
   connection_string {
     name  = "Database"
     type  = "SQLAzure"
-    value = "Server=tcp:${azurerm_lb.backendlb.private_ip_address},1433;Initial Catalog=exampledb;User ID=exampleuser;Password=examplepassword;"
+    value = "Server=tcp:${azurerm_lb.sqldbbkndlb.private_ip_address},1433;Initial Catalog=sqldb-0;User ID=${var.admin_username};Password=${var.admin_password};"
   }
 }
-
 ################################################
 ## Create Public IP address for Load Balancer ##
 ################################################
