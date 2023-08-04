@@ -33,7 +33,7 @@ source_image_reference {
 resource "azurerm_monitor_metric_alert" "wiki_vm" {
   name                = "wiki-CPU"
   resource_group_name = var.resource_group_name
-  scopes              = azurerm_linux_virtual_machine.wiki_vm.id
+  scopes              = [azurerm_linux_virtual_machine.wiki_vm.id]
   description         = "Action will be triggered when CPU usage exceeds 80% for 5 minutes."
 
   criteria {
@@ -50,7 +50,7 @@ resource "azurerm_monitor_metric_alert" "wiki_vm" {
 resource "azurerm_monitor_metric_alert" "wikivm" {
   name                = "wiki-MeM"
   resource_group_name = var.resource_group_name
-  scopes              = azurerm_linux_virtual_machine.wiki_vm.id
+  scopes              = [azurerm_linux_virtual_machine.wiki_vm.id]
   description         = "Action will be triggered when available memory falls below 20% for 5 minutes."
 
   criteria {
