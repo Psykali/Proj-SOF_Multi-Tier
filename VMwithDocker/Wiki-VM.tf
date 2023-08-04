@@ -41,21 +41,21 @@ resource "azurerm_network_interface" "wiki_nic" {
     name                          = var.wiki_ip
     subnet_id                     = azurerm_subnet.default.id
     private_ip_address_allocation = "Dynamic"
-#    public_ip_address_id          = azurerm_public_ip.wiki_pip.id
+    public_ip_address_id          = azurerm_public_ip.wiki_pip.id
   }
   tags = local.common_tags
 }
 ################################
 ## Create a public IP address ##
 ################################
-#resource "azurerm_public_ip" "wiki_pip" {
-#  name                = var.wiki_pip
-#  location            = var.location
-#  resource_group_name = var.resource_group_name
-#  allocation_method   = "Dynamic"
-#  domain_name_label   = var.wiki_vm
-#  tags = local.common_tags
-#}
+resource "azurerm_public_ip" "wiki_pip" {
+  name                = var.wiki_pip
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  allocation_method   = "Dynamic"
+  domain_name_label   = var.wiki_vm
+  tags = local.common_tags
+}
 ###################
 ## SQL Databases ##
 ###################
@@ -104,8 +104,8 @@ provisioner "remote-exec" {
     "sudo rm index.html",
     "sudo tar xvzf /var/www/html/mediawiki-1.35.0.tar.gz",
     " sudo mv /var/www/html/mediawiki-1.35.0 /var/www/html/",
-    "sudo chmod 664 /var/www/html/w/LocalSettings.php",
-    "mysql_config_editor set --login-path=azure_mysql --host=${azurerm_mysql_server.mysql.fqdn} --user=${azurerm_mysql_server.mysql.administrator_login} --password=${azurerm_mysql_server.mysql.administrator_login_password}",
+    "sudo chmod 664 /var/www/html/LocalSettings.php",
+#    "mysql_config_editor set --login-path=azure_mysql --host=${azurerm_mysql_server.mysql.fqdn} --user=${azurerm_mysql_server.mysql.administrator_login} --password=${azurerm_mysql_server.mysql.administrator_login_password}",
 
   ]
 }
