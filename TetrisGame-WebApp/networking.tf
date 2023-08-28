@@ -52,16 +52,10 @@ resource "azurerm_traffic_manager_profile" "example" {
   }
 }
 
-resource "azurerm_traffic_manager_endpoint" "example1" {
-  name                = "example-endpoint1"
+resource "azurerm_traffic_manager_endpoint" "example" {
+  count              = 2
+  name               = "example-endpoint${count.index + 1}"
   resource_group_name = azurerm_resource_group.example.name
-  profile_name        = azurerm_traffic_manager_profile.example.name
-  target_resource_id   <EUGPSCoordinates>azurerm_app_service.example1.id
-}
-
-resource "azurerm_traffic_manager_endpoint" "example2" {
-  name                = "example-endpoint2"
-  resource_group_name = azurerm_resource_group.example.name
-  profile_name        = azurerm_traffic_manager_profile.example.name
-   <EUGPSCoordinates>azurerm_app_service.example2.id
+  profile_name       = azurerm_traffic_manager_profile.example.name
+  target_resource_id = azurerm_app_service.example[count.index].id
 }
