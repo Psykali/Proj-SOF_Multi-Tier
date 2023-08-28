@@ -88,17 +88,17 @@ resource "azurerm_application_gateway" "example" {
     request_timeout       = 60
   }
 
-  http_listener {
+http_listener {
     name                           = "example-http-listener"
     frontend_ip_configuration_name = "example-frontend-ip-configuration"
     frontend_port_name             = "example-frontend-port"
-    protocol                       <EUGPSCoordinates>Http"
+    protocol                       = "Http"
 }
 
 resource "azurerm_application_gateway_request_routing_rule" "example" {
-    name                       <EUGPSCoordinates>example-request-routing-rule"
-    rule_type                  <EUGPSCoordinates>Basic"
-    http_listener_name         <EUGPSCoordinates>example-http-listener"
-    backend_address_pool_name   <EUGPSCoordinates>example-backend-address-pool"
-    backend_http_settings_name <EUGPSCoordinates>example-backend-http-settings"
+    name                       = "example-request-routing-rule"
+    rule_type                  = "Basic"
+    http_listener_name         = "example-http-listener"
+    backend_address_pool_name  = "example-backend-address-pool"
+    backend_http_settings_name = "example-backend-http-settings"
 }
