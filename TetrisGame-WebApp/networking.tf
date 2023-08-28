@@ -116,13 +116,7 @@ resource "azurerm_app_service" "example" {
 
   site_config {
     always_on = true
-  }
-
-  site_config {
     http2_enabled = true
-  }
-
-  site_config {
     websockets_enabled = true
   }
 
