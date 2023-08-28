@@ -94,7 +94,7 @@ http_listener {
     frontend_port_name             = "example-frontend-port"
     protocol                       = "Http"
 }
-
+}
 resource "azurerm_application_gateway_request_routing_rule" "example" {
     name                       = "example-request-routing-rule"
     rule_type                  = "Basic"
