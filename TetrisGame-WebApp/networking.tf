@@ -11,7 +11,7 @@ resource "azurerm_virtual_network" "example" {
 }
 
 resource "azurerm_subnet_network_security_group_association" "example" {
-  subnet_id                 = azurerm_virtual_network.example.subnet.id
+  subnet_id                 = azurerm_virtual_network.example.subnet[0].id
   network_security_group_id = azurerm_network_security_group.example.id
 }
 
@@ -53,31 +53,22 @@ resource "azurerm_public_ip" "example" {
   allocation_method   = "Dynamic"
 }
 
-resource "azurerm_lb" "example" {
-  name                = "example-lb"
-  location            = var.location
-  resource_group_name = var.resource_group_name
+resource "azurerm_lb_backend_address_pool" "example" {
+  loadbalancer_id = azurerm_lb.example.id
+  name            = "example-backend-pool"
+}
 
-  frontend_ip_configuration {
-    name                 = "PublicIPAddress"
-    public_ip_address_id = azurerm_public_ip.example.id
-  }
-
-  backend_address_pool {
-    name = "example-backend-pool"
-  }
-
-  probe {
-    name                      = "example-probe"
-    protocol                  = "Http"
-    request_path              = "/"
-    port                      = 80
-    interval_seconds          = 30
-    number_of_probes          = 2
-    load_balancing_rule_ids   = [azurerm_lb_rule.example.http.id, azurerm_lb_rule.example.https.id]
-    protocol_match_value      = "200-399"
-    protocol_match_criteria   = "StatusCodes"
-  }
+resource "azurerm_lb_probe" "example" {
+  loadbalancer_id = azurerm_lb.example.id
+  name            = "example-probe"
+  protocol        = "Http"
+  request_path    = "/"
+  port            = 80
+  interval_seconds          = 30
+  number_of_probes          = 2
+  load_balancing_rule_ids   = [azurerm_lb_rule.example.http.id, azurerm_lb_rule.example.https.id]
+  protocol_match_value      = "200-399"
+  protocol_match_criteria   = "StatusCodes"
 }
 
 resource "azurerm_lb_rule" "example" {
