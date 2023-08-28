@@ -1,7 +1,7 @@
 resource "azurerm_app_service_plan" "example" {
   name                = "example-appserviceplan"
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
+  location            = var.location
+  resource_group_name = var.resource_group_name
   kind                = "Linux"
   reserved            = true
 
@@ -14,8 +14,8 @@ resource "azurerm_app_service_plan" "example" {
 resource "azurerm_app_service" "example" {
   count               = 2
   name                = "example-app-service${count.index + 1}"
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
+  location            = var.location
+  resource_group_name = var.resource_group_name
   app_service_plan_id = azurerm_app_service_plan.example.id
 
   site_config {
@@ -29,7 +29,7 @@ resource "azurerm_app_service" "example" {
 
 resource "azurerm_traffic_manager_profile" "example" {
   name                   = "example-trafficmanagerprofile"
-  resource_group_name    = azurerm_resource_group.example.name
+  resource_group_name = var.resource_group_name
   traffic_routing_method = "Weighted"
 
   dns_config {
@@ -55,7 +55,7 @@ resource "azurerm_traffic_manager_profile" "example" {
 resource "azurerm_traffic_manager_endpoint" "example" {
   count              = 2
   name               = "example-endpoint${count.index + 1}"
-  resource_group_name = azurerm_resource_group.example.name
+  resource_group_name = var.resource_group_name
   profile_name       = azurerm_traffic_manager_profile.example.name
   target_resource_id = azurerm_app_service.example[count.index].id
 }
