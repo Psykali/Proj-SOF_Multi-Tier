@@ -93,12 +93,19 @@ http_listener {
     frontend_ip_configuration_name = "example-frontend-ip-configuration"
     frontend_port_name             = "example-frontend-port"
     protocol                       = "Http"
-}
-}
-resource "azurerm_application_gateway_request_routing_rule" "example" {
+ }
+request_routing_rule {
     name                       = "example-request-routing-rule"
     rule_type                  = "Basic"
     http_listener_name         = "example-http-listener"
     backend_address_pool_name  = "example-backend-address-pool"
     backend_http_settings_name = "example-backend-http-settings"
+  }
 }
+#resource "azurerm_application_gateway_request_routing_rule" "example" {
+#    name                       = "example-request-routing-rule"
+#    rule_type                  = "Basic"
+#    http_listener_name         = "example-http-listener"
+#    backend_address_pool_name  = "example-backend-address-pool"
+#    backend_http_settings_name = "example-backend-http-settings"
+#}
