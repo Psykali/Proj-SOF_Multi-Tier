@@ -8,7 +8,7 @@ variable "app_service_plan_name" {
   description = "skskabdocker"
 }
 
-variable "webapp_name" {
+variable "web_app_name" {
   type = string
   description = "skskabdocker"
 }
