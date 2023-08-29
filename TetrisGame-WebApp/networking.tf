@@ -90,13 +90,12 @@ resource "azurerm_application_gateway" "example" {
     protocol              = "Http"
     request_timeout       = 60
   }
-
-http_listener {
+  http_listener {
     name                           = "skttrsp20-http-listener"
-    frontend_ip_configuration_name = "skttrsp20-frontend-ip-configuration"
+    frontend_ip_configuration_name = "skttrsp20-ip-configuration"
     frontend_port_name             = "skttrsp20-frontend-port"
     protocol                       = "Http"
- }
+  }
 request_routing_rule {
     name                       = "skttrsp20-request-routing-rule"
     rule_type                  = "Basic"
