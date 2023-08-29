@@ -1,3 +1,17 @@
+variable "storage_account_name" {
+  type = string
+  description = "skskabdocker"
+}
+
+variable "app_service_plan_name" {
+  type = string
+  description = "skskabdocker"
+}
+
+variable "webapp_name" {
+  type = string
+  description = "skskabdocker"
+}
 #####################
 ## Ressource Group ##
 #####################
