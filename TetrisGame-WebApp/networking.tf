@@ -76,7 +76,10 @@ resource "azurerm_application_gateway" "example" {
 
   backend_address_pool {
     name         = "skttrsp20-address-pool"
-    ip_addresses = [azurerm_app_service.example[0].default_site_hostname, azurerm_app_service.example[1].default_site_hostname]
+    ip_addresses = [
+      split(",", azurerm_app_service.example[0].outbound_ip_addresses)[0],
+      split(",", azurerm_app_service.example[1].outbound_ip_addresses)[0]
+    ]
   }
 
   backend_http_settings {
