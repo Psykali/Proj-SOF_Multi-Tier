@@ -1,6 +1,6 @@
 # Create a storage account
 resource "azurerm_storage_account" "sa" {
-  name                     = var.storage_account_name
+  name                     = "skskabstrg"
   resource_group_name      = var.resource_group_name
   location                 = var.location
   account_tier             = "Standard"
@@ -9,7 +9,7 @@ resource "azurerm_storage_account" "sa" {
 
 # Create an App Service plan
 resource "azurerm_app_service_plan" "asp" {
-  name                = var.app_service_plan_name
+  name                = "skskabdockersp"
   resource_group_name      = var.resource_group_name
   location                 = var.location
   kind                = "linux"
@@ -23,7 +23,7 @@ resource "azurerm_app_service_plan" "asp" {
 
 # Create a web app
 resource "azurerm_app_service" "webapp" {
-  name                = var.web_app_name
+  name                = "skskabdocker-prd"
   resource_group_name      = var.resource_group_name
   location                 = var.location
   app_service_plan_id  = azurerm_app_service_plan.asp.id
@@ -34,7 +34,7 @@ resource "azurerm_app_service" "webapp" {
 
 # Create a dev web app
 resource "azurerm_app_service" "dev_webapp" {
-  name                = "${var.web_app_name}-dev"
+  name                = "skskabdocker-dev"
   resource_group_name      = var.resource_group_name
   location                 = var.location
   app_service_plan_id  = azurerm_app_service_plan.asp.id
