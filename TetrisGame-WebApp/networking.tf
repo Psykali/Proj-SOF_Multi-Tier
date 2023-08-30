@@ -56,7 +56,7 @@ resource "azurerm_app_service_slot" "example" {
 ## Create Public IP address for Load Balancer ##
 ################################################
 resource "azurerm_public_ip" "lb_pip" {
-  name                = "lb-public-ip"
+  name                = "Tetrislb-public-ip"
   location            = var.location
   resource_group_name = var.resource_group_name
   allocation_method   = "Static"
@@ -67,13 +67,13 @@ resource "azurerm_public_ip" "lb_pip" {
 ## Create Load Balancer WebApps ##
 ##################################
 resource "azurerm_lb" "lb" {
-  name                = "webapp-lb"
+  name                = "Tetris-lb"
   location            = var.location
   resource_group_name = var.resource_group_name
   sku                 = "Standard"
 
   frontend_ip_configuration {
-    name                 = "PublicIPAddress"
+    name                 = "TetrisPIPAddress"
     public_ip_address_id = azurerm_public_ip.lb_pip.id
   }
   tags = local.common_tags
@@ -90,19 +90,19 @@ resource "azurerm_lb_backend_address_pool" "example" {
 ###############################################################
 resource "azurerm_lb_backend_address_pool_address" "example" {
   backend_address_pool_id = azurerm_lb_backend_address_pool.example.id
-  name                    = "wordpressbkndpl"
+  name                    = "Tetrisbkndpl"
   ip_address              = azurerm_linux_virtual_machine.example.private_ip_address # Update this argument
 }
 #######################
 ## Create Front Door ##
 #######################
 resource "azurerm_frontdoor" "frontdoor" {
-  name                = "webapp-frontdoor"
+  name                = "Tetris-frontdoor"
   location            = var.location
   resource_group_name = var.resource_group_name
 
   routing_rule {
-    name               = "webapp-routing-rule"
+    name               = "Tetris-routing-rule"
     frontend_endpoints = [azurerm_frontdoor_frontend_endpoint.frontend.id]
     accepted_protocols = ["Http", "Https"]
     patterns_to_match  = ["/*"]
@@ -114,7 +114,7 @@ resource "azurerm_frontdoor" "frontdoor" {
   }
 
   frontend_endpoint {
-    name                 = "webapp-frontend"
+    name                 = "Tetris-frontend"
     host_name            = azurerm_public_ip.lb_pip.fqdn
     session_affinity_enabled = true
     session_affinity_ttl_seconds = 300
@@ -126,12 +126,12 @@ resource "azurerm_frontdoor" "frontdoor" {
 ## Create Front Door ##
 #######################
 resource "azurerm_frontdoor" "frontdoor" {
-  name                = "webapp-frontdoor"
+  name                = "Tetris-frontdoor"
   location            = var.location
   resource_group_name = var.resource_group_name
 
   routing_rule {
-    name               = "webapp-routing-rule"
+    name               = "Tetris-routing-rule"
     frontend_endpoints = [azurerm_frontdoor.frontdoor.frontend_endpoint[0].id] # Update this argument
     accepted_protocols = ["Http", "Https"]
     patterns_to_match  = ["/*"]
@@ -143,7 +143,7 @@ resource "azurerm_frontdoor" "frontdoor" {
   }
 
   frontend_endpoint {
-    name                 = "webapp-frontend"
+    name                 = "Tetris-frontend"
     host_name            = azurerm_public_ip.lb_pip.fqdn
     session_affinity_enabled = true
     session_affinity_ttl_seconds = 300
