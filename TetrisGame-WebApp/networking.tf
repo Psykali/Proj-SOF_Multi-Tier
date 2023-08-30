@@ -1,7 +1,10 @@
+#####################
+## Create App Plan ##
+#####################
 resource "azurerm_app_service_plan" "example" {
-  name                = "skttrsp20-appserviceplan"
-  location            = var.location
-  resource_group_name = var.resource_group_name
+  name                = "app-service-plan"
+  location            = "France Central"
+  resource_group_name = "PERSO_SIEF"
   kind                = "Linux"
   reserved            = true
 
@@ -10,104 +13,141 @@ resource "azurerm_app_service_plan" "example" {
     size = "B1"
   }
 }
-
-resource "azurerm_app_service" "example" {
-  count               = 2
-  name                = "skttrsp20${count.index + 1}"
+##################################
+## Create Web App for WordPress ##
+##################################
+variable "app_names" {
+  type = list(string)
+  default = ["1stTetris", "2ndTetris", "3rdTetris"]
+}
+resource "azurerm_app_service" "wordpress" {
+  count               = length(var.app_names)
+  name                = var.app_names[count.index]
   location            = var.location
   resource_group_name = var.resource_group_name
   app_service_plan_id = azurerm_app_service_plan.example.id
 
   site_config {
+    always_on = true
     linux_fx_version = "DOCKER|skP20ContReg.azurecr.io/tetrisgameapp"
   }
 
-  app_settings = {
-    WEBSITES_ENABLE_APP_SERVICE_STORAGE = false
+  identity {
+    type = "SystemAssigned"
   }
+
+  tags = local.common_tags
 }
 
-resource "azurerm_virtual_network" "example" {
-  name                = "skttrsp20-vnet"
+resource "azurerm_app_service_slot" "example" {
+  app_service_name       = azurerm_app_service.wordpress[0].name
+  location               = azurerm_app_service.wordpress[0].location
+  resource_group_name    = azurerm_app_service.wordpress[0].resource_group_name
+  app_service_plan_id    = azurerm_app_service_plan.example.id
+  name                   = "staging"
+
+  connection_string {
+    name  = "Database"
+    type  = "SQLAzure"
+    value = "Server=tcp:${azurerm_lb.sqldbbkndlb.private_ip_address},1433;Initial Catalog=sqldb-0;User ID=${var.admin_username};Password=${var.admin_password};"
+  }
+}
+################################################
+## Create Public IP address for Load Balancer ##
+################################################
+resource "azurerm_public_ip" "lb_pip" {
+  name                = "lb-public-ip"
   location            = var.location
   resource_group_name = var.resource_group_name
-  address_space       = ["10.0.0.0/16"]
+  allocation_method   = "Static"
+  sku                 = "Standard"
+  tags                = local.common_tags
 }
-
-resource "azurerm_subnet" "example" {
-  name                 = "skttrsp20-subnet"
-  resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.example.name
-  address_prefixes     = ["10.0.1.0/24"]
-}
-
-resource "azurerm_public_ip" "example" {
-  name                = "skttrsp20-pip"
+##################################
+## Create Load Balancer WebApps ##
+##################################
+resource "azurerm_lb" "lb" {
+  name                = "webapp-lb"
   location            = var.location
   resource_group_name = var.resource_group_name
-  allocation_method   = "Dynamic"
-}
-
-resource "azurerm_application_gateway" "example" {
-  name                = "skttrsp20-appgateway"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-
-  sku {
-    name     = "Standard_Small"
-    tier     = "Standard"
-    capacity = 2
-  }
-
-  gateway_ip_configuration {
-    name      = "skttrsp20-ip-configuration"
-    subnet_id = azurerm_subnet.example.id
-  }
-
-  frontend_port {
-    name = "skttrsp20-frontend-port"
-    port = 80
-  }
+  sku                 = "Standard"
 
   frontend_ip_configuration {
-    name                 = "skttrsp20-ip-configuration"
-    public_ip_address_id = azurerm_public_ip.example.id
+    name                 = "PublicIPAddress"
+    public_ip_address_id = azurerm_public_ip.lb_pip.id
   }
-
-  backend_address_pool {
-    name         = "skttrsp20-address-pool"
-    ip_addresses = [
-      split(",", azurerm_app_service.example[0].outbound_ip_addresses)[0],
-      split(",", azurerm_app_service.example[1].outbound_ip_addresses)[0]
-    ]
-  }
-
-  backend_http_settings {
-    name                  = "skttrsp20-backend-http-settings"
-    cookie_based_affinity = "Disabled"
-    path                  = "/"
-    port                  = 80
-    protocol              = "Http"
-    request_timeout       = 60
-  }
-  http_listener {
-    name                           = "skttrsp20-http-listener"
-    frontend_ip_configuration_name = "skttrsp20-ip-configuration"
-    frontend_port_name             = "skttrsp20-frontend-port"
-    protocol                       = "Http"
-  }
-request_routing_rule {
-    name                       = "skttrsp20-request-routing-rule"
-    rule_type                  = "Basic"
-    http_listener_name         = "skttrsp20-http-listener"
-    backend_address_pool_name  = "skttrsp20-backend-address-pool"
-    backend_http_settings_name = "skttrsp20-backend-http-settings"
-  }
+  tags = local.common_tags
 }
-#resource "azurerm_application_gateway_request_routing_rule" "example" {
-#    name                       = "example-request-routing-rule"
-#    rule_type                  = "Basic"
-#    http_listener_name         = "example-http-listener"
-#    backend_address_pool_name  = "example-backend-address-pool"
-#    backend_http_settings_name = "example-backend-http-settings"
-#}
+#######################################
+## backend pool of the load balancer ##
+#######################################
+resource "azurerm_lb_backend_address_pool" "example" {
+  loadbalancer_id = azurerm_lb.lb.id
+  name            = "BackendPool"
+}
+###############################################################
+## Add the Web Apps to the backend pool of the load balancer ##
+###############################################################
+resource "azurerm_lb_backend_address_pool_address" "example" {
+  backend_address_pool_id = azurerm_lb_backend_address_pool.example.id
+  name                    = "wordpressbkndpl"
+  ip_address              = azurerm_linux_virtual_machine.example.private_ip_address # Update this argument
+}
+#######################
+## Create Front Door ##
+#######################
+resource "azurerm_frontdoor" "frontdoor" {
+  name                = "webapp-frontdoor"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+
+  routing_rule {
+    name               = "webapp-routing-rule"
+    frontend_endpoints = [azurerm_frontdoor_frontend_endpoint.frontend.id]
+    accepted_protocols = ["Http", "Https"]
+    patterns_to_match  = ["/*"]
+    forwarding_configuration {
+      backend_pool_name = azurerm_lb_backend_address_pool.backend_pool.name
+      backend_protocol  = "Http"
+      backend_host_header = azurerm_app_service.wordpress_primary.default_site_hostname
+    }
+  }
+
+  frontend_endpoint {
+    name                 = "webapp-frontend"
+    host_name            = azurerm_public_ip.lb_pip.fqdn
+    session_affinity_enabled = true
+    session_affinity_ttl_seconds = 300
+  }
+
+  tags = local.common_tags
+}
+#######################
+## Create Front Door ##
+#######################
+resource "azurerm_frontdoor" "frontdoor" {
+  name                = "webapp-frontdoor"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+
+  routing_rule {
+    name               = "webapp-routing-rule"
+    frontend_endpoints = [azurerm_frontdoor.frontdoor.frontend_endpoint[0].id] # Update this argument
+    accepted_protocols = ["Http", "Https"]
+    patterns_to_match  = ["/*"]
+    forwarding_configuration {
+      backend_pool_name = azurerm_lb_backend_address_pool.backend_pool.name
+      backend_protocol  = "Http"
+      backend_host_header = azurerm_app_service.wordpress.default_site_hostname
+    }
+  }
+
+  frontend_endpoint {
+    name                 = "webapp-frontend"
+    host_name            = azurerm_public_ip.lb_pip.fqdn
+    session_affinity_enabled = true
+    session_affinity_ttl_seconds = 300
+  }
+
+  tags = local.common_tags
+}
