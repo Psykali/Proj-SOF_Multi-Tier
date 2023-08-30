@@ -1,124 +1,88 @@
-#####################
-## Create App Plan ##
-#####################
+resource "azurerm_virtual_network" "example" {
+  name                = "Tetris-apps-vnet"
+  address_space       = ["10.0.0.0/16"]
+  location            = var.location
+  resource_group_name = azurerm_resource_group.example.name
+}
+########
+resource "azurerm_subnet" "example" {
+  name                 = "Tetris-apps-subnet"
+  resource_group_name  = azurerm_resource_group.example.name
+  virtual_network_name = azurerm_virtual_network.example.name
+  address_prefixes     = ["10.0.1.0/24"]
+}
+########
+resource "azurerm_public_ip" "example" {
+  name                = "Tetris-apps-public-ip"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.example.name
+  allocation_method  = "Static"
+}
+########
 resource "azurerm_app_service_plan" "example" {
-  name                = "app-service-plan"
-  location            = "France Central"
-  resource_group_name = "PERSO_SIEF"
+  name                = "Tetris-apps-plan"
+  location            = var.location
+  resource_group_name = var.resource_group_name
   kind                = "Linux"
-  reserved            = true
-
+  
   sku {
-    tier = "Basic"
-    size = "B1"
+    tier = "Standard"
+    size = "S1"
   }
 }
-##################################
-## Create Web App for WordPress ##
-##################################
-variable "app_names" {
-  type = list(string)
-  default = ["1stTetris", "2ndTetris", "3rdTetris"]
-}
-resource "azurerm_app_service" "wordpress" {
-  count               = length(var.app_names)
-  name                = var.app_names[count.index]
+########
+resource "azurerm_app_service" "web_app" {
+  count               = 2
+  name                = "Tetris-${count.index + 1}"
   location            = var.location
   resource_group_name = var.resource_group_name
   app_service_plan_id = azurerm_app_service_plan.example.id
 
   site_config {
-    always_on = true
     linux_fx_version = "DOCKER|skP20ContReg.azurecr.io/tetrisgameapp"
   }
-
-  identity {
-    type = "SystemAssigned"
+}
+########
+resource "azurerm_application_gateway" "example" {
+  name                = "Tetris-apps-gateway"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  sku {
+    name = "WAF_v2"
+    tier = "WAF_v2"
   }
 
-  tags = local.common_tags
-}
-
-resource "azurerm_app_service_slot" "example" {
-  app_service_name       = azurerm_app_service.wordpress[0].name
-  location               = azurerm_app_service.wordpress[0].location
-  resource_group_name    = azurerm_app_service.wordpress[0].resource_group_name
-  app_service_plan_id    = azurerm_app_service_plan.example.id
-  name                   = "staging"
-
-  connection_string {
-    name  = "Database"
-    type  = "SQLAzure"
-    value = "Server=tcp:${azurerm_lb.sqldbbkndlb.private_ip_address},1433;Initial Catalog=sqldb-0;User ID=${var.admin_username};Password=${var.admin_password};"
+  gateway_ip_configuration {
+    name      = "Tetris-gateway-ip-configuration"
+    subnet_id = azurerm_subnet.example.id
   }
-}
-################################################
-## Create Public IP address for Load Balancer ##
-################################################
-resource "azurerm_public_ip" "lb_pip" {
-  name                = "Tetrislb-public-ip"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  allocation_method   = "Static"
-  sku                 = "Standard"
-  tags                = local.common_tags
-}
-##################################
-## Create Load Balancer WebApps ##
-##################################
-resource "azurerm_lb" "lb" {
-  name                = "Tetris-lb"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  sku                 = "Standard"
+
+  frontend_port {
+    name = "http"
+    port = 80
+  }
 
   frontend_ip_configuration {
-    name                 = "TetrisPIPAddress"
-    public_ip_address_id = azurerm_public_ip.lb_pip.id
-  }
-  tags = local.common_tags
-}
-#######################################
-## backend pool of the load balancer ##
-#######################################
-resource "azurerm_lb_backend_address_pool" "example" {
-  loadbalancer_id = azurerm_lb.lb.id
-  name            = "BackendPool"
-}
-###############################################################
-## Add the Web Apps to the backend pool of the load balancer ##
-###############################################################
-resource "azurerm_lb_backend_address_pool_address" "example" {
-  backend_address_pool_id = azurerm_lb_backend_address_pool.example.id
-  name                    = "Tetrisbkndpl"
-  ip_address              = azurerm_linux_virtual_machine.example.private_ip_address # Update this argument
-}
-#######################
-## Create Front Door ##
-#######################
-resource "azurerm_frontdoor" "frontdoor" {
-  name                = "Tetris-frontdoor"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-
-  routing_rule {
-    name               = "Tetris-routing-rule"
-    frontend_endpoints = [azurerm_frontdoor_frontend_endpoint.frontend.id]
-    accepted_protocols = ["Http", "Https"]
-    patterns_to_match  = ["/*"]
-    forwarding_configuration {
-      backend_pool_name = azurerm_lb_backend_address_pool.backend_pool.name
-      backend_protocol  = "Http"
-      backend_host_header = azurerm_app_service.wordpress_primary.default_site_hostname
-    }
+    name                 = "Tetris-frontend-ip-configuration"
+    public_ip_address_id = azurerm_public_ip.example.id
   }
 
-  frontend_endpoint {
-    name                 = "Tetris-frontend"
-    host_name            = azurerm_public_ip.lb_pip.fqdn
-    session_affinity_enabled = true
-    session_affinity_ttl_seconds = 300
+  backend_address_pool {
+    name = "Tetris-backend-pool"
+    fqdns = [for app in azurerm_app_service.web_app : app.default_site_hostname]
   }
 
-  tags = local.common_tags
+  http_listener {
+    name                           = "my-http-listener"
+    frontend_ip_configuration_name = azurerm_application_gateway.example.frontend_ip_configuration[0].name
+    frontend_port_name             = azurerm_application_gateway.example.frontend_port[0].name
+  }
+
+  request_routing_rule {
+    name                       = "Tetris-rule"
+    rule_type                  = "Basic"
+    http_listener_name         = azurerm_application_gateway.example.http_listener[0].name
+    backend_address_pool_name  = azurerm_application_gateway.example.backend_address_pool[0].name
+    backend_http_settings_name = "appGatewayBackendHttpSettings"
+  }
 }
