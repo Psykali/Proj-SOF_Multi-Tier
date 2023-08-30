@@ -9,7 +9,7 @@ resource "azurerm_virtual_network" "vnet" {
 # Create a subnet for the Application Gateway
 resource "azurerm_subnet" "subnet_gw" {
   name                 = "mySubnet-gw"
-  resource_group_name  = azurerm_resource_group.rg.name
+  virtual_network_name = azurerm_virtual_network.vnet.name
   resource_group_name = var.resource_group_name
   address_prefixes     = ["10.0.1.0/24"]
 }
@@ -17,7 +17,7 @@ resource "azurerm_subnet" "subnet_gw" {
 # Create a subnet for the Web Apps
 resource "azurerm_subnet" "subnet_web" {
   name                 = "mySubnet-web"
-  resource_group_name  = azurerm_resource_group.rg.name
+  virtual_network_name = azurerm_virtual_network.vnet.name
   resource_group_name = var.resource_group_name
   address_prefixes     = ["10.0.2.0/24"]
 
@@ -127,16 +127,13 @@ name                ="webapp1-${random_string.rs.result}"
   location            = var.location
   resource_group_name = var.resource_group_name
   app_service_plan_id = azurerm_app_service_plan.example.id
-
   site_config {
     linux_fx_version = "DOCKER|skP20ContReg.azurecr.io/tetrisgameapp"
+ }
+  identity {
+    type = "SystemAssigned"
   }
-
-}
-    identity{
-       type="SystemAssigned"
-
-    }
+  tags = local.common_tags
 }
 # Create the second Web App for Linux
 resource "azurerm_app_service" "webapp2" {
@@ -144,20 +141,19 @@ resource "azurerm_app_service" "webapp2" {
   location            = var.location
   resource_group_name = var.resource_group_name
   app_service_plan_id = azurerm_app_service_plan.example.id
-
   site_config {
     linux_fx_version = "DOCKER|skP20ContReg.azurecr.io/tetrisgameapp"
+ }
+  identity {
+    type = "SystemAssigned"
   }
-
-}
-    identity{
-       type="SystemAssigned"
-
-    }
+  tags = local.common_tags
 }
 # Generate a random string for unique resource names
 resource "random_string" "rs" {
     length=4
+
     special=false
+
     upper=false
 }
