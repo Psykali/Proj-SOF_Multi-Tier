@@ -68,24 +68,24 @@ resource "azurerm_application_gateway" "example" {
   }
 
   backend_address_pool {
-    for_each = azurerm_app_service.web_app
-    name     = "webapp-backend-pool-${each.key}"
-    fqdns    = [each.value.default_site_hostname]
+    count  = var.web_app_count
+    name   = "webapp-backend-pool-${count.index}"
+    fqdns  = [azurerm_app_service.web_app[count.index].default_site_hostname]
   }
 
   http_listener {
-    for_each                      = azurerm_app_service.web_app
-    name                          = "http-listener-${each.key}"
+    count                           = var.web_app_count
+    name                            = "http-listener-${count.index}"
     frontend_ip_configuration_name = azurerm_application_gateway.example.frontend_ip_configuration[0].name
-    frontend_port_name            = "http"
+    frontend_port_name              = "http"
   }
 
   request_routing_rule {
-    for_each               = azurerm_app_service.web_app
-    name                   = "webapp-rule-${each.key}"
-    rule_type              = "Basic"
-    http_listener_name     = azurerm_application_gateway.example.http_listener[each.key].name
-    backend_address_pool_name  = azurerm_application_gateway.example.backend_address_pool[each.key].name
+    count                 = var.web_app_count
+    name                  = "webapp-rule-${count.index}"
+    rule_type             = "Basic"
+    http_listener_name    = azurerm_application_gateway.example.http_listener[count.index].name
+    backend_address_pool_name  = azurerm_application_gateway.example.backend_address_pool[count.index].name
     backend_http_settings_name = "appGatewayBackendHttpSettings"
   }
 }
