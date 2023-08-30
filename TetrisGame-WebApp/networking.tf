@@ -122,32 +122,3 @@ resource "azurerm_frontdoor" "frontdoor" {
 
   tags = local.common_tags
 }
-#######################
-## Create Front Door ##
-#######################
-resource "azurerm_frontdoor" "frontdoor" {
-  name                = "Tetris-frontdoor"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-
-  routing_rule {
-    name               = "Tetris-routing-rule"
-    frontend_endpoints = [azurerm_frontdoor.frontdoor.frontend_endpoint[0].id] # Update this argument
-    accepted_protocols = ["Http", "Https"]
-    patterns_to_match  = ["/*"]
-    forwarding_configuration {
-      backend_pool_name = azurerm_lb_backend_address_pool.backend_pool.name
-      backend_protocol  = "Http"
-      backend_host_header = azurerm_app_service.wordpress.default_site_hostname
-    }
-  }
-
-  frontend_endpoint {
-    name                 = "Tetris-frontend"
-    host_name            = azurerm_public_ip.lb_pip.fqdn
-    session_affinity_enabled = true
-    session_affinity_ttl_seconds = 300
-  }
-
-  tags = local.common_tags
-}
