@@ -72,6 +72,7 @@ resource "azurerm_application_gateway" "appgw" {
     protocol              = "Http"
     request_timeout       = 20
     probe_name                ="http-probe"
+    host = "mytetrisp20"
 }
 http_listener {
   name                           ="http-listener"
