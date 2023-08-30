@@ -109,7 +109,7 @@ ssl_policy{
 }
 }
 # Create an App Service Plan for the Web Apps
-resource "azurerm_app_service_plan" "plan" {
+resource "azurerm_app_service_plan" "example" {
   name                ="myAppServicePlan"
   location            = var.location
   resource_group_name = var.resource_group_name
