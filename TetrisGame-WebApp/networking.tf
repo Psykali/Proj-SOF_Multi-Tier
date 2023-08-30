@@ -64,15 +64,19 @@ resource "azurerm_application_gateway" "appgw" {
     fqdns        = [azurerm_app_service.webapp1.default_site_hostname, azurerm_app_service.webapp2.default_site_hostname]
     ip_addresses = []
   }
-  backend_http_settings {
+ backend_http_settings {
     name                  = "myBackendHTTPSettings"
     cookie_based_affinity = "Disabled"
     path                  = "/"
     port                  = 80
     protocol              = "Http"
     request_timeout       = 20
-    probe_name                ="http-probe"
-}
+    probe_name            = "http-probe"
+
+    # Use the hostname from the backend HTTP settings
+    pick_host_name_from_backend_http_settings = true
+  }
+
 http_listener {
   name                           ="http-listener"
   frontend_ip_configuration_name ="myFrontendIPConfig"
