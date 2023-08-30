@@ -2,12 +2,12 @@ resource "azurerm_virtual_network" "example" {
   name                = "Tetris-apps-vnet"
   address_space       = ["10.0.0.0/16"]
   location            = var.location
-  resource_group_name = azurerm_resource_group.example.name
+  resource_group_name = var.resource_group_name
 }
 ########
 resource "azurerm_subnet" "example" {
   name                 = "Tetris-apps-subnet"
-  resource_group_name  = azurerm_resource_group.example.name
+  resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.example.name
   address_prefixes     = ["10.0.1.0/24"]
 }
@@ -15,7 +15,7 @@ resource "azurerm_subnet" "example" {
 resource "azurerm_public_ip" "example" {
   name                = "Tetris-apps-public-ip"
   location            = var.location
-  resource_group_name = azurerm_resource_group.example.name
+  resource_group_name = var.resource_group_name
   allocation_method  = "Static"
 }
 ########
