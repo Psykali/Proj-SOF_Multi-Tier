@@ -44,7 +44,7 @@ resource "azurerm_app_service" "web_app" {
 }
 ########
 resource "azurerm_application_gateway" "example" {
-  name                = "Tetris-apps-gateway"
+  name                = "web-apps-gateway"
   resource_group_name = var.resource_group_name
   location            = var.location
   sku {
@@ -53,7 +53,7 @@ resource "azurerm_application_gateway" "example" {
   }
 
   gateway_ip_configuration {
-    name      = "Tetris-gateway-ip-configuration"
+    name      = "my-gateway-ip-configuration"
     subnet_id = azurerm_subnet.example.id
   }
 
@@ -63,26 +63,26 @@ resource "azurerm_application_gateway" "example" {
   }
 
   frontend_ip_configuration {
-    name                 = "Tetris-frontend-ip-configuration"
+    name                 = "my-frontend-ip-configuration"
     public_ip_address_id = azurerm_public_ip.example.id
   }
 
   backend_address_pool {
-    name = "Tetris-backend-pool"
-    fqdns = [for app in azurerm_app_service.web_app : app.default_site_hostname]
+    name = "webapp-backend-pool"
+    fqdns = [for app in azurerm_app_service.web_app : app.value.default_site_hostname]
   }
 
   http_listener {
     name                           = "my-http-listener"
     frontend_ip_configuration_name = azurerm_application_gateway.example.frontend_ip_configuration[0].name
-    frontend_port_name             = azurerm_application_gateway.example.frontend_port[0].name
+    frontend_port_name             = "http"  # Use the name of the frontend_port block
   }
 
   request_routing_rule {
-    name                       = "Tetris-rule"
+    name                       = "webapp-rule"
     rule_type                  = "Basic"
-    http_listener_name         = azurerm_application_gateway.example.http_listener[0].name
-    backend_address_pool_name  = azurerm_application_gateway.example.backend_address_pool[0].name
+    http_listener_name         = azurerm_application_gateway.example.http_listener["my-http-listener"].name
+    backend_address_pool_name  = azurerm_application_gateway.example.backend_address_pool["webapp-backend-pool"].name
     backend_http_settings_name = "appGatewayBackendHttpSettings"
   }
 }
