@@ -79,18 +79,25 @@ resource "azurerm_app_service" "webapp1" {
     }
 
     tags= local.common_tags
-}
-
-resource "azurerm_app_service_slot" "example" {
-    app_service_name   = azurerm_app_service.webapp1[0].name
-    location           = azurerm_app_service.webapp1[0].location
-    resource_group_name= azurerm_app_service.webapp1[0].resource_group_name
-    app_service_plan_id= azurerm_app_service_plan.example.id
-    name               ="staging"
-
-    connection_string {
+    
+      connection_string {
         name  = "Database"
         type  = "SQLAzure"
         value = "Server=tcp:${azurerm_sql_server.example.fully_qualified_domain_name},1433;Initial Catalog=${azurerm_sql_database.example.name};User ID=${var.admin_username};Password=${var.admin_password};"
     }
+}
+
+resource "azurerm_app_service_slot" "staging" {
+  count               = length(var.app_names)
+  name                ="staging"
+  app_service_name    = azurerm_app_service.webapp1[count.index].name
+  location            = azurerm_app_service.webapp1[count.index].location
+  resource_group_name= azurerm_app_service.webapp1[count.index].resource_group_name
+  app_service_plan_id= azurerm_app_service_plan.example.id
+
+   connection_string {
+        name   ="Database"
+        type   ="SQLAzure"
+        value ="Server=tcp:${azurerm_sql_server.example.fully_qualified_domain_name},1433;Initial Catalog=${azurerm_sql_database.example.name};User ID=${var.admin_username};Password=${var.admin_password};"
+   }
 }
