@@ -89,8 +89,8 @@ resource "azurerm_app_service_slot" "example" {
     name               ="staging"
 
     connection_string {
-        name= "Database"
-        type= "SQLAzure"
-        value="Server=tcp:${azurerm_lb.sqldbbkndlb.private_ip_address},1433;Initial Catalog=sqldb-0;User ID=${var.admin_username};Password=${var.admin_password};"
+        name  = "Database"
+        type  = "SQLAzure"
+        value = "Server=tcp:${azurerm_sql_server.example.fully_qualified_domain_name},1433;Initial Catalog=${azurerm_sql_database.example.name};User ID=${var.admin_username};Password=${var.admin_password};"
     }
 }
