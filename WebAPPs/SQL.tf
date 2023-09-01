@@ -2,7 +2,7 @@
 ## Create the SQL Server ##
 ###########################
 resource "azurerm_sql_server" "sql_backend_pool" {
-  name                         = "sqlserv"
+  name                         = "multiwebsqlserv"
   resource_group_name          = var.resource_group_name
   location                     = var.location
   version                      = "12.0"
