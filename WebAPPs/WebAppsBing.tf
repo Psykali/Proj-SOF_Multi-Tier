@@ -1,33 +1,27 @@
-resource "azurerm_resource_group" "example" {
-  name     = "example-resources"
-  location = "West Europe"
-}
-
 resource "azurerm_virtual_network" "example" {
   name                = "example-vnet"
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
+  resource_group_name          = var.resource_group_name
+  location                     = var.location
   address_space       = ["10.0.0.0/16"]
 }
 
 resource "azurerm_subnet" "example" {
   name                 = "example-subnet"
   virtual_network_name = azurerm_virtual_network.example.name
-  resource_group_name  = azurerm_resource_group.example.name
+  resource_group_name          = var.resource_group_name
   address_prefixes     = ["10.0.1.0/24"]
 }
 
 resource "azurerm_public_ip" "example" {
-  name                = "example-pip"
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
+  resource_group_name          = var.resource_group_name
+  location                     = var.location
   allocation_method   = "Static"
 }
 
 resource "azurerm_lb" "example" {
   name                = "example-lb"
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
+  resource_group_name          = var.resource_group_name
+  location                     = var.location
 
   frontend_ip_configuration {
     name                 = "example-frontend-ip"
@@ -48,13 +42,13 @@ resource "azurerm_lb_rule" "example" {
   frontend_port                  = 80
   backend_port                   = 80
   frontend_ip_configuration_name = "example-frontend-ip"
-  backend_address_pool_id        = azurerm_lb_backend_address_pool.example.id
+  backend_address_pool_ids        = azurerm_lb_backend_address_pool.example.id
 }
 
-resource "azurerm_app_service_plan" "example1" {
-    name                ="example-asp"
-    location            ="${azurerm_resource_group.example.location}"
-    resource_group_name ="${azurerm_resource_group.example.name}"
+resource "azurerm_app_service_plan" "example" {
+    name                ="multiWeb-asp"
+  resource_group_name          = var.resource_group_name
+  location                     = var.location
 
     sku {
         tier     ="Standard"
