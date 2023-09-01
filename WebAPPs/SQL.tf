@@ -48,6 +48,7 @@ resource "azurerm_lb_backend_address_pool" "example" {
 resource "azurerm_lb_backend_address_pool_address" "sql_backend_pool" {
   count                   = length(azurerm_sql_database.sql_backend_pool)
   backend_address_pool_id = azurerm_lb_backend_address_pool.example.id # Add this argument
+  virtual_network_id      = azurerm_virtual_network.example.id
   name                    = "sql_backend_pool-${count.index}"
   ip_address              = azurerm_sql_database.sql_backend_pool[count.index].id # Update this argument
 }
