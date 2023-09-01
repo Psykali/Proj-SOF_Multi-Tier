@@ -63,11 +63,10 @@ resource "azurerm_app_service_plan" "example1" {
 }
 
 resource "azurerm_app_service" "webapp1" {
-variable "app_names" {
+    variable "app_names" {
   type = list(string)
   default = ["1stwppsyckprjst", "2ndwppsyckprjs", "3rdwppsyckprjs"]
 }
-resource "azurerm_app_service" "wordpress" {
   count               = length(var.app_names)
   name                = var.app_names[count.index]
   location            = var.location
