@@ -9,7 +9,6 @@ resource "azurerm_sql_server" "sql_backend_pool" {
   administrator_login          = var.admin_username
   administrator_login_password = var.admin_password
 }
-
 ##############################
 ## Create the SQL databases ##
 ##############################
