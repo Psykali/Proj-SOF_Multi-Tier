@@ -99,3 +99,4 @@ resource "azurerm_app_service_slot" "example" {
     value = "Server=tcp:${azurerm_lb.sqldbbkndlb.private_ip_address},1433;Initial Catalog=sqldb-0;User ID=${var.admin_username};Password=${var.admin_password};"
   }
 }
+}
