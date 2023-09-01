@@ -42,7 +42,7 @@ resource "azurerm_lb" "sqldbbkndlb" {
 ####################################################################
 resource "azurerm_lb_backend_address_pool_address" "sql_backend_pool" {
   count                   = length(azurerm_sql_database.sql_backend_pool)
-  backend_address_pool_id = azurerm_lb.sqldbbkndlb.backend_address_pool[0].id # Add this argument
+  backend_address_pool_ids = azurerm_lb.sqldbbkndlb.backend_address_pool[0].id # Add this argument
   name                    = "sql_backend_pool-${count.index}"
   ip_address              = azurerm_sql_database.sql_backend_pool[count.index].id # Update this argument
 }
