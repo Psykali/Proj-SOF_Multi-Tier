@@ -46,13 +46,15 @@ resource "azurerm_lb_rule" "example" {
 }
 
 resource "azurerm_app_service_plan" "example" {
-    name                ="multiWeb-asp"
+    name                = "multiWeb-asp"
     resource_group_name = var.resource_group_name
     location            = var.location
+    kind                = "Linux"
+    reserved            = true
 
     sku {
-        tier     ="Standard"
-        size     ="S1"
+        tier     = "Standard"
+        size     = "S1"
     }
 }
 
