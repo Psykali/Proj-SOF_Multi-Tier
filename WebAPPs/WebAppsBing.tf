@@ -57,7 +57,7 @@ resource "azurerm_app_service_plan" "example" {
 }
 
 resource "azurerm_app_service" "webapp1" {
-    variable "app_names" {
+variable "app_names" {
   type = list(string)
   default = ["1stwppsyckprjst", "2ndwppsyckprjs", "3rdwppsyckprjs"]
 }
@@ -80,9 +80,9 @@ resource "azurerm_app_service" "webapp1" {
 }
 
 resource "azurerm_app_service_slot" "example" {
-  app_service_name       = azurerm_app_service.wordpress[0].name
-  location               = azurerm_app_service.wordpress[0].location
-  resource_group_name    = azurerm_app_service.wordpress[0].resource_group_name
+  app_service_name       = azurerm_app_service.webapp1[0].name
+  location               = azurerm_app_service.webapp1[0].location
+  resource_group_name    = azurerm_app_service.webapp1[0].resource_group_name
   app_service_plan_id    = azurerm_app_service_plan.example.id
   name                   = "staging"
 
