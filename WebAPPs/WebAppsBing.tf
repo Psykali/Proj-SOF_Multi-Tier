@@ -36,7 +36,6 @@ resource "azurerm_lb_backend_address_pool" "example" {
 }
 
 resource "azurerm_lb_rule" "example" {
-  resource_group_name            = azurerm_resource_group.example.name
   loadbalancer_id                = azurerm_lb.example.id
   name                           = "example-lb-rule"
   protocol                       = "Tcp"
