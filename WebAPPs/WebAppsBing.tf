@@ -30,9 +30,9 @@ resource "azurerm_lb" "example" {
   }
 }
 
-resource "azurerm_lb_backend_address_pool" "example" {
+resource "azurerm_lb_backend_address_pool" "webappbkend" {
   loadbalancer_id = azurerm_lb.example.id
-  name            = "example-backend-pool"
+  name            = "webappbkend-pool"
 }
 
 resource "azurerm_lb_rule" "example" {
@@ -42,7 +42,7 @@ resource "azurerm_lb_rule" "example" {
   frontend_port                  = 80
   backend_port                   = 80
   frontend_ip_configuration_name = "example-frontend-ip"
-  backend_address_pool_ids        = azurerm_lb_backend_address_pool.example.id
+  backend_address_pool_ids        = azurerm_lb_backend_address_pool.webappbkend.id
 }
 
 resource "azurerm_app_service_plan" "example" {
