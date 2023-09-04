@@ -1,103 +1,103 @@
-resource "azurerm_virtual_network" "example" {
-  name                = "example-vnet"
-  resource_group_name = var.resource_group_name
+# Create an App Service Plan
+resource "azurerm_app_service_plan" "wordpress_asp" {
+  name                = "wordpress-asp"
   location            = var.location
-  address_space       = ["10.0.0.0/16"]
-}
-
-resource "azurerm_subnet" "example" {
-  name                 = "example-subnet"
-  virtual_network_name = azurerm_virtual_network.example.name
-  resource_group_name  = var.resource_group_name
-  address_prefixes     = ["10.0.1.0/24"]
-}
-
-resource "azurerm_public_ip" "example" {
-  name                = "multiwebip"
   resource_group_name = var.resource_group_name
-  location            = var.location
-  allocation_method   = "Static"
-}
 
-resource "azurerm_lb" "example" {
-  name                = "example-lb"
-  resource_group_name = var.resource_group_name
-  location            = var.location
-
-  frontend_ip_configuration {
-    name                 = "example-frontend-ip"
-    public_ip_address_id = azurerm_public_ip.example.id
+  sku {
+    tier = "Standard"
+    size = "S1"
   }
 }
 
-resource "azurerm_lb_backend_address_pool" "webappbkend" {
-  loadbalancer_id = azurerm_lb.example.id
-  name            = "webappbkend-pool"
+# Create a MySQL Database
+resource "azurerm_mysql_database" "wordpress_db" {
+  name                = "wordpress-db"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  server_name         = azurerm_mysql_server.wordpress_server.name
+  charset             = "utf8"
+  collation           = "utf8_general_ci"
 }
 
-resource "azurerm_lb_rule" "example" {
-  loadbalancer_id                = azurerm_lb.example.id
-  name                           = "example-lb-rule"
-  protocol                       = "Tcp"
-  frontend_port                  = 80
-  backend_port                   = 80
-  frontend_ip_configuration_name = "example-frontend-ip"
-  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.webappbkend.id]
+# Create a MySQL Server
+resource "azurerm_mysql_server" "wordpress_server" {
+  name                = "wordpress-mysql"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  sku_name            = "B_Gen5_1"
+  version             = "5.7"
+  storage_mb          = 5120
+  administrator_login = "wordpressadmin"
+  administrator_login_password = "P@ssw0rd1234!"
 }
 
-resource "azurerm_app_service_plan" "example" {
-    name                = "multiWeb-asp"
-    resource_group_name = var.resource_group_name
-    location            = var.location
-    kind                = "Linux"
-    reserved            = true
+# Create a WordPress App Service on Linux
+resource "azurerm_app_service" "wordpress_app" {
+  name                = "wordpress-site"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  app_service_plan_id = azurerm_app_service_plan.wordpress_asp.id
 
-    sku {
-        tier     = "Standard"
-        size     = "S1"
-    }
+  site_config {
+    linux_fx_version = "DOCKER|mcr.microsoft.com/azure-app-service/wordpress:5.6-php8.0"
+  }
+
+  app_settings = {
+    "DOCKER_REGISTRY_SERVER_USERNAME" = var.registry_username
+    "DOCKER_REGISTRY_SERVER_PASSWORD" = var.registry_password
+    "WORDPRESS_DB_HOST"               = azurerm_mysql_server.wordpress_server.fqdn
+    "WORDPRESS_DB_NAME"               = azurerm_mysql_database.wordpress_db.name
+    "WORDPRESS_DB_USER"               = "wordpressadmin"
+    "WORDPRESS_DB_PASSWORD"           = "P@ssw0rd1234!"
+    "APPINSIGHTS_INSTRUMENTATIONKEY"  = azurerm_application_insights.wordpress_ai.instrumentation_key
+  }
+
+  identity {
+    type = "SystemAssigned"
+  }
+
+  tags = local.common_tags
 }
 
-variable "app_names" {
-    type    = list(string)
-    default = ["1stwppsyckprjst", "2ndwppsyckprjs", "3rdwppsyckprjs"]
-}
-resource "azurerm_app_service" "webapp1" {
-    count               = length(var.app_names)
-    name                = var.app_names[count.index]
-    location            = var.location
-    resource_group_name = var.resource_group_name
-    app_service_plan_id = azurerm_app_service_plan.example.id
-
-    site_config {
-        always_on       = true
-        linux_fx_version= "DOCKER|wordpress:latest"
-    }
-
-    identity {
-        type= "SystemAssigned"
-    }
-
-    tags= local.common_tags
-    
-      connection_string {
-        name  = "Database"
-        type  = "SQLAzure"
-        value = "Server=tcp:${azurerm_sql_server.example.fully_qualified_domain_name},1433;Initial Catalog=${azurerm_sql_database.example.name};User ID=${var.admin_username};Password=${var.admin_password};"
-    }
+# Create an Application Insights for WordPress
+resource "azurerm_application_insights" "wordpress_ai" {
+  name                = "wordpress-ai"
+  location            = var.location
+  resource_group_name = var.resource_group_name
 }
 
-resource "azurerm_app_service_slot" "staging" {
-  count               = length(var.app_names)
-  name                ="staging"
-  app_service_name    = azurerm_app_service.webapp1[count.index].name
-  location            = azurerm_app_service.webapp1[count.index].location
-  resource_group_name= azurerm_app_service.webapp1[count.index].resource_group_name
-  app_service_plan_id= azurerm_app_service_plan.example.id
+# Create an App Insights resource for WordPress App Service
+resource "azurerm_app_insights" "wordpress_appinsights" {
+  name                = "wordpress-appinsights"
+  resource_group_name = var.resource_group_name
+  application_type    = "web"
+  application_id      = azurerm_application_insights.wordpress_ai.application_id
 
-   connection_string {
-        name   ="Database"
-        type   ="SQLAzure"
-        value ="Server=tcp:${azurerm_sql_server.example.fully_qualified_domain_name},1433;Initial Catalog=${azurerm_sql_database.example.name};User ID=${var.admin_username};Password=${var.admin_password};"
-   }
+  depends_on = [
+    azurerm_application_insights.wordpress_ai,
+  ]
+
+  location       = azurerm_application_insights.wordpress_ai.location
+  tags           = local.common_tags
+  correlation {
+    client_track_enabled = false
+  }
+  web {
+    app_id = azurerm_app_service.wordpress_app.id
+  }
+}
+
+# Create a MySQL Firewall Rule
+resource "azurerm_mysql_firewall_rule" "wordpress_firewall" {
+  name                = "wordpress-firewall"
+  resource_group_name = var.resource_group_name
+  server_name         = azurerm_mysql_server.wordpress_server.name
+  start_ip_address    = "0.0.0.0"
+  end_ip_address      = "255.255.255.255"
+}
+
+# Output the WordPress App Service URL
+output "wordpress_url" {
+  value = "https://${azurerm_app_service.wordpress_app.default_site_hostname}/wp-admin/install.php"
 }
