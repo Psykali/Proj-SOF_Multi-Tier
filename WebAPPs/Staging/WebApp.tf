@@ -56,7 +56,7 @@ resource "azurerm_app_service" "tetris_webapps" {
   app_service_plan_id = azurerm_app_service_plan.skprjs_asp.id
 
   site_config {
-    linux_fx_version = "DOCKER|skP20ContReg.azurecr.io/tetrisgameapp"
+    linux_fx_version = "DOCKER|skP20ContReg.azurecr.io/dev/stackoverp20kcab"
   }
 
   app_settings = {
