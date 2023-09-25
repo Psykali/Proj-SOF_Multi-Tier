@@ -71,7 +71,7 @@ resource "azurerm_monitor_metric_alert" "admin_vm" {
 ##############################
 resource "azurerm_network_interface" "admin_nic" {
   count               = 1
-  name                = "${var.admin_nic}-${count.index}"
+  name                = "${var.admin_nic}${count.index}"
   location            = var.location
   resource_group_name = var.resource_group_name
 
@@ -89,7 +89,7 @@ resource "azurerm_network_interface" "admin_nic" {
 ################################
 resource "azurerm_public_ip" "admin_pip" {
   count               = 1
-  name                = "${var.admin_pip}-${count.index}"
+  name                = "${var.admin_pip}${count.index}"
   location            = var.location
   resource_group_name = var.resource_group_name
   allocation_method   = "Dynamic"
