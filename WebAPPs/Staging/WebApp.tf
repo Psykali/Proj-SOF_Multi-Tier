@@ -36,7 +36,7 @@ output "webtests_synthetic_id" {
 
 
 resource "azurerm_app_service_plan" "skprjs_asp" {
-  name                = "Sof-asp"
+  name                = "Sofstaging-asp"
   location            = var.location
   resource_group_name = var.resource_group_name
   kind                = "Linux"
