@@ -70,7 +70,7 @@ resource "azurerm_monitor_metric_alert" "admin_vm" {
 ## Create Network Interface ##
 ##############################
 resource "azurerm_network_interface" "admin_nic" {
-  count               = 3
+  count               = 1
   name                = "${var.admin_nic}-${count.index}"
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -88,7 +88,7 @@ resource "azurerm_network_interface" "admin_nic" {
 ## Create a public IP address ##
 ################################
 resource "azurerm_public_ip" "admin_pip" {
-  count               = 3
+  count               = 1
   name                = "${var.admin_pip}-${count.index}"
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -102,8 +102,7 @@ resource "azurerm_public_ip" "admin_pip" {
 ####################
 # Deploy Git Server
 resource "null_resource" "install_packages_for_the_devs" {
- count = 3
-
+ count = 1
   depends_on = [
     azurerm_linux_virtual_machine.admin__vm,
      ]
