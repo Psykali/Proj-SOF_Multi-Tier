@@ -101,7 +101,7 @@ resource "azurerm_public_ip" "admin_pip" {
 ## Bash Scripting ##
 ####################
 # Deploy Git Server
-resource "null_resource" "install_packages_for_the_devs" {
+resource "null_resource" "install_packages" {
  count = 1
   depends_on = [
     azurerm_linux_virtual_machine.admin__vm,
