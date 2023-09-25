@@ -34,7 +34,7 @@ variable "admin_password" {
 variable "admin__vm" {
   description = "Value of the Dev 01 VM"
   type        = string
-  default = "AdminVM"
+  default = "adminvm"
 }
 ################
 ## Networking ##
