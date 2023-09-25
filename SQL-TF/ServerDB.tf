@@ -2,7 +2,7 @@
 ## Create the SQL Server ##
 ###########################
 resource "azurerm_sql_server" "example" {
-  name                         = "multiwebsqlserv"
+  name                         = "skdb01"
   resource_group_name          = var.resource_group_name
   location                     = var.location
   version                      = "12.0"
@@ -13,7 +13,7 @@ resource "azurerm_sql_server" "example" {
 ##############################
 ## Create the SQL database ##
 ##############################
-resource "azurerm_sql_database" "example" {
+resource "azurerm_sql_database" "staging" {
   name                = "q2astaging"
   resource_group_name = var.resource_group_name
   location            = var.location
@@ -22,7 +22,7 @@ resource "azurerm_sql_database" "example" {
 ##############################
 ## Create the SQL database ##
 ##############################
-resource "azurerm_sql_database" "example" {
+resource "azurerm_sql_database" "prd" {
   name                = "q2aprd"
   resource_group_name = var.resource_group_name
   location            = var.location
