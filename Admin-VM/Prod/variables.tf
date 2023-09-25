@@ -34,7 +34,7 @@ variable "admin_password" {
 variable "admin__vm" {
   description = "Value of the Dev 01 VM"
   type        = string
-  default = "prdsql"
+  default = "AdminVM"
 }
 ################
 ## Networking ##
@@ -60,15 +60,15 @@ variable "network_security_group_name" {
 variable "admin_nic" {
   description = "Value of the admin NIC name"
   type        = string
-  default = "prdsql-nic"
+  default = "admin-nic"
 }
 variable "admin_pip" {
   description = "Value of the admin Public IP name"
   type        = string
-  default = "prdsql-pip"
+  default = "admin-pip"
 }
 variable "admin_ip" {
   description = "Value of the admin Public IP name"
   type        = string
-  default = "prd-sqlip"
+  default = "admin-ip"
 }
