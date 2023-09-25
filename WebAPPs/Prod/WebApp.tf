@@ -48,7 +48,7 @@ resource "azurerm_app_service_plan" "skprjs_asp" {
 }
 
 
-resource "azurerm_app_service" "tetris_webapps" {
+resource "azurerm_app_service" "skprjs_webapps" {
   count               = 1
   name                = "sofprd-${count.index}"
   location            = var.location
