@@ -48,19 +48,24 @@ resource "azurerm_app_service" "webapp" {
   resource_group_name = var.resource_group_name
   app_service_plan_id = azurerm_app_service_plan.webapp_asp[count.index].id
 
-  site_config 
-              { 
-                linux_fx_version = "DOCKER|mcr.microsoft.com/azure-app-service/wordpress:5.6-php8.0" 
-                }
-  
+  site_config {
+    linux_fx_version = "DOCKER|${var.docker_registry_server_url}/prd/stackoverp20kcab"
+    always_on        = true
+
+    docker_registry_server_url      = var.docker_registry_server_url
+    docker_registry_server_user     = var.docker_registry_server_user
+    docker_registry_server_password = var.docker_registry_server_password
+  }
+
   app_settings = {
     "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.appinsights.instrumentation_key
-    "DATABASE_NAME"                 = azurerm_mysql_database.mysql_database[count.index].name
-    "MYSQL_HOST"                    = azurerm_mysql_server.mysql_server.fqdn
-    "MYSQL_PORT"                    = "3306"
-    "MYSQL_USER"                    = azurerm_mysql_server.mysql_server.administrator_login
-    "MYSQL_PASSWORD"                = azurerm_mysql_server.mysql_server.administrator_login_password
+    "DATABASE_NAME"                 = var.db_name
+    "MYSQL_HOST"                    = var.db_host
+    "MYSQL_PORT"                    = "1433"
+    "MYSQL_USER"                    = var.admin_username
+    "MYSQL_PASSWORD"                = var.admin_password
   }
+
 
   identity {
     type = "SystemAssigned"
