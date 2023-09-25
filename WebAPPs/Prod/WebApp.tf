@@ -5,34 +5,10 @@ resource "azurerm_application_insights" "appinsights" {
   resource_group_name = var.resource_group_name
 }
 
-# Create a MySQL server for the databases
-resource "azurerm_mysql_server" "mysql_server" {
-  name                = "my-mysql-server"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-
-  sku_name   = "B_Gen5_1"
-  storage_mb = 5120
-
-  version = "5.7"
-  administrator_login          = var.admin_username
-  administrator_login_password = var.admin_password
-}
-
-# Create a MySQL database for every web app
-resource "azurerm_mysql_database" "mysql_database" {
-  count               = 3
-  name                = "wordpress-db-${count.index}"
-  resource_group_name = var.resource_group_name
-  server_name         = azurerm_mysql_server.mysql_server.name
-  charset             = "utf8"
-  collation           = "utf8_unicode_ci"
-}
-
 # Create Web Apps and App Service Plans
 resource "azurerm_app_service_plan" "webapp_asp" {
-  count               = 3
-  name                = "webapp-asp-${count.index}"
+  count               = 1
+  name                = "prd-asp-${count.index}"
   location            = var.location
   resource_group_name = var.resource_group_name
   sku {
@@ -42,24 +18,29 @@ resource "azurerm_app_service_plan" "webapp_asp" {
 }
 
 resource "azurerm_app_service" "webapp" {
-  count               = 3
-  name                = "webapp-${count.index}"
+  count               = 1
+  name                = "prod-Sof-${count.index}"
   location            = var.location
   resource_group_name = var.resource_group_name
   app_service_plan_id = azurerm_app_service_plan.webapp_asp[count.index].id
 
-  site_config 
-              { 
-                linux_fx_version = "DOCKER|mcr.microsoft.com/azure-app-service/wordpress:5.6-php8.0" 
-                }
-  
+  site_config {
+    linux_fx_version = "DOCKER|${var.docker_registry_server_url}/azure-app-service/wordpress:5.6-php8.0"
+    always_on        = true
+
+    docker_registry_server_url      = var.docker_registry_server_url
+    docker_registry_server_user     = var.docker_registry_server_user
+    docker_registry_server_password = var.docker_registry_server_password
+  }
+
+
   app_settings = {
     "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.appinsights.instrumentation_key
-    "DATABASE_NAME"                 = azurerm_mysql_database.mysql_database[count.index].name
-    "MYSQL_HOST"                    = azurerm_mysql_server.mysql_server.fqdn
+    "DATABASE_NAME"                 = var.db_name
+    "MYSQL_HOST"                    = var.db_host
     "MYSQL_PORT"                    = "3306"
-    "MYSQL_USER"                    = azurerm_mysql_server.mysql_server.administrator_login
-    "MYSQL_PASSWORD"                = azurerm_mysql_server.mysql_server.administrator_login_password
+    "MYSQL_USER"                    = var.admin_username
+    "MYSQL_PASSWORD"                = var.admin_password
   }
 
   identity {
@@ -69,7 +50,7 @@ resource "azurerm_app_service" "webapp" {
 
 # Create an App Insights resource per Web App
 resource "azurerm_app_insights" "appinsights_app" {
-  count               = 3
+  count               = 1
   name                = "app-${count.index}-insights"
   resource_group_name = var.resource_group_name
   application_id      = azurerm_application_insights.appinsights.application_id
