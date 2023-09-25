@@ -38,7 +38,7 @@ resource "azurerm_app_service" "webapp" {
     "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.appinsights.instrumentation_key
     "DATABASE_NAME"                 = var.db_name
     "MYSQL_HOST"                    = var.db_host
-    "MYSQL_PORT"                    = "3306"
+    "MYSQL_PORT"                    = "1433"
     "MYSQL_USER"                    = var.admin_username
     "MYSQL_PASSWORD"                = var.admin_password
   }
