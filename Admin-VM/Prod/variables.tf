@@ -60,15 +60,15 @@ variable "network_security_group_name" {
 variable "admin_nic" {
   description = "Value of the admin NIC name"
   type        = string
-  default = "admin-nic"
+  default = "adminnic"
 }
 variable "admin_pip" {
   description = "Value of the admin Public IP name"
   type        = string
-  default = "admin-pip"
+  default = "adminpip"
 }
 variable "admin_ip" {
   description = "Value of the admin Public IP name"
   type        = string
-  default = "admin-ip"
+  default = "adminip"
 }
