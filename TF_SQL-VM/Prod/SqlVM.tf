@@ -1,7 +1,6 @@
-
-#####################
-## Create Admin VM ##
-#####################
+###################
+## Create SQL VM ##
+###################
 resource "azurerm_linux_virtual_machine" "admin__vm" {
   count               = 1
   name                = "${var.admin__vm}-${count.index}"
