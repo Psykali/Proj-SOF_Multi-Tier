@@ -49,6 +49,12 @@ variable "virtual_network_name" {
   type        = string
   default = "skdb-vnet"
 }
+
+variable "network_security_group_name" {
+  description = "Value of the NSG name"
+  type        = string
+  default = "skdb-nsg"
+}
 ## Administer and developper
 variable "admin_nic" {
   description = "Value of the admin NIC name"
