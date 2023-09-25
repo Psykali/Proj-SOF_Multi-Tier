@@ -42,3 +42,13 @@ variable "docker_registry_server_password" {
   type        = string
   default = "y+vwH2D7QqUE3VHrBTz+hsMAUejMduPjug7E40Alau+ACRCytZmV"
 }
+variable "db_name" {
+  description = "Value of the Admin Pass"
+  type        = string
+  default = "q2astaging"
+}
+variable "db_host" {
+  description = "Value of the Admin Pass"
+  type        = string
+  default = "skdb01.database.windows.net"
+}
