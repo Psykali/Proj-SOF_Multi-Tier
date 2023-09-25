@@ -14,7 +14,16 @@ resource "azurerm_sql_server" "example" {
 ## Create the SQL database ##
 ##############################
 resource "azurerm_sql_database" "example" {
-  name                = "sqldb"
+  name                = "q2astaging"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  server_name         = azurerm_sql_server.example.name
+}
+##############################
+## Create the SQL database ##
+##############################
+resource "azurerm_sql_database" "example" {
+  name                = "q2aprd"
   resource_group_name = var.resource_group_name
   location            = var.location
   server_name         = azurerm_sql_server.example.name
