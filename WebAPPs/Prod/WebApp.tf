@@ -25,7 +25,7 @@ resource "azurerm_app_service" "webapp" {
   app_service_plan_id = azurerm_app_service_plan.webapp_asp[count.index].id
 
   site_config {
-    linux_fx_version = "DOCKER|${var.docker_registry_server_url}/azure-app-service/wordpress:5.6-php8.0"
+    linux_fx_version = "DOCKER|${var.docker_registry_server_url}/prd/stackoverp20kcab"
     always_on        = true
 
     docker_registry_server_url      = var.docker_registry_server_url
