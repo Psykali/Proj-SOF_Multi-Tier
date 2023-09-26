@@ -27,6 +27,6 @@ resource "azurerm_bastion_host" "default" {
   ip_configuration {
     name                 = "configuration"
     subnet_id            = azurerm_subnet.default.id
-    public_ip_address_id = azurerm_linux_virtual_machine.admin__vm.*.public_ip_address, count.index
+    public_ip_address_id = element(azurerm_linux_virtual_machine.admin__vm.*.public_ip_address, count.index)
   }
 }
