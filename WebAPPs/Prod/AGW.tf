@@ -31,29 +31,31 @@ resource "azurerm_application_gateway" "skprjs_appgw" {
   name                = "sofappgw"
   location            = var.location
   resource_group_name = var.resource_group_name
- 
-  backend_address_pool {
-    name = "sofbknd"
-  }
 
   sku {
-  name = "Standard_v2"
-  tier = "Standard_v2"
- }
+    name = "Standard_v2"
+    tier = "Standard_v2"
+  }
 
   gateway_ip_configuration {
     name      = "appGatewayIpConfig"
     subnet_id = azurerm_subnet.skprjs_subnet.id
   }
+
   frontend_port {
     name = "port_80"
     port = 80
   }
+
   frontend_ip_configuration {
     name                 = "appGwPublicFrontendIpIPv4"
     public_ip_address_id = azurerm_public_ip.skprjs_public_ip.id
   }
-  
+
+  backend_address_pool {
+    name = "sofbkend"
+  }
+
   backend_http_settings {
     name                  = "sofbackhttp"
     port                  = 80
@@ -62,20 +64,22 @@ resource "azurerm_application_gateway" "skprjs_appgw" {
     request_timeout       = 50
     probe_name            = "sof_health"
   }
+
   http_listener {
     name                   = "soflistener"
     frontend_ip_configuration_name = "appGwPublicFrontendIpIPv4"
     frontend_port_name     = "port_80"
     protocol               = "Http"
   }
+
   request_routing_rule {
     name                       = "sof_rule"
     rule_type                  = "Basic"
     http_listener_name         = "soflistener"
     backend_address_pool_name  = "sofbkend"
-    backend_http_settings_name = "sofbckhttp"
-    priority                   = 1
+    backend_http_settings_name = "sofbackhttp"
   }
+
   probe {
     name                = "sof_health"
     protocol            = "Http"
@@ -85,12 +89,14 @@ resource "azurerm_application_gateway" "skprjs_appgw" {
     timeout             = 30
     unhealthy_threshold = 3
     match {
-      status_code = ["200-399"]
+      status_code       = ["200-399"]
     }
   }
+
   autoscale_configuration {
-    min_capacity = 1
-    max_capacity = 10
+    min_capacity       = 1
+    max_capacity       = 10
   }
-  tags = local.common_tags
+
+  tags                 = local.common_tags
 }
