@@ -18,6 +18,14 @@ resource "azurerm_subnet" "default" {
   address_prefixes     = ["10.0.1.0/24"]
 }
 
+resource "azurerm_subnet" "bastion" {
+  name                 = "AzureBastionSubnet"
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  resource_group_name  = var.resource_group_name
+  address_prefixes     = ["10.0.1.0/24"]
+}
+
+
 resource "azurerm_bastion_host" "default" {
   count               = 1
   name                = "skprjsbastion"
@@ -26,7 +34,7 @@ resource "azurerm_bastion_host" "default" {
 
   ip_configuration {
     name                 = "configuration"
-    subnet_id            = azurerm_subnet.default.id
-    public_ip_address_id = element(azurerm_linux_virtual_machine.admin__vm.*.public_ip_address, count.index)
+    subnet_id            = azurerm_subnet.bastion.id
+    public_ip_address_id = element(azurerm_public_ip.*.id, count.index)
   }
 }
