@@ -49,7 +49,7 @@ resource "azurerm_app_service_plan" "skprjs_asp" {
 
 
 resource "azurerm_app_service" "skprjs_webapps" {
-  count               = 1
+  count               = 3
   name                = "sofprd-${count.index}"
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -77,7 +77,7 @@ resource "azurerm_app_service" "skprjs_webapps" {
 }
 
 resource "azurerm_app_service_slot" "staging" {
-  count               = 1
+  count               = 3
   name                = "slot"
   app_service_name    = azurerm_app_service.skprjs_webapps[count.index].name
   location            = azurerm_app_service.skprjs_webapps[count.index].location
