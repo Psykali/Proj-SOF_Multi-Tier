@@ -28,7 +28,7 @@ resource "azurerm_container_group" "skprjs_container" {
 
   diagnostics {
     log_analytics {
-      workspace_id  = split("/", azurerm_log_analytics_workspace.skprjs_la.id)[8]
+      workspace_id  = azurerm_log_analytics_workspace.skprjs_la.id
       workspace_key = azurerm_log_analytics_workspace.skprjs_la.primary_shared_key
     }
   }
