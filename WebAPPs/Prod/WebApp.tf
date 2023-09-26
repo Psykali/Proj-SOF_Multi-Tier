@@ -4,11 +4,11 @@ resource "azurerm_service_plan" "skprjs_asp" {
   resource_group_name = var.resource_group_name
   kind                = "Linux"
   reserved            = true
-  sku {
-    tier = "Standard"
-    size = "S1"
-  }
+
+  sku_name = "S1"
+  os_type  = "linux"
 }
+
 
 resource "azurerm_app_service" "skprjs_webapps" {
   count               = 3
