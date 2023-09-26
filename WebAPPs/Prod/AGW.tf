@@ -72,13 +72,14 @@ resource "azurerm_application_gateway" "skprjs_appgw" {
     protocol               = "Http"
   }
 
-  request_routing_rule {
-    name                       = "sof_rule"
-    rule_type                  = "Basic"
-    http_listener_name         = "soflistener"
-    backend_address_pool_name  = "sofbkend"
-    backend_http_settings_name = "sofbackhttp"
-  }
+request_routing_rule {
+  name                       = "sof_rule"
+  rule_type                  = "Basic"
+  http_listener_name         = "soflistener"
+  backend_address_pool_name  = "sofbkend"
+  backend_http_settings_name = "sofbackhttp"
+  priority                   = 1
+}
 
   probe {
     name                = "sof_health"
