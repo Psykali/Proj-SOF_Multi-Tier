@@ -1,3 +1,10 @@
+resource "azurerm_log_analytics_workspace" "skprjs_la" {
+  name                = "skprjs-log-analytics"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  sku                 = "PerGB2018"
+}
+
 resource "azurerm_container_group" "skprjs_container" {
   name                = "Sofstaging-container"
   location            = var.location
