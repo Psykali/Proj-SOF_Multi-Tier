@@ -35,6 +35,6 @@ resource "azurerm_bastion_host" "default" {
   ip_configuration {
     name                 = "configuration"
     subnet_id            = azurerm_subnet.bastion.id
-    public_ip_address_id = element(azurerm_public_ip.*.id, count.index)
+    public_ip_address_id = element(azurerm_public_ip.admin_pip.*.id, count.index)
   }
 }
