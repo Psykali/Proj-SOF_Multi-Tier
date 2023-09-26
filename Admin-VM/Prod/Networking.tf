@@ -17,3 +17,16 @@ resource "azurerm_subnet" "default" {
   resource_group_name = var.resource_group_name
   address_prefixes     = ["10.0.1.0/24"]
 }
+
+resource "azurerm_bastion_host" "default" {
+  count               = 1
+  name                = "skprjsbastion"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+
+  ip_configuration {
+    name                 = "configuration"
+    subnet_id            = azurerm_subnet.default.id
+    public_ip_address_id = azurerm_linux_virtual_machine.admin__vm.*.public_ip_address, count.index
+  }
+}
