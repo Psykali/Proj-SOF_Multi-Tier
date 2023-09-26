@@ -2,9 +2,6 @@ resource "azurerm_service_plan" "skprjs_asp" {
   name                = "sofprd-asp"
   location            = var.location
   resource_group_name = var.resource_group_name
-  kind                = "Linux"
-  reserved            = true
-
   sku_name = "S1"
   os_type  = "linux"
 }
