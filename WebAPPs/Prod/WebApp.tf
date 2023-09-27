@@ -1,3 +1,6 @@
+######################
+## Service App Plan ##
+######################
 resource "azurerm_service_plan" "skprjs_asp" {
   name                = "sofprd-asp"
   location            = var.location
@@ -5,8 +8,9 @@ resource "azurerm_service_plan" "skprjs_asp" {
   sku_name = "S1"
   os_type  = "Linux"
 }
-
-
+#############
+## WebApps ##
+#############
 resource "azurerm_app_service" "skprjs_webapps" {
   count               = 3
   name                = "sofprd-${count.index}"
@@ -34,7 +38,9 @@ resource "azurerm_app_service" "skprjs_webapps" {
 
   tags = local.common_tags
 }
-
+###########
+## Slots ##
+###########
 resource "azurerm_app_service_slot" "staging" {
   count               = 3
   name                = "slot"
