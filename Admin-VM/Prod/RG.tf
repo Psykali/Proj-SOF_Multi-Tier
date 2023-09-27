@@ -15,6 +15,6 @@ locals {
     Why       = "DipP20"
     Proj        = "Proj-Multitier"
     Infratype   = "PaaS-IaaS-IaC"
-    Ressources  = "VM-NSG-VNET-ContReg-Workbook-DockerImg"
+    Ressources  = "VM-WebApp-NSG-VNET-ContReg-Workbook-DockerImg"
   }
 }
