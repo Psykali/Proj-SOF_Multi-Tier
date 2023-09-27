@@ -1,10 +1,10 @@
-############################
-## Create Ressource Group ##
-############################
-#resource "azurerm_resource_group" "example" {
-#  name     = "PERSO_SIEF"
-#  location = "France Central"
-#}
+###########################
+## Create Resource Group
+##########################
+##resource "azurerm_resource_group" "rg" {
+##  name     = var.resource_group_name
+##  location = var.location
+##}
 ##########
 ## Tags ##
 ##########
@@ -13,5 +13,8 @@ locals {
     CreatedBy = "SK"
     Env       = "Prod"
     Why       = "DipP20"
+    Proj        = "Proj-Multitier"
+    Infratype   = "PaaS-IaaS-IaC"
+    Ressources  = "VM-WebApp-NSG-VNET-ContReg-Workbook-DockerImg"
   }
 }
