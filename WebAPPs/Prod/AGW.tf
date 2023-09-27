@@ -1,32 +1,6 @@
-resource "azurerm_public_ip" "skprjs_public_ip" {
-  name                = "sofpip"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-
-  allocation_method = "Static"
-  sku               = "Standard"
-
-  tags = local.common_tags
-}
-
-
-resource "azurerm_virtual_network" "skprjs_vnet" {
-  name                = "sofvnet"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  address_space       = ["10.0.0.0/16"]
-
-  tags = local.common_tags
-}
-
-resource "azurerm_subnet" "skprjs_subnet" {
-  name                 = "prod"
-  resource_group_name  = "PERSO_SIEF"
-  virtual_network_name = azurerm_virtual_network.skprjs_vnet.name
-  address_prefixes     = ["10.0.1.0/24"]
-
-}
-
+#######################
+## Azure Gateway App ##
+####################### 
 resource "azurerm_application_gateway" "skprjs_appgw" {
   name                = "sofappgw"
   location            = var.location
@@ -100,4 +74,38 @@ request_routing_rule {
   }
 
   tags                 = local.common_tags
+}
+#######################
+## Azure Gateway PIP ##
+#######################
+resource "azurerm_public_ip" "skprjs_public_ip" {
+  name                = "sofpip"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+
+  allocation_method = "Static"
+  sku               = "Standard"
+
+  tags = local.common_tags
+}
+##################
+## Gateway Vnet ##
+##################
+resource "azurerm_virtual_network" "skprjs_vnet" {
+  name                = "sofvnet"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  address_space       = ["10.0.0.0/16"]
+
+  tags = local.common_tags
+}
+####################
+## Gateway Subnet ##
+####################
+resource "azurerm_subnet" "skprjs_subnet" {
+  name                 = "prod"
+  resource_group_name  = "PERSO_SIEF"
+  virtual_network_name = azurerm_virtual_network.skprjs_vnet.name
+  address_prefixes     = ["10.0.1.0/24"]
+
 }
