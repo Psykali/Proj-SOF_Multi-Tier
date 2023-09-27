@@ -56,7 +56,9 @@ variable "network_security_group_name" {
   type        = string
   default = "skdb-nsg"
 }
-## Administer and developper
+###############################
+## Administer and developper ##
+###############################
 variable "admin_nic" {
   description = "Value of the admin NIC name"
   type        = string
