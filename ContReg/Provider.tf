@@ -1,3 +1,6 @@
+##################################
+## Providers && BackEnd && Data ##
+##################################
 terraform {
   required_providers {
     azurerm = {
