@@ -1,20 +1,30 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Projet StackOverflow Entreprise
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+## Contexte du projet
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+Notre mission consiste à concevoir, créer et gérer un environnement de production, de staging et de développement pour une application qui ressemble à StackOverflow pour le compte d’une entreprise.
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+## Portée du projet
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+La portée de notre projet comprend la conception, la création et la gestion de l'environnement, ainsi que l'optimisation de la sécurité et des performances.
+
+## Ressources à créer
+
+- 1 serveur AzureSQL
+- 2 AzureSQL Databases
+- 1 VM en Ubuntu Linux
+- 1 WebApp pour le développement
+- 3 WebApps pour la production
+- 1 Keyvault
+- 1 compte de stockage
+- 1 service connecton
+- 1 repos Azure DevOps
+- 2 pipeline Azure
+- 1 Release Pipeline
+- 1 Azure container registry
+- 1 Backup vault
+- Application Insights pour le dev et le prod
+
+## Livrables
+
+Les livrables du projet comprennent la documentation de conception, l'environnement de production, de staging et de développement, les rapports de gestion, le plan de sécurité, le plan d'optimisation, le code source, les pipelines Azure, les images Docker, le plan de sauvegarde et les instances d'Application Insights.
