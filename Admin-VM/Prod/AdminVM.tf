@@ -1,6 +1,6 @@
-###################
-## Create SQL VM ##
-###################
+#####################
+## Create Admin VM ##
+#####################
 resource "azurerm_linux_virtual_machine" "admin__vm" {
   count               = 1
   name                = "${var.admin__vm}-${count.index}"
@@ -30,7 +30,9 @@ resource "azurerm_linux_virtual_machine" "admin__vm" {
 
   tags = local.common_tags
 }
-## Metrecs and Alerts
+########################
+## Metrecs and Alerts ##
+########################
 resource "azurerm_monitor_metric_alert" "admin__vm" {
   name                = "adminvm-CPU"
   resource_group_name = var.resource_group_name
@@ -65,7 +67,6 @@ resource "azurerm_monitor_metric_alert" "admin_vm" {
   window_size        = "PT15M"
   frequency          = "PT5M"
 }
-
 ##############################
 ## Create Network Interface ##
 ##############################
@@ -118,9 +119,8 @@ provisioner "remote-exec" {
   inline = [
       "sudo apt-get update && sudo apt-get -y upgrade", 
       "sudo apt update && sudo apt -y upgrade",
-      "sudo apt-get install -y mariadb-server",
+      "sudo apt-get install -y mariadb-client",
       "sudo apt -y install docker.io",
     ]
 }
 }
-
