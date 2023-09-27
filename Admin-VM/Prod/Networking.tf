@@ -26,15 +26,14 @@ resource "azurerm_subnet" "bastion" {
 }
 
 
-resource "azurerm_bastion_host" "default" {
-  count               = 1
-  name                = "skprjsbastion"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-
-  ip_configuration {
-    name                 = "configuration"
-    subnet_id            = azurerm_subnet.bastion.id
-    public_ip_address_id = element(azurerm_public_ip.admin_pip.*.id, count.index)
-  }
-}
+#resource "azurerm_bastion_host" "default" {
+#  count               = 1
+#  name                = "skprjsbastion"
+#  location            = var.location
+#  resource_group_name = var.resource_group_name
+#  ip_configuration {
+#    name                 = "configuration"
+#    subnet_id            = azurerm_subnet.bastion.id
+#    public_ip_address_id = element(azurerm_public_ip.admin_pip.*.id, count.index)
+#  }
+#""}
