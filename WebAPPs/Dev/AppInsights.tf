@@ -2,7 +2,7 @@
 ## App Insights ##
 ##################
 resource "azurerm_application_insights" "skprjs_ai" {
-  name                = "Sofstaging-ai"
+  name                = "Sofdev-ai"
   location            = var.location
   resource_group_name = var.resource_group_name
   application_type    = "web"
@@ -11,7 +11,7 @@ resource "azurerm_application_insights" "skprjs_ai" {
 ## App Insights Web ##
 ######################
 resource "azurerm_application_insights_web_test" "skprjs_appinsights" {
-  name                = "SofStaging-ai"
+  name                = "SofSdev-ai"
   resource_group_name = var.resource_group_name
   application_insights_id = azurerm_application_insights.skprjs_ai.id
   location       = azurerm_application_insights.skprjs_ai.location
