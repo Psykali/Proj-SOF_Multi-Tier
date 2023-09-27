@@ -1,10 +1,15 @@
+##################
+## App Insights ##
+##################
 resource "azurerm_application_insights" "skprjs_ai" {
   name                = "sofprd-ai"
   location            = var.location
   resource_group_name = var.resource_group_name
   application_type    = "web"
 }
-
+######################
+## App Insights Web ##
+######################
 resource "azurerm_application_insights_web_test" "skprjs_appinsights" {
   name                = "sofprd-ai"
   resource_group_name = var.resource_group_name
