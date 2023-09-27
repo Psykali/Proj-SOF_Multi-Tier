@@ -120,7 +120,7 @@ provisioner "remote-exec" {
       "sudo apt-get update && sudo apt-get -y upgrade", 
       "sudo apt update && sudo apt -y upgrade",
       "sudo apt-get install -y mariadb-client",
-      "sudo apt -y install docker.io",
+#      "sudo apt -y install docker.io",
     ]
 }
 }
