@@ -8,7 +8,9 @@ terraform {
       version = "3.40.0"
     }
   }
-
+######################
+## BackEnd TF State ##
+######################
   backend "azurerm" {
     resource_group_name  = "PERSO_SIEF"
     storage_account_name = "sppersotfstates"
