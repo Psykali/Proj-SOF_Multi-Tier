@@ -2,7 +2,7 @@
 ## Service App Plan ##
 ######################
 resource "azurerm_service_plan" "skprjs_asp" {
-  name                = "sofstaging-asp"
+  name                = "sofdev-asp"
   location            = var.location
   resource_group_name = var.resource_group_name
   sku_name = "S1"
@@ -13,7 +13,7 @@ resource "azurerm_service_plan" "skprjs_asp" {
 #############
 resource "azurerm_app_service" "skprjs_webapps" {
   count               = 1
-  name                = "sofstaging-${count.index}"
+  name                = "sofdev-${count.index}"
   location            = var.location
   resource_group_name = var.resource_group_name
   app_service_plan_id = azurerm_service_plan.skprjs_asp.id
