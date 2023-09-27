@@ -1,0 +1,72 @@
+FROM file:... in /
+
+RUN set -xe && \
+    rm -rf /var/lib/apt/lists/* && \
+    mkdir -p /run/systemd
+
+CMD ["/bin/bash"]
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    DOCKERIZE_VERSION=v0.6.1 \
+    GOSU_VERSION=1.10 \
+    SHELL=/bin/bash \
+    TINI_VERSION=v0.18.0 \
+    LANG=en_US.UTF-8 \
+    LANGUAGE=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8 \
+    PYTHONIOENCODING=UTF-8 \
+    COMPOSER_ALLOW_SUPERUSER=1 \
+    COMPOSER_ALLOW_XDEBUG=1 \
+    COMPOSER_DISABLE_XDEBUG_WARN=1 \
+    COMPOSER_MEMORY_LIMIT=-1
+
+RUN apt-get update && \
+    apt-get dist-upgrade --assume-yes && \
+    apt-get install --assume-yes && \
+    update-locale && \
+    apt-get purge --assume-yes && \
+    rm -rf /var/lib/apt/lists/* && \
+    pip install --upgrade && \
+    pip install setuptools && \
+    pip install awscli && \
+    curl -LS https://github.com/jwilder/dockerize/releases/download/${DOCKERIZE_VERSION}/dockerize-linux-amd64-${DOCKERIZE_VERSION}.tar.gz && \
+    curl -LS https://gist.githubusercontent.com/zyedidia/d4acfcc6acf2d0d75e79004fa5feaf24/raw/a43e603e62205e1074775d756ef98c3fc77f6f8d/install_micro.sh
+
+ADD 11c0b0c43c7c51af4e3d83ce690cf81fa725f41177fe930411b5abe7822fba28 in /usr/local/bin/tini
+ADD f3f7e0d153f8d747d9bc088089c130694235a0918b03c34b8390616e19ce9690 in /usr/local/bin/gosu
+COPY file:75a4ef89088752ee8cedc916a4bcf66af4e11c34ce851c9993e548b6df69254b in /usr/local/bin/idmod
+
+RUN chown root:root /usr/local/bin/* && chmod 755 /usr/local/bin/*
+
+COPY file:db32906545faff8b332723b2a71aa880b3eac9c8882b528ac0c37971aeb527f2 in /etc/bash.bashrc
+COPY file:3c0313e98c691c7f021c9715b81b3330cf8b58d6e972b92e4588848f1b797d69 in /etc/ssh/ssh_config
+COPY file:c7afc9e496e69d0e9b3eb24bf32068989a10dd547b58efcfec18719a741cf86a in /etc/sudoers
+
+RUN chmod 440 /etc/sudoers
+
+RUN echo "deb http://ppa.launchpad.net/malteworld/ppa/ubuntu" && apt-key adv --keyserver && apt-get update && apt-get install --assume-yes && apt-get purge --assume-yes && rm -rf /var/lib/apt/lists/* && curl -LS https://getcomposer.org/installer
+
+COPY dir:0ebe73b425853a76d94fe2aaf7dc786d687fe3cc54628adc3bc45e73dc55a462 in /etc/apache2
+COPY dir:fc486ba49060f687ba35d0c9119b561584994114875c0f6ad41e62ad0bf5248c in /etc/php/7.3
+COPY file:894323e88fec7c530c5079d4f99ec8fb07df408e8e8cb225d58028c800d7899e in /usr/local/bin/
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+
+RUN chown root:root /usr/local/bin/* && chmod 755 /usr/local/bin/*
+
+STOPSIGNAL SIGWINCH
+CMD ["apache2" "-DFOREGROUND"]
+
+RUN echo "deb http://ppa.launchpad.net/ondrej/apache2/ubuntu" && echo "deb http://ppa.launchpad.net/ondrej/php/ubuntu" && apt-key adv --keyserver && apt-get update
+
+RUN echo "TLS_REQCERT"
+
+RUN git clone --branch
+
+COPY file:3c6f8305ef5dc57a241d4008021ddff6b48118e49ed99cafdb80713620895197 in /question2answer/qa-config.php
+
+RUN rm -fR /var/www/html && sed -i "s/^\(.*\)require_once
+
+EXPOSE 80
+STOPSIGNAL SIGWINCH
+CMD ["apache2" "-DFOREGROUND"]
