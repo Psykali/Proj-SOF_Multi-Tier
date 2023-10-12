@@ -58,7 +58,7 @@ resource "azurerm_app_service_slot" "staging" {
 resource "azurerm_service_plan" "skprjs_asp2" {
   count               = 1
   name                = "sofprdfc-asp-${count.index}"
-  location            = var.location
+  location            = var.location2
   resource_group_name = var.resource_group_name
   sku_name = "S1"
   os_type  = "Linux"
@@ -69,7 +69,7 @@ resource "azurerm_service_plan" "skprjs_asp2" {
 resource "azurerm_app_service" "skprjs_webapps2" {
   count               = 2
   name                = "sofprdfc-${count.index}"
-  location            = var.location
+  location            = var.location2
   resource_group_name = var.resource_group_name
   app_service_plan_id = azurerm_service_plan.skprjs_asp2.id
 
