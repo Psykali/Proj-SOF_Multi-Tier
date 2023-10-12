@@ -7,6 +7,12 @@ variable "location" {
   default = "francecentral"
 }
 
+variable "location2" {
+  description = "Value of the Ressource Group Locations"
+  type        = string
+  default = "westeurope"
+}
+
 variable "resource_group_name" {
   description = "Value of the Ressource Group name"
   type        = string
