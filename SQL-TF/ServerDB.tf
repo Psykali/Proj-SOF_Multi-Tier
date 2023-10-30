@@ -13,7 +13,7 @@ resource "azurerm_sql_server" "example" {
 ##############################
 ## Create the SQL database ##
 ##############################
-resource "azurerm_sql_database" "staging" {
+resource "azurerm_sql_database" "dev" {
   name                = "q2adev"
   resource_group_name = var.resource_group_name
   location            = var.location
