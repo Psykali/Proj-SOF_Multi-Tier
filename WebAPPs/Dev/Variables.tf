@@ -7,6 +7,12 @@ variable "location" {
   default = "francecentral"
 }
 
+variable "location2" {
+  description = "Value of the Ressource Group Locations"
+  type        = string
+  default = "westeurope"
+}
+
 variable "resource_group_name" {
   description = "Value of the Ressource Group name"
   type        = string
@@ -18,37 +24,35 @@ variable "resource_group_name" {
 variable "admin_username" {
   description = "Value of the Admin login"
   type        = string
-  default = "SkLoginDipP20"
 }
 
 variable "admin_password" {
   description = "Value of the Admin Pass"
   type        = string
-  default = "V83phJJDRExKW3kmhLCm4"
 }
+
 #######
 variable "docker_registry_server_url" {
-  description = "Value of the Admin Pass"
+  description = "Docker registry server URL"
   type        = string
-  default = "skp20contreg.azurecr.io"
 }
+
 variable "docker_registry_server_user" {
-  description = "Value of the Admin Pass"
+  description = "Docker registry server user"
   type        = string
-  default = "skP20ContReg"
 }
+
 variable "docker_registry_server_password" {
-  description = "Value of the Admin Pass"
+  description = "Docker registry server password"
   type        = string
-  default = "y+vwH2D7QqUE3VHrBTz+hsMAUejMduPjug7E40Alau+ACRCytZmV"
 }
+
 variable "db_name" {
-  description = "Value of the Admin Pass"
+  description = "Database name"
   type        = string
-  default = "q2astaging"
 }
+
 variable "db_host" {
-  description = "Value of the Admin Pass"
+  description = "Database host"
   type        = string
-  default = "skdb01.database.windows.net"
 }
