@@ -17,7 +17,7 @@ resource "azurerm_app_service" "skprjs_webapps" {
   name                = "sofprdwe-${count.index}"
   location            = var.location
   resource_group_name = var.resource_group_name
-  app_service_plan_id = azurerm_service_plan.skprjs_asp.id
+  app_service_plan_id = azurerm_service_plan.skprjs_asp[count.index].id
 
   site_config {
     linux_fx_version = "DOCKER|skP20ContReg.azurecr.io/prd/stackoverp20kcab"
@@ -71,7 +71,7 @@ resource "azurerm_app_service" "skprjs_webapps2" {
   name                = "sofprdfc-${count.index}"
   location            = var.location2
   resource_group_name = var.resource_group_name
-  app_service_plan_id = azurerm_service_plan.skprjs_asp2.id
+  app_service_plan_id = azurerm_service_plan.skprjs_asp2[count.index].id
 
   site_config {
     linux_fx_version = "DOCKER|skP20ContReg.azurecr.io/prd/stackoverp20kcab"
