@@ -1,0 +1,38 @@
+trigger:
+- main
+
+resources:
+- repo: self
+
+variables:
+  dockerRegistryServiceConnection: '8350de9f-9ab7-471e-b167-d334918e454c'
+  imageRepository: 'davidcorbetta/question2answer-pt-br'
+  containerRegistry: 'skp20contreg.azurecr.io'
+  tag: 'latest'
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: Docker@2
+      displayName: Pull an image from Docker Hub
+      inputs:
+        command: login
+        containerRegistry: $(dockerRegistryServiceConnection)
+    - script: docker pull $(imageRepository):$(tag)
+      displayName: Pull Image
+    - task: Docker@2
+      displayName: Tag and push an image to container registry
+      inputs:
+        command: push
+        repository: $(containerRegistry)/$(imageRepository)
+        tags: |
+          $(tag)
